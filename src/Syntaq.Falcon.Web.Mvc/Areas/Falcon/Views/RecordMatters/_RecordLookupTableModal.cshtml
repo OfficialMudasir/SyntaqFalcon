@@ -1,0 +1,39 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatters
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model RecordLookupTableViewModel
+
+@section Scripts
+{
+	<script abp-src="/view-resources/Areas/Falcon/Views/RecordMatters/_RecordLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickRecord")))
+
+<div class="modal-body  ">
+ 
+ 
+	<div class="col-12">
+		<div class="form-group kt-form__group align-items-center">
+			<div class="input-group">
+				<input type="text" id="RecordTableFilter" class="form-control kt-input" placeholder="Search..." value="">
+						 
+					<button id="GetRecordButton" class="btn btn-primary kt-btn kt-btn--custom   OpenRecordMatterLookupTableButton" type="submit"><ispan class="fa fa-search"></ispan></button>
+						 
+			</div>
+		</div>
+	</div>
+ 
+	 
+	<table id="RecordTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+	<thead>
+		<tr>
+			<th>@L("RecordName")</th>
+			@*<th>@L("RecordName")</th>*@
+		</tr>
+	</thead>
+	</table>
+		 
+ 
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

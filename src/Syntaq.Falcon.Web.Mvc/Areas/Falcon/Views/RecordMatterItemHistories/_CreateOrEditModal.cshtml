@@ -1,0 +1,120 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterItemHistories
+@model CreateOrEditRecordMatterItemHistoryModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordMatterItemHistory")) : L("CreateNewRecordMatterItemHistory")))
+
+<div class="modal-body">
+        <div id="RecordMatterItemHistoryInformationsTab">
+            <form name="RecordMatterItemHistoryInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.RecordMatterItemHistory.Id" />
+                }
+
+				            
+								<div class="form-group m-form__group">
+										<label for="RecordMatterItemDocumentName">@L("RecordMatterItem")</label>
+									    <div class="input-group">
+											<input class="form-control" id="RecordMatterItemDocumentName" name="recordMatterItemDocumentName" value="@Model.RecordMatterItemDocumentName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenRecordMatterItemLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger btn-icon" type="button" id="ClearRecordMatterItemDocumentNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" id="RecordMatterItemHistory_RecordMatterItemId" value="@Model.RecordMatterItemHistory.RecordMatterItemId" type="text" name="recordMatterItemId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" id="RecordMatterItemHistory_RecordMatterItemId" value="" type="text" name="recordMatterItemId"  hidden/>
+								}
+
+            
+								<div class="form-group m-form__group">
+										<label for="FormName">@L("Form")</label>
+									    <div class="input-group">
+											<input class="form-control" id="FormName" name="formName" value="@Model.FormName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenFormLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger btn-icon" type="button" id="ClearFormNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" id="RecordMatterItemHistory_FormId" value="@Model.RecordMatterItemHistory.FormId" type="text" name="formId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" id="RecordMatterItemHistory_FormId" value="" type="text" name="formId"  hidden/>
+								}
+
+            
+								<div class="form-group m-form__group">
+										<label for="SubmissionSubmissionStatus">@L("Submission")</label>
+									    <div class="input-group">
+											<input class="form-control" id="SubmissionSubmissionStatus" name="submissionSubmissionStatus" value="@Model.SubmissionSubmissionStatus" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenSubmissionLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger btn-icon" type="button" id="ClearSubmissionSubmissionStatusButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" id="RecordMatterItemHistory_SubmissionId" value="@Model.RecordMatterItemHistory.SubmissionId" type="text" name="submissionId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" id="RecordMatterItemHistory_SubmissionId" value="" type="text" name="submissionId"  hidden/>
+								}
+
+
+
+				
+								<div class="form-group">
+									<label for="RecordMatterItemHistory_DocumentName">@L("DocumentName")</label>
+									<input class="form-control" id="RecordMatterItemHistory_DocumentName" value="@Model.RecordMatterItemHistory.DocumentName" type="text" name="documentName"   maxlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MaxDocumentNameLength"  minlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MinDocumentNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="RecordMatterItemHistory_Document">@L("Document")</label>
+									<input class="form-control m-input" id="RecordMatterItemHistory_Document" value="@Model.RecordMatterItemHistory.Document.ToString(CultureInfo.InvariantCulture)" type="number" name="document"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="RecordMatterItemHistory_GroupId">@L("GroupId")</label>
+									<input class="form-control" id="RecordMatterItemHistory_GroupId" value="@Model.RecordMatterItemHistory.GroupId" type="text" name="groupId"     />
+								</div>
+					
+								<div class="form-group">
+									<label for="RecordMatterItemHistory_AllowedFormats">@L("AllowedFormats")</label>
+									<input class="form-control" id="RecordMatterItemHistory_AllowedFormats" value="@Model.RecordMatterItemHistory.AllowedFormats" type="text" name="allowedFormats"   maxlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MaxAllowedFormatsLength"  minlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MinAllowedFormatsLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="RecordMatterItemHistory_Status">@L("Status")</label>
+									<input class="form-control" id="RecordMatterItemHistory_Status" value="@Model.RecordMatterItemHistory.Status" type="text" name="status"   maxlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MaxStatusLength"  minlength="@Syntaq.Falcon.Records.RecordMatterItemHistoryConsts.MinStatusLength"  />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

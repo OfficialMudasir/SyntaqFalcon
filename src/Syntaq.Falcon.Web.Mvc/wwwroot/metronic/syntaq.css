@@ -1,0 +1,29 @@
+﻿nav:empty {
+    display: none;
+}
+
+
+.stq-primary-icon {
+    color: #009EF7 !important;
+    font-size: 2em;
+    height: 32px;
+    width: 32px;
+}
+
+.stq-primary-icon-lg {
+    color: #009EF7 !important;
+    font-size: 2em;
+    height: 42px;
+    width: 42px;
+}
+
+.stq-primary-icon-sm {
+    color: #009EF7 !important;
+    font-size: 2em;
+    height: 24px;
+    width: 24px;
+}
+.nowrap {
+    white-space: nowrap;
+}
+

@@ -1,0 +1,53 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Vouchers
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model VoucherUsageLookupViewModel
+
+@*@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/Vouchers/_ViewVoucherUsageLookupTableModal.js" asp-append-version="true"></script>
+}*@
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("VoucherUsage")))
+
+
+<div class="modal-body">
+ 
+            <div class="row align-items-center mb-6">
+                <div class="col-xl-12">
+                    <div class="form-group kt-form__group align-items-center">
+                        <div class="input-group">
+                            <input aria-label="Usage Filter" type="text" id="VoucherUsageTableFilter" class="form-control kt-input" placeholder="@L("SearchWithThreeDot")" @*value="@Model.FilterText"*@>
+                            <span class="input-group-btn">
+                                <button aria-label="Submit" id="SearchVoucherUsageBtn"
+                                        class="btn btn-primary SearchVoucherUsageButton"
+                                        type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         
+            <div class="  align-items-center">
+                <div>
+                    <input readonly type="hidden" name="Voucher[][VoucherId]" id="vUsage_VoucherID" value="@Model.VoucherId" />
+                </div>
+                <table id="VoucherUsageTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>@L("DateRedeemed")</th>
+                            <th>@L("EntityName")</th>
+                            <th>@L("EntityType")</th>
+                            <th>@L("UserName")</th>
+                            <th>@L("UserEmail")</th>
+                            @*<th>@L("DiscountType")</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+ 
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

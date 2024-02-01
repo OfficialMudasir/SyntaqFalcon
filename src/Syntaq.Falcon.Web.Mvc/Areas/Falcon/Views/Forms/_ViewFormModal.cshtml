@@ -1,0 +1,61 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@model FormViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(""))
+<div class="modal-body">
+    <div id="FormInformationsTab">
+        
+        <div class="m-stack m-stack--hor m-stack--general m-stack--demo">
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("Description") :</h6>
+                @Model.Form.Description
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            @*<div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("DocPDF") :</h6>
+                @Model.Form.DocPDF
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("DocUserCanSave") :</h6>
+                @Model.Form.DocUserCanSave
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("DocWord") :</h6>
+                @Model.Form.DocWord
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("DocWordPaid") :</h6>
+                @Model.Form.DocWordPaid
+            </div>
+            <div class="m-separator m-separator--dashed"></div>*@
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("Name") :</h6>
+                @Model.Form.Name
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("PaymentAmount") :</h6>
+                @Model.Form.PaymentAmount
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("PaymentCurr") :</h6>
+                @Model.Form.PaymentCurrency
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("PaymentEnabled") :</h6>
+                @Model.Form.PaymentEnabled
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+
+        </div>
+
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

@@ -1,0 +1,33 @@
+.user-edit-dialog-profile-image {
+  margin-bottom: 10px;
+}
+div.user-password.has-error span.help-block {
+  position: relative !important;
+  -ms-opacity: 1 !important;
+  opacity: 1 !important;
+}
+div.user-password.has-error label:after {
+  background: transparent !important;
+}
+div.user-password.has-error input {
+  border-bottom-width: 2px !important;
+}
+#UsersTable img.img-circle {
+  height: 24px;
+  margin-right: 5px;
+}
+.auto-complete-off.form-control[readonly] {
+  background-color: #fff !important;
+}
+.user-edit-modal ul.nav-tabs li a {
+  min-height: 37px;
+}
+
+.date .input-group-text
+{
+    height: 100%;
+}
+
+.wk-checkbox {
+    gap: 5px;
+}

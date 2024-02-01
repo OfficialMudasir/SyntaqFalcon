@@ -1,0 +1,71 @@
+
+@*@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TeamUserRoles
+@model CreateOrEditTeamUserRoleModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditTeamUserRole")) : L("CreateNewTeamUserRole")))
+
+<div class="modal-body">
+        <div id="TeamUserRoleInformationsTab">
+            <form name="TeamUserRoleInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.TeamUserRole.Id" />
+                }
+
+				            
+								<div class="form-group m-form__group">
+										<label for="OrganizationUnitDisplayName">@L("OrganizationUnit")</label>
+									<div class="input-group">
+											<input class="form-control" id="OrganizationUnitDisplayName" name="organizationUnitDisplayName" value="@Model.OrganizationUnitDisplayName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenOrganizationUnitLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearOrganizationUnitDisplayNameButton"><i class="fa fa-close"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.TeamUserRole.OrganizationUnitId" type="text" name="organizationUnitId" required hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="organizationUnitId" required hidden/>
+								}
+
+            
+								<div class="form-group m-form__group">
+										<label for="UserName">@L("User")</label>
+									<div class="input-group">
+											<input class="form-control" id="UserName" name="userName" value="@Model.UserName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenUserLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearUserNameButton"><i class="fa fa-close"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.TeamUserRole.UserId" type="text" name="userId" required hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="userId" required hidden/>
+								}
+
+
+
+				
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

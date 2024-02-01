@@ -1,0 +1,58 @@
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.FormRules
+@model CreateOrEditFormRuleModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditFormRule")) : L("CreateNewFormRule")))
+
+<div class="modal-body">
+		<div id="FormRuleInformationsTab">
+			<form name="FormRuleInformationsForm" role="form" novalidate class="form-validation">
+
+				@if (Model.IsEditMode)
+				{
+					<input type="hidden" name="id" value="@Model.FormRule.Id" />
+				}
+
+							
+								<div class="form-group m-form__group">
+										<label for="FormName">@L("Form")</label>
+									<div class="input-group">
+											<input class="form-control" id="FormName" name="formName" value="@Model.FormName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenFormLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearFormNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.FormRule.FormId" type="text" name="formId" required hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="formId" required hidden/>
+								}
+
+
+
+				
+								<div class="form-group">
+									<label for="FormRule_Rule">@L("Rule")</label>
+									<input class="form-control" id="FormRule_Rule" value="@Model.FormRule.Rule" type="text" name="rule"  required    />
+								</div>
+					
+								@*<div class="form-group">
+									<label for="FormRule_RuleScript">@L("RuleScript")</label>
+									<input class="form-control" id="FormRule_RuleScript" value="@Model.FormRule.RuleScript" type="text" name="ruleScript"     />
+								</div>*@
+					
+
+			</form>
+		</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

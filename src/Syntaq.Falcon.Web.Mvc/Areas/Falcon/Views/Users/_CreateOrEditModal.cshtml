@@ -1,0 +1,319 @@
+﻿@using Abp.Authorization.Users
+@using Abp.Configuration
+@using Abp.Json
+@using Abp.Zero.Configuration
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Authorization.Users
+@using Syntaq.Falcon.Net.Emailing
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Users
+@model CreateOrEditUserModalViewModel
+@inject IEmailSettingsChecker EmailSettingsChecker
+
+@*TODO REFACTOR INTO STQ VERSION*@
+
+@{
+    var isSMTPSettingsProvided = await EmailSettingsChecker.EmailSettingsValidAsync();
+}
+<script>
+    window.passwordComplexitySetting = @Html.Raw(Model.PasswordComplexitySetting.ToJsonString(indented: true));
+</script>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditUser") + ": " + Model.User.UserName) : L("CreateNewUser")))
+
+<div class="modal-body user-edit-modal">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#UserInformationsTab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                @L("UserInformations")
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#RolesTab" data-bs-toggle="tab" role="tab" class="nav-link">
+                @L("Roles") <span id="assigned-role-count" class="badge badge-success me-2">@Model.AssignedRoleCount</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#OrganizationUnitsTab" data-bs-toggle="tab" role="tab" class="nav-link">
+                @L("OrganizationUnits")
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane pt-5 active" id="UserInformationsTab" role="tabpanel">
+            <form name="UserInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="Id" value="@Model.User.Id"/>
+                }
+
+                <div class="row">
+                    <div class="col-sm-3 text-center margin-top-15 margin-bottom-15">
+                        @if (Model.User.Id > 0)
+                        {
+                            <img src="@Url.Action("GetProfilePictureById", "Profile", new {area = string.Empty})?id=@(Model.ProfilePictureId)" width="128" height="128" class="img-thumbnail img-rounded user-edit-dialog-profile-image"/>
+                        }
+                        else
+                        {
+                            <img alt="Profile Picture" src="@Url.Content("~/Common/Images/default-profile-picture.png")" width="128" height="128" class="img-thumbnail img-rounded user-edit-dialog-profile-image"/>
+                        }
+                        
+                        @if(Model.User.Id > 0 && await PermissionChecker.IsGrantedAsync(AppPermissions.Pages_Administration_Users_ChangeProfilePicture)){
+                            <button class="btn btn-light btn-sm mb-5" id="changeProfilePicture">@L("ChangeProfilePicture")</button>
+                        }
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="mb-5">
+                            <label for="Name" class="form-label">@L("FirstName")</label>
+                            <input id="Name" class="form-control" value="@Model.User.Name" type="text" name="Name" required maxlength="@Syntaq.Falcon.Authorization.Users.User.MaxNameLength">
+                        </div>
+
+                        <div class="mb-5">
+                            <label for="Surname" class="form-label">@L("Surname")</label>
+                            <input id="Surname" type="text" name="Surname" class="form-control" value="@Model.User.Surname" required maxlength="@Syntaq.Falcon.Authorization.Users.User.MaxSurnameLength">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="EmailAddress" class="form-label">@L("EmailAddress")</label>
+                    <input id="EmailAddress" type="email" name="EmailAddress" class="form-control" value="@Model.User.EmailAddress" required maxlength="@AbpUserBase.MaxEmailAddressLength">
+                </div>
+
+                <div class="mb-5">
+                    <label for="PhoneNumber" class="form-label">@L("PhoneNumber")</label>
+                    <input id="PhoneNumber" type="text" name="PhoneNumber" class="form-control" value="@Model.User.PhoneNumber" maxlength="@UserConsts.MaxPhoneNumberLength">
+                </div>
+
+                <div class="mb-5 form-md-line-input form-md-floating-label">
+                    <label for="UserName" class="form-label">@L("UserName")</label>
+                    <div class="input-group">
+                        <input id="UserName" type="text" @Html.Raw(!Model.CanChangeUserName ? "disabled=\"disabled\"" : "") name="UserName" class="form-control" value="@Model.User.UserName" required maxlength="@AbpUserBase.MaxUserNameLength">
+                        <span class="input-group-text" data-bs-toggle="tooltip" data-placement="right" title="@L("AllowedUserNameCharactersInfoText", Model.AllowedUserNameCharacters)">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </div>
+                    @if (!Model.CanChangeUserName)
+                    {
+                        <span class="form-text text-muted">@L("CanNotChangeAdminUserName")</span>
+                    }
+                </div>
+
+                <h5>Address</h5>
+                <hr>
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("AddressCO")</label>
+                        <input type="text" name="AddressCO" class="form-control" value="@Model.User.AddressCO">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("AddressLine1")</label>
+                        <input type="text" name="AddressLine1" class="form-control" value="@Model.User.AddressLine1">
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">@L("AddressLine2")</label>
+                    <input type="text" name="AddressLine2" class="form-control" value="@Model.User.AddressLine2">
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("AddressPostCode")</label>
+                        <input type="text" name="AddressPostCode" class="form-control" value="@Model.User.AddressPostCode">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="form-label">@L("AddressState")</label>
+                        <input type="text" name="AddressState" class="form-control" value="@Model.User.AddressState">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label class="form-label">@L("AddressSub")</label>
+                        <input type="text" name="AddressSub" class="form-control" value="@Model.User.AddressSub">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("AddressCountry")</label>
+                        <input type="text" name="AddressCountry" class="form-control" value="@Model.User.AddressCountry">
+                    </div>
+                </div>
+
+
+@*                <div class="checkbox-list mb-3">
+                    <label for="EditUser_SetRandomPassword" class="form-check form-check-custom form-check-solid">
+                        <input id="EditUser_SetRandomPassword" type="checkbox" name="SetRandomPassword" class="form-check-input" value="true" @Html.Raw(Model.IsEditMode ? "" : "checked=\"checked\"")/>
+                        <span class="form-check-label">
+                            @L("SetRandomPassword")
+                        </span>
+                    </label>
+                </div>*@
+                <div class="mb-5 user-password">
+                    <label for="EditUser_Password" class="form-label">@L("Password")</label>
+                    <input id="EditUser_Password" type="password" name="Password" class="form-control auto-complete-off" readonly onfocus="this.removeAttribute('readonly');"
+                           maxlength="@Syntaq.Falcon.Authorization.Users.User.MaxPlainPasswordLength" autocomplete="new-password">
+                </div>
+
+                <div class="mb-5 user-password">
+                    <label for="PasswordRepeat" class="form-label">@L("PasswordRepeat")</label>
+                    <input id="PasswordRepeat" type="password" name="PasswordRepeat" class="form-control auto-complete-off" readonly onfocus="this.removeAttribute('readonly');"
+                           maxlength="@Syntaq.Falcon.Authorization.Users.User.MaxPlainPasswordLength" equalto="#EditUser_Password" autocomplete="new-password">
+                </div>
+
+                <div class="checkbox-list">
+                    <label for="EditUser_ShouldChangePasswordOnNextLogin" class="form-check form-check-custom form-check-solid mb-2">
+                        <input id="EditUser_ShouldChangePasswordOnNextLogin" type="checkbox" name="ShouldChangePasswordOnNextLogin" class="form-check-input" value="true" @Html.Raw(Model.User.ShouldChangePasswordOnNextLogin ? "checked=\"checked\"" : "")>
+                        <span class="form-check-label">
+                            @L("ShouldChangePasswordOnNextLogin")
+                        </span>
+                    </label>
+
+                    @if (!isSMTPSettingsProvided)
+                    {
+                        <span class="form-text text-muted">@L("SMTPSettingsNotProvidedWarningText")</span>
+                    }
+
+                    <label for="EditUser_SendActivationEmail" class="form-check form-check-custom form-check-solid mb-2">
+                        <input id="EditUser_SendActivationEmail" type="checkbox" name="SendActivationEmail" class="form-check-input" value="true" @(!isSMTPSettingsProvided ? "disabled='disabled'" : "") @Html.Raw(Model.IsEditMode || !isSMTPSettingsProvided ? "" : "checked=\"checked\"")>
+                        <span class="form-check-label">
+                            @L("SendActivationEmail")
+                        </span>
+                    </label>
+
+                    <label for="EditUser_IsActive" class="form-check form-check-custom form-check-solid mb-2">
+                        <input id="EditUser_IsActive" type="checkbox" name="IsActive" class="form-check-input" value="true" @Html.Raw(Model.User.IsActive ? "checked=\"checked\"" : "")>
+                        <span class="form-check-label">
+                            @L("Active")
+                        </span>
+                    </label>
+                    @if (SettingManager.GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled))
+                    {
+                        <label for="EditUser_IsTwoFactorEnabled" class="form-check form-check-custom form-check-solid mb-2">
+                            <input id="EditUser_IsTwoFactorEnabled" type="checkbox" name="IsTwoFactorEnabled" class="form-check-input" value="true" @Html.Raw(Model.User.IsTwoFactorEnabled ? "checked=\"checked\"" : "")>
+                            <span class="form-check-label">
+                                @L("IsTwoFactorEnabled")
+                            </span>
+                        </label>
+                    }
+                    @if (SettingManager.GetSettingValue<bool>(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled))
+                    {
+                        <label for="EditUser_IsLockoutEnabled" data-bs-toggle="tooltip" title="@L("IsLockoutEnabled_Hint")" class="form-check form-check-custom form-check-solid mb-2">
+                            <input id="EditUser_IsLockoutEnabled" type="checkbox" name="IsLockoutEnabled" class="form-check-input" value="true" @Html.Raw(Model.User.IsLockoutEnabled ? "checked=\"checked\"" : "")>
+                            <span class="form-check-label">
+                                @L("IsLockoutEnabled")
+                            </span>
+                        </label>
+                    }
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane" id="EntityInformationTab" role="tabpanel">
+            <form name="EntityInformationsForm" role="form" novalidate class="form-validation">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="Entity">@L("Entity")</label>
+                        <input class="form-control" value="@Model.User.Entity" type="text" name="Entity">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="ABN">@L("ABN")</label>
+                        <input class="form-control edited" type="text" name="ABN" value="@Model.User.ABN" pattern="@UserConsts.ABNRegex" minlength="@UserConsts.MinABNNumberLength" maxlength="@UserConsts.MaxABNNumberLength">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="EmailAddressWork">@L("EmailAddressWork")</label>
+                        <input class="form-control" value="@Model.User.EmailAddressWork" type="text" name="EmailAddressWork" maxlength="@AbpUserBase.MaxEmailAddressLength">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("PhoneNumberWork") </label>
+                        <input type="text" name="PhoneNumberWork" class="form-control edited" value="@Model.User.PhoneNumberWork" maxlength="@UserConsts.MaxPhoneNumberLength">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="Fax">@L("Fax")</label>
+                        <input class="form-control" value="@Model.User.Fax" type="text" name="Fax">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="form-label" for="WebsiteURL">@L("WebsiteURL")</label>
+                        <input class="form-control edited" value="@Model.User.WebsiteURL" type="text" name="WebsiteURL">
+                    </div>
+                </div>
+
+
+                <h5>Address</h5>
+                <hr>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("EntityAddressCO")</label>
+                        <input type="text" name="EntityAddressCO" class="form-control" value="@Model.User.EntityAddressCO">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("EntityAddressLine1")</label>
+                        <input type="text" name="EntityAddressLine1" class="form-control" value="@Model.User.EntityAddressLine1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">@L("EntityAddressLine2")</label>
+                    <input type="text" name="EntityAddressLine2" class="form-control" value="@Model.User.EntityAddressLine2">
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("EntityAddressPostCode")</label>
+                        <input type="text" name="EntityAddressPostCode" class="form-control" value="@Model.User.EntityAddressPostCode">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="form-label">@L("EntityAddressState")</label>
+                        <input type="text" name="EntityAddressState" class="form-control" value="@Model.User.EntityAddressState">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="form-label">@L("EntityAddressSub")</label>
+                        <input type="text" name="EntityAddressSub" class="form-control" value="@Model.User.EntityAddressSub">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="form-label">@L("EntityAddressCountry")</label>
+                        <input type="text" name="EntityAddressCountry" class="form-control" value="@Model.User.EntityAddressCountry">
+                    </div>
+                </div>
+
+
+
+            </form>
+        </div>
+        <div class="tab-pane pt-5" id="RolesTab" role="tabpanel">
+            <div class="user-role-checkbox-list">
+                @foreach (var role in Model.Roles)
+                {
+                    <div class="checkbox-list pb-1">
+                        <label for="EditUser_@(role.RoleName)" class="form-check form-check-custom form-check-solid mb-2">
+                            <input id="EditUser_@(role.RoleName)"
+                                   type="checkbox"
+                                   name="@(role.RoleName)"
+                                   class="form-check-input"
+                                   value="true"
+                                   @Html.Raw(role.IsAssigned ? "checked=\"checked\"" : "")
+                                   @Html.Raw(role.InheritedFromOrganizationUnit ? "disabled=\"disabled\"" : "")>
+                            <span class="form-check-label">
+                                @role.RoleDisplayName
+                                @if (role.InheritedFromOrganizationUnit)
+                                {
+                                    <small>(@L("RoleIsInheritedFromOrganizationUnit"))</small>
+                                }
+                            </span>
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="tab-pane pt-5" id="OrganizationUnitsTab" role="tabpanel">
+            <div class="list-group">
+                @await Html.PartialAsync("~/Areas/Falcon/Views/Common/_OrganizationTree.cshtml", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

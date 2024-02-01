@@ -1,0 +1,122 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagEntities
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model TagEntitiesViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.TagEntities;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/TagEntities/Index.js" asp-append-version="true"></script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+
+                <div class="kt-subheader kt-grid__item">
+                  <div class="@(await GetContainerClass())">
+                    <div class="kt-subheader__main">
+                        <h3 class="kt-subheader__title">
+                            <span>@L("TagEntities")</span>
+                        </h3>
+                        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                        <span class="kt-subheader__desc">
+                            @L("TagEntitiesHeaderInfo")
+                        </span>
+                    </div>
+                    <div class="kt-subheader__toolbar">
+                        <div class="kt-subheader__wrapper">
+                            @if (IsGranted(AppPermissions.Pages_TagEntities_Create))
+                            {
+                                <button id="CreateNewTagEntityButton" class="btn btn-primary blue"> @L("CreateNewTagEntity")</button>                
+                            }
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">   
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+            <div class="kt-form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+                        <div class="form-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="TagEntitiesTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <span class="input-group-btn">
+                                    <button id="GetTagEntitiesButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+						<div class="kt-separator kt-separator--border-dashed"></div>
+					</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="EntityIdFilterId">@L("EntityId")</label>
+									<input type="text" class="form-control" name="entityIdFilter" id="EntityIdFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="EntityTypeFilterId">@L("EntityType")</label>
+								<select class="form-control" name="EntityTypeFilter" id="EntityTypeFilterId">
+								<option value="-1">@L("All")</option>
+																			<option value="0">@L("Enum_EntityType_0")</option>
+
+										<option value="1">@L("Enum_EntityType_1")</option>
+
+										<option value="2">@L("Enum_EntityType_2")</option>
+
+										<option value="3">@L("Enum_EntityType_3")</option>
+
+										<option value="4">@L("Enum_EntityType_4")</option>
+
+										<option value="5">@L("Enum_EntityType_5")</option>
+
+										<option value="6">@L("Enum_EntityType_6")</option>
+
+										<option value="7">@L("Enum_EntityType_7")</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="TagValueValueFilterId">(@L("TagValue")) @L("Value")</label>
+									<input type="text" class="form-control" name="tagValueValueFilter" id="TagValueValueFilterId">
+								</div>
+                            </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+            <div class="row align-items-center">
+                <table id="TagEntitiesTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            
+                            <th>@L("Actions")</th>
+								<th>@L("EntityId")</th>
+								<th>@L("EntityType")</th>
+								<th>@L("TagValueValue")</th>
+                            
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

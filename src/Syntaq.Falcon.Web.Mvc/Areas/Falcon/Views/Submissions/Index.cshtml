@@ -1,0 +1,190 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Submissions
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model SubmissionsViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Submissions;
+}
+@section Scripts
+	{
+    <script abp-src="/view-resources/Areas/Falcon/Views/Submissions/Index.js" asp-append-version="true"></script>
+}
+@section Styles
+    {
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/Users/Index.css" asp-append-version="true" />
+}
+ 
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Submissions")" description="@L("SubmissionsHeaderInfo")">
+        <button id="ExportToExcelButton" class="btn btn-success">  @L("ExportToExcel")</button>
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="mb-5 align-items-center">
+                                <div class="input-group">
+                                    <input type="text" id="SubmissionsTableFilter" aria-label="@L("InputFilterText")" class="form-control" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                    <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button id="GetSubmissionsButton" aria-label="@L("Search")" class="btn btn-primary" type="submit">
+                                        <span class="fa fa-search" aria-label="@L("Search")"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="StartEndRange" class="form-label">@L("DateRange")</label>
+                                <div class="input-group date">
+                                    <input id="StartEndRange" type="text" class="form-control date-range-picker" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="RequiresPaymentFilterId" class="form-label">@L("RequiresPayment")</label>
+                                <select class="form-control" name="RequiresPaymentFilter" id="RequiresPaymentFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="PaymentStatusFilterId" class="form-label">@L("PaymentStatus")</label>
+                                <select class="form-control" name="paymentStatusFilter" id="PaymentStatusFilterId">
+                                    <option value="">@L("All")</option>
+                                    <option value="Not Required">@L("NotRequired")</option>
+                                    <option value="Required">@L("Required")</option>
+                                    <option value="Paid">@L("Paid")</option>
+                                    <option value="Deffered">@L("Deffered")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="SubmissionStatusFilterId" class="form-label">@L("SubmissionStatus")</label>
+                                <select class="form-control" name="submissionStatusFilter" id="SubmissionStatusFilterId">
+                                    <option value="">@L("All")</option>
+                                    <option value="Started">@L("Started")</option>
+                                    <option value="Awaiting Payment">@L("AwaitingPayment")</option>
+                                    <option value="Submitted">@L("Submitted")</option>
+                                    <option value="Assembling">@L("Assembling")</option>
+                                    <option value="Error">@L("Error")</option>
+                                    <option value="Complete">@L("Complete")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="ChargeIdFilterId" class="form-label">@L("ChargeId")</label>
+                                <input type="text" class="form-control" name="chargeIdFilter" id="ChargeIdFilterId">
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="TypeFilterId" class="form-label">@L("Type")</label>
+                                <select class="form-control" name="typeFilter" id="TypeFilterId">
+                                    <option value="">@L("All")</option>
+                                    <option value="Test">@L("Test")</option>
+                                    <option value="Live">@L("Live")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="FormNameFilterId" class="form-label">@L("FormName")</label>
+                                <input type="text" class="form-control" name="formNameFilter" id="FormNameFilterId">
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="AppNameFilterId" class="form-label">@L("App") @L("Name")</label>
+                                <input type="text" class="form-control" name="appNameFilter" id="AppNameFilterId">
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="RecordNameFilterId" class="form-label">@L("RecordName")</label>
+                                <input type="text" class="form-control" name="recordNameFilter" id="RecordNameFilterId">
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="RecordMatterNameFilterId" class="form-label">@L("Record") @L("RecordMatterName")</label>
+                                <input type="text" class="form-control" name="recordMatterNameFilter" id="RecordMatterNameFilterId">
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <label for="UserNameFilterId" class="form-label">@L("UserName")</label>
+                                <input type="text" class="form-control" name="userNameFilter" id="UserNameFilterId">
+                            </div>
+                        </div>
+                        <div class="col-xl-2">
+                            <div class="mb-5">
+                                <div class="btn-group wk-checkbox" role="group">
+                                    <span class="switch-padding">
+                                        <input aria-label="Exclude Own Account Toggle" type="checkbox" id="ExcludeOwnAccountToggleId" name="excludeOwnAccountToggle" class="fldscheckbox">
+                                    </span>
+                                    <span class="switch-padding" id="ExcludeOwnAccountToggleLabel"> @L("ExcludeOwnAccount")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12 text-end">
+                            <button name="RefreshButton" class="btn btn-primary float-end">
+                                <i class="fa fa-sync btn-md-icon"></i>
+                                <span class="d-none d-md-inline-block">
+                                    @L("Refresh")
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-12">
+                            <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item">
+                                <i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")
+                            </span>
+                            <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none">
+                                <i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <table id="SubmissionsTable" class="table align-middle table-hover table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@L("Name")</th>
+                                <th>@L("Username")</th>
+                                <th>@L("UserEmail")</th>
+                                <th>@L("RecordName")</th>
+                                <th>@L("Date")</th>
+                                @*<th>@L("Type")</th>*@
+                                <th>@L("SubmissionStatus")</th>
+                                <th>@L("PaymentStatus")</th>
+                                @*<th></th>*@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.FormRules
+@model FormRuleViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(""))
+
+<div class="modal-body">
+    <div id="FormRuleInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Rule") :</h6>
+                @Model.FormRule.Rule
+            </div>
+            @*<div class="col-6 mb-3">
+                <h6>@L("RuleScript") :</h6>
+                @Model.FormRule.RuleScript
+            </div>*@
+
+            <div class="col-6 mb-3">
+                <h6>(@L("Form")) @L("Name") :</h6>
+                @Model.FormName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

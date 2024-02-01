@@ -1,0 +1,79 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.FormFeedbacks
+@using Newtonsoft.Json
+
+@model FormFeedbackViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ViewFeedback")))
+<link href="~/assets/formio/dist/formio.full.min.css" rel="stylesheet" />
+<script>
+    var UserName = "@Model.UserName";
+    var Email = "@Model.Email";
+    var Rating = "@Model.Rating";
+    var Comment = "@Model.Comment";
+    var FeedbackData = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.FeedbackFormData)));
+    var FeedbackFormSchema = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.FeedbackFormSchema)));
+</script>
+<style>
+    #viewFeedbackForm > ul.list-inline {
+        display: none;
+    }
+</style>
+<div class="modal-body m-3">
+    <div id="FormFeedbackInformationsTab">
+
+        <div class="row">
+
+            <div class="col-2 mb-3">
+                <span class="form-label" style="width:100px">@L("FormName"): </span>
+            </div>
+
+            <div class="col-4 mb-3">
+                <span >@Model.FormName</span>
+            </div>
+
+            <div class="col-2 mb-3">
+                <span class="form-label">@L("Rating"): </span> 
+            </div>
+
+            <div class="col-4 mb-3">
+                 <span>@Model.Rating</span>
+            </div>
+
+            <div class="col-2 mb-3">
+                <span  class="form-label">@L("Sender"): </span> 
+            </div>
+
+            <div class="col-4 mb-3">
+                 <span>@Model.UserName</span>
+            </div>
+
+            <div class="col-2 mb-3">
+                <span  class="form-label">@L("Email"):  </span>
+            </div>
+
+            <div class="col-4 mb-3">
+                  <span>@Model.Email</span>
+            </div>
+
+            <div id="commentdiv" class="col-2 mb-3">
+                <span class="form-label">@L("Comments"): </span>
+             
+            </div>
+
+            <div id="commentdiv" class="col-8 mb-3"> 
+                <span>@Model.Comment</span>
+            </div>
+
+            <div class="col-12 mb-3 mt-3">
+                <div class="form-label">@L("FeedbackFormData"): </div>
+                <div id="viewFeedbackForm">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

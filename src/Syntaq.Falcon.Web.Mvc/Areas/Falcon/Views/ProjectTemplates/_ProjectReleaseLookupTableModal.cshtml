@@ -1,0 +1,70 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectDeployments
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model ProjectDeploymentProjectReleaseLookupTableViewModel
+
+@section Scripts
+{
+<script abp-src="/view-resources/Areas/Falcon/Views/ProjectTemplates/_ProjectReleaseLookupTableModal.js" asp-append-version="true"></script>
+}
+ 
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Releases")))
+ 
+    <div class="card card-custom gutter-b">
+        <div class="card-body">
+            <div class="form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+@*                        <div class="form-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="ProjectReleaseTableFilter" class="form-control m-input" placeholder='@L("SearchWithThreeDot")' value="@Model.FilterText">
+                                <span class="input-group-btn">
+                                    <button id="GetProjectReleaseButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                </span>
+
+
+
+                            </div>
+                        </div>*@
+
+                        <button id="PublishProjectTemplateButton" class="btn btn-sm btn-primary nowrap pull-right">
+                            @L("CreateNewProjectRelease")
+                        </button> 
+
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+
+                <input type="hidden" class="form-control" name="Modal_ProjectTemplateId" id="Modal_ProjectTemplateId" placeholder="" value="@Model.ProjectTemplateId">
+                <input type="hidden" class="form-control" name="Modal_ProjectId" id="Modal_ProjectId" placeholder="" value="@Model.ProjectId">
+
+               <div class="table-responsive">
+                <table id="ProjectReleasesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                    <thead>
+                        <tr>
+                            @*<th></th>*@
+
+                            <th>@L("Name")</th>
+                            @*<th>@L("Notes")</th>*@
+                            @*STQ Modified*@
+                            <th>@L("releasedDate")</th>
+                            <th>@L("Required")</th>
+                            <th>@L("Major")</th>
+                            <th>@L("Minor")</th>
+                            <th>@L("Revision")</th>
+                            <th>@L("Type")</th>
+                            <th>@L("Environment")</th>
+                            <th>@L("Actions")</th>
+                        </tr>
+                    </thead>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

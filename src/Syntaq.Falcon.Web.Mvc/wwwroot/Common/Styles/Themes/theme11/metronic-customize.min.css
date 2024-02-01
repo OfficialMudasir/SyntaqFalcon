@@ -1,0 +1,87 @@
+.cc-window {
+  background-color: #282a3a;
+}
+.cc-btn {
+  background-color: #5867dd;
+  border-color: #5867dd;
+  color: #ffffff;
+}
+.cc-message {
+  color: #fefefe;
+}
+.searchMenuContainerSelect2 {
+  margin: 1em;
+}
+.searchMenuContainerSelect2 .select2-selection__rendered {
+  min-height: 35px;
+}
+.searchMenuContainerSelect2 .select2-container {
+  width: 100% !important;
+}
+body.dark-mode .searchMenuContainerSelect2 .select2-selection {
+  background: #1e1e2d !important;
+  border-color: #8a8a91 !important;
+}
+/*** top menu search ***/
+@media (max-width: 991px) {
+  .searchMenuTop {
+    display: block !important;
+  }
+  .searchMenuBottom {
+    display: none !important;
+  }
+  .searchMenuContainerSelect2 {
+    width: calc(100% - 40px) !important;
+  }
+}
+@media (min-width: 992px) {
+  .searchMenuTop {
+    display: none !important;
+  }
+  .searchMenuBottom {
+    display: block !important;
+  }
+}
+.searchMenuTop {
+  margin-bottom: 1em !important;
+  margin-left: 25px !important;
+}
+.unread-chat-message-count {
+  position: absolute;
+  top: 20px;
+}
+.unread-notification-count {
+  position: absolute;
+  top: -10px;
+  right: 0px;
+}
+@media (min-width: 992px) {
+  .header .header-bottom {
+    height: auto;
+  }
+}
+#kt_header .topbar-item {
+  margin-right: 0.5rem !important;
+}
+@media (max-width: 991px) {
+  .searchMenuTop {
+    display: block !important;
+  }
+  .searchMenuBottom {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) {
+  .searchMenuTop {
+    display: none !important;
+  }
+  .searchMenuBottom {
+    display: block !important;
+  }
+}
+.searchMenuTop {
+  margin: 15px !important;
+}
+#kt_chat_contacts_header {
+  padding: 0 1rem !important;
+}

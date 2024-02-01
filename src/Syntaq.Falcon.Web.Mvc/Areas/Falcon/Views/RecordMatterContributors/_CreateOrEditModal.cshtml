@@ -1,0 +1,356 @@
+﻿@using Syntaq.Falcon.Projects;
+@using Newtonsoft.Json.Linq;
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterContributors
+@model CreateOrEditRecordMatterContributorModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordMatterContributor")) : L("CreateNewRecordMatterContributor")))
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-4.css" rel="stylesheet" />
+@*<script src="~/metronic/common/js/wizard/wizard-4.js"></script>*@
+
+<style>
+    .kt-form {
+        width: 90% !important;
+    }
+
+    .kt-wizard-v4 .kt-wizard-v4__wrapper .kt-form {
+        padding-bottom: 1rem;
+    }
+    /* .kt-heading {
+            margin: 1.25rem 0 1.75rem 0 !important;
+        }
+    */
+    .kt-wizard-v4__nav-item {
+        cursor: pointer;
+    }
+
+    .form-control-label {
+        margin-bottom: 0
+    }
+
+    .form-group.step-form-group {
+        margin-bottom: 1rem;
+    }
+
+    .focusedRow {
+        /*font-weight: bold;*/
+        color: darkslategrey !important;
+        background-color: darkslategrey !important;
+    }
+
+    .dataTables_scroll {
+        overflow: auto;
+    }
+
+
+    .kt-wizard-v4__nav-body {
+        padding: 1rem 1rem !important;
+    }
+
+    .kt-wizard-v4 .kt-wizard-v4__nav .kt-wizard-v4__nav-items {
+        justify-content: start;
+    }
+
+        .kt-wizard-v4 .kt-wizard-v4__nav .kt-wizard-v4__nav-items .kt-wizard-v4__nav-item {
+            background-color: #ffffff;
+        }
+
+            .kt-wizard-v4 .kt-wizard-v4__nav .kt-wizard-v4__nav-items .kt-wizard-v4__nav-item .kt-wizard-v4__nav-label-title {
+                border-bottom: solid;
+                border-width: 3px;
+                border-color: #fff;
+            }
+
+            .kt-wizard-v4 .kt-wizard-v4__nav .kt-wizard-v4__nav-items .kt-wizard-v4__nav-item[data-ktwizard-state="current"] .kt-wizard-v4__nav-label-title {
+                border-bottom: solid;
+                border-width: 3px;
+                border-color: #5d78ff;
+            }
+
+    .kt-wizard-v4 .kt-wizard-v4__wrapper .kt-form {
+        width: 60%;
+        padding: 4rem 0 1rem;
+    }
+
+        .kt-wizard-v4 .kt-wizard-v4__wrapper .kt-form .kt-wizard-v4__content .kt-wizard-v4__form {
+            margin-top: 0rem
+        }
+</style>
+<script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
+<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+ 
+ 
+<div class="kt-portlet">
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <div class="kt-grid  kt-wizard-v4 kt-wizard-v4--white" id="kt_wizard_v4" data-ktwizard-state="first">
+            <div class="kt-grid__item kt-wizard-v4__aside pt-3">
+                <!--begin: Form Wizard Nav -->
+                @* Temporarily Removed Functionality
+                <div class=" ">
+                <!--begin: Form Wizard Nav -->
+                <div class="row">
+                    <div class="col-5" style="margin-left:2em">
+                        <div class="kt-wizard-v4__nav">
+                            <div class="kt-wizard-v4__nav-items">
+                                <!--doc: Replace A tag with SPAN tag to disable the step link click -->
+                                <div class="kt-wizard-v4__nav-item" data-ktwizard-type="step" data-ktwizard-state="current">
+                                    <div class="kt-wizard-v4__nav-body">
+                                        <div class="kt-wizard-v4__nav-icon">
+                                        </div>
+                                        <div class="kt-wizard-v4__nav-label">
+                                            <div class="kt-wizard-v4__nav-label-title">
+                                                @L("Invite")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kt-wizard-v4__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                                    <div class="kt-wizard-v4__nav-body">
+                                        <div class="kt-wizard-v4__nav-icon">
+                                        </div>
+                                        <div class="kt-wizard-v4__nav-label">
+                                            <div class="kt-wizard-v4__nav-label-title">
+                                                @L("Pages")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            *@
+            <!--end: Form Wizard Nav -->
+        </div>
+        <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v4__wrapper"
+             style="overflow-y: auto; max-height: 47em;">
+            <!--begin: Form Wizard Form-->
+            <form name="RecordMatterContributorInformationsForm" role="form" novalidate class="form-validation kt-form pt-0">
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.RecordMatterContributor.Id" />
+                }
+                @*<div class="kt-form pt-0" >*@
+                <!--Was Wizard Form-->
+                <!--begin: Form Wizard Step 1-->
+                <div class="kt-wizard-v4__content pb-1" data-ktwizard-type="step-content"
+                     data-ktwizard-state="current">
+                    @*<div class="kt-heading kt-heading--md">Invite a user or guest to your project</div>*@
+                    <div class="kt-form__section kt-form__section--first">
+                        <div class="kt-wizard-v4__form">
+                            <h6>
+                             
+                                    <input id="invite1" @(Model.RecordMatterContributor.Id == null || Model.RecordMatterContributor.UserId != null ? "checked" : "") style="font-size:1.4em" type="radio" name="inviteType" />
+                                    <label for="invite1" class="mr-2">@L("InviteUser")</label>
+                                    <input  id="invite2" @(Model.RecordMatterContributor.Id != null && Model.RecordMatterContributor.UserId == null ? "checked" : "") style="font-size:1.4em" type="radio" name="inviteType" />
+                                    <label for="invite2">@L("InviteGuest")</label>
+                             
+                            </h6>
+                            @{
+                                //not show share role
+                                var selectListStepRole = Html.GetEnumSelectList(typeof(Syntaq.Falcon.Projects.ProjectConsts.ProjectStepRole)).Where(e => e.Value != "3" & e.Value != "2");
+
+                                foreach (var selectOption in selectListStepRole)
+                                {
+                                    switch (selectOption.Value)
+                                    {
+                                        case "0":
+                                            selectOption.Text = L("Enum_ProjectStepRole_" + "0") + " - " + L("AbleEditAndApproval");
+
+                                            break;
+                                        case "1":
+                                            selectOption.Text = L("Enum_ProjectStepRole_" + "1") + " - " + L("AbleApproval");
+
+                                            break;
+                                        case "2":
+                                            selectOption.Text = L("Enum_ProjectStepRole_" + "2");
+                                            break;
+                                    }
+
+                                    selectOption.Selected = selectOption.Value == Convert.ToString(Model.Role);
+                                }
+
+
+                            }
+                            <div class="form-group m-form__group mb-3">
+                                <label for="RecordMatterContributor_StepRole" class="mb-0">@L("Role")</label>
+                                <select class="form-control m-input m-input--square" name="stepRole"
+                                        id="RecordMatterContributor_StepRole" asp-for="@Model.RecordMatterContributor.StepRole"
+                                        asp-items="@selectListStepRole" style="appearance: auto;">
+                                </select>
+                            </div>
+
+                            <div id="inviteUser" class="form-group m-form__group mb-3" style="@(Model.RecordMatterContributor.Id != null && Model.RecordMatterContributor.UserId == null  ? "display:none" : "")">
+                                <label for="UserName" class="mb-0">@L("User") *</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="UserName" name="userName" value="@Model.UserName" type="text" disabled>
+                                    @*<input class="form-control" id="UserNameEmail" name="userNameEmail" value="@Model.RecordMatterContributor.Email" type="text" disabled>*@
+
+                                
+                                        <button class="btn btn-primary blue" id="OpenUserLookupTableButton" type="button">
+                                            <span class="fa fa-search" style="color:white;"></span> @L("Pick")
+                                        </button>
+                             
+                                        <button aria-label="Remove" class="btn btn-danger " type="button" id="ClearUserNameButton">
+                                            <span class="fa fa-times"></span>
+                                        </button>
+                                 
+
+
+                                </div>
+                            </div>
+
+                            <div id="inviteByEmail" style="@(Model.RecordMatterContributor.Id != null && Model.RecordMatterContributor.UserId == null  ? "" : "display:none")">
+                                <div class="form-group mb-3">
+                                    <label for="RecordMatterContributor_Name" class="mb-0">@L("Name") *</label>
+                                    <input class="form-control" id="RecordMatterContributor_Name"
+                                           value="@Model.RecordMatterContributor.Name" type="text" name="name"
+                                           maxlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MaxNameLength"
+                                           minlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MinNameLength" />
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="RecordMatterContributor_OrganizationName" class="mb-0">@L("OrganizationName")</label>
+                                <input class="form-control" id="RecordMatterContributor_OrganizationName"
+                                       value="@Model.RecordMatterContributor.OrganizationName" type="text"
+                                       name="organizationName"
+                                       maxlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MaxOrganizationNameLength"
+                                       minlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MinOrganizationNameLength" />
+                            </div>
+                            <div id="UserEmailShowHide">
+                                <div class="form-group mb-3">
+                                    <label for="RecordMatterContributor_Email" class="mb-0">@L("Email") *</label>
+                                    <input class="form-control" id="RecordMatterContributor_Email"
+                                           value="@Model.RecordMatterContributor.Email" type="text" name="email"
+                                           maxlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MaxEmailLength"
+                                           minlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MinEmailLength"
+                                           @*pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"*@ />
+                                </div>
+                            </div>
+
+
+                            <div class="mb-2 ">
+                                <label for="Message" class="mb-0">@L("Message")</label>
+                                <textarea rows="3" id="Message" name="Message" class="form-control"
+                                          placeholder="Enter a message to the contributor here..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Form Wizard Step 1-->
+                <!--begin: Form Wizard Step 2-->
+                <div class="kt-wizard-v4__content" data-ktwizard-type="step-content">
+                    <div class="mb-2 ">Select which pages the Contributor will have access to</div>
+                    <div class="kt-form__section kt-form__section--first">
+                        <div class="row">
+
+                            <div class="col-12 h6 mb-2">
+                                <label class="">
+                                    <a id="btn-selete-pages" href="#" class="btn btn-sm btn-brand kt-font-bold">Select All</a>
+                                </label>
+                            </div>
+                            <div style="overflow:auto;height:27em;" class="col-lg-6">
+                                @*<h5 class="col-12 p-1"><img src="/Common/Images/Entities/form.png" height="32" />
+                        @L("FormPages")</h5>*@
+                                    @{
+                                        string[] formpages = new string[] { };
+
+                                        if (!string.IsNullOrEmpty(Model.RecordMatterContributor.FormPages))
+                                        {
+                                            formpages = Model.RecordMatterContributor.FormPages.Replace("FormPages", "").Replace("=",
+                                                "").Split("&");
+                                        }
+
+
+                                        var pages = JObject.Parse(Model.RecordMatterContributor.FormSchema).SelectToken("components",errorWhenNoMatch:false);
+                                        if(pages != null)
+                                        {
+                                                foreach (JObject pagesection in pages.ToList()){
+                                                <div class="w-100">
+                                                    <label class="kt-checkbox" for="FormPages@(pagesection["key"].ToString())">
+
+                                                        <input id="FormPages@(pagesection["key"].ToString())"
+                                                               @*@(formpages.Any(pagesection["key"].ToString().Contains) ? "checked" : "")
+                                                                   8952 IS-208
+                                                                *@
+                                                               checked 
+                                                               style="font-size:1.4em" type="checkbox" name="FormPages"
+                                                               value="@pagesection["key"].ToString()" />
+
+                                                        @pagesection["label"].ToString()
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            }
+                                        }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Form Wizard Step 2-->
+                <!--begin: Form Actions -->
+                <div class=" ">
+
+                    <button type="button" class="btn btn-secondary pull-right close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+
+                    <button class="btn btn-success me-2 pull-right" data-ktwizard-type="action-save">
+                        Send Invite
+                    </button>
+                    
+                    
+
+                    <!--end: Form Actions -->
+                </div>
+
+
+                <input class="form-control" id="RecordMatterContributor_FormId"
+                       value="@Model.RecordMatterContributor.FormId" type="hidden" name="formId" />
+                <input class="form-control" id="RecordMatterContributor_RecordMatterId"
+                       value="@Model.RecordMatterContributor.RecordMatterId" type="hidden" name="recordMatterId"
+                        />
+                <input class="form-control" id="RecordMatterContributor_FormSchema"
+                       value="@Model.RecordMatterContributor.FormSchema" type="hidden" name="formSchema"  />
+                <input class="form-control" id="RecordMatterContributor_FormScript"
+                       value="@Model.RecordMatterContributor.FormScript" type="hidden" name="formScript"  />
+                <input class="form-control" id="RecordMatterContributor_FormRules"
+                       value="@Model.RecordMatterContributor.FormRules" type="hidden" name="formRules"  />
+                @*<input class="form-control" id="RecordMatterContributor_FormPages"
+        value="@Model.RecordMatterContributor.FormPages" type="text" name="formPages" hidden />*@
+                <input class="form-control" id="RecordMatterContributor_AccessToken"
+                       value="@Model.RecordMatterContributor.AccessToken" type="hidden" name="accessToken"
+                       maxlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MaxAccessTokenLength"
+                       minlength="@Syntaq.Falcon.Records.RecordMatterContributorConsts.MinAccessTokenLength"
+                        />
+                <input class="form-control m-input date-picker" id="RecordMatterContributor_Time" type="hidden"
+                       name="time" value="@Model.RecordMatterContributor.Time"  />
+
+
+                <input class="form-control m-input date-picker" id="RecordMatterContributor_StepStatus"
+                       type="hidden" name="RecordMatterContributor_StepStatus"
+                       value="@Model.RecordMatterContributor.StepStatus"  />
+
+
+                <input id="RecordMatterContributor_Complete" type="hidden" name="complete" value="true"  />
+
+                @if (Model.IsEditMode)
+                {
+                    <input class="form-control" id="RecordMatterContributor_UserId"
+                           value="@Model.RecordMatterContributor.UserId" type="hidden" name="userId"  />
+                }
+                else
+                {
+                    <input class="form-control" id="RecordMatterContributor_UserId" value="" type="hidden"
+                           name="userId"  />
+                }
+                @*</div>*@
+                </form>
+                <!--end: Form Wizard Form-->
+            </div>
+        </div>
+    </div>
+</div>
+

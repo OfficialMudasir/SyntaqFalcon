@@ -1,0 +1,44 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Vouchers
+@model VoucherViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="VoucherInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Key") :</h6>
+                @Model.Voucher.Key
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Value") :</h6>
+                @Model.Voucher.Value
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Expiry") :</h6>
+                @Model.Voucher.Expiry
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("NoOfUses") :</h6>
+                @Model.Voucher.NoOfUses
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Description") :</h6>
+                @Model.Voucher.Description
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("DiscountType") :</h6>
+                @Model.Voucher.DiscountType
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

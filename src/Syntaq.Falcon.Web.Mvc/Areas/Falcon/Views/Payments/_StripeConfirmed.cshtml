@@ -1,0 +1,42 @@
+﻿<link href="~/metronic/src/vendors/fontawesome5/css/fontawesome.min.css" rel="stylesheet" />
+<link href="~/metronic/src/vendors/fontawesome5/css/all.css" rel="stylesheet" />
+@{
+	Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.notheme.cshtml";
+}
+<style>
+	html, body {
+		min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+		min-height: 100vh; /* These two lines are counted as one :-)       */
+		overflow: hidden;
+	}
+
+	.vertical-center {
+		min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+		min-height: 100vh; /* These two lines are counted as one :-)       */
+		display: flex;
+		align-items: center;
+	}
+</style>
+<script>
+	function ParentReturn() {
+		if(window.opener != null && !window.opener.closed) {
+				//var txtName = window.opener.document.getElementById("txtName");
+				//txtName.value = document.getElementById("txtbx").value;
+			window.opener.$("#IsStripeConfirgured").prop("checked", true);
+		}
+		window.close();
+	}
+</script>
+<div class="jumbotron text-center vertical-center">
+	<div class="container">
+		<p style="margin-bottom: 0px;">
+			<img alt="" src="~/Common/Images/app-logo-on-light.png" />  <i class="fas fa-link" style="font-size: 25px; position: relative; top: 3px;"></i><img alt="" src="~/Common/Images/stripe-logo.png" width="125" height="59" /></pstyle="margin-bottom:>
+			<h1 style="margin-top: 0px;">You are connected!</h1>
+		<p class="lead">Your Stripe account is connected with Syntaq. You can return to your settings now.</p>
+		<hr>
+		<p class="lead">
+			@*<a class="btn btn-primary btn-sm" href="https://bootstrapcreative.com/" role="button">Return to Settings</a>*@
+			<button class="btn btn-primary btn-sm" onclick="ParentReturn()">Return to Settings</button>
+		</p>
+	</div>
+</div>

@@ -1,0 +1,58 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@model FormViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Embed links for " + Model.Form.Name))
+<script type="text/javascript">
+
+	var clipboard1 = new ClipboardJS("[name='CopyDirectEmbedLink']");
+	var clipboard2 = new ClipboardJS("[name='CopyAuthEmbedLink']");
+	var clipboard3 = new ClipboardJS("[name='CopyUnauthEmbedLink']");
+
+ 
+</script>
+<div class="modal-body">
+	<div class="EmbeddedLinkView">
+		<div class="form-group">
+			<label for="Form_Name"><strong>@L("DirectEmbed")</strong></label>
+			<textarea class="form-control" id="DirectEmbedTextarea" rows="1" spellcheck="false">
+			<a href="@(Context.Request.Scheme + "://" + Context.Request.Host)/Falcon/forms/load?OriginalId=@Model.Form.OriginalId.ToString()&version=live"></a></textarea>
+			<span class="form-text text-muted">
+				Copy this link to embed a direct link to this form in your website.
+				@{
+				<a class="OnClickLink pull-right" name="CopyDirectEmbedLink" data-clipboard-action="copy" data-clipboard-target="#DirectEmbedTextarea"><i class="fa fa-copy"></i> Copy Direct Link</a>
+				}
+			</span>
+		</div>
+		<div class="form-group">
+			<label for="Form_Name">@L("AuthEmbed")</label>
+			<textarea class="form-control" id="AuthEmbedTextarea" rows="8" spellcheck="false">
+<div id="form-content" class="p-3"></div>
+<script src="@(Context.Request.Scheme + "://" + Context.Request.Host)/assets/formio/dist/formio.full.js"></script>
+<script src="@(Context.Request.Scheme + "://" + Context.Request.Host)/assets/forms/Syntaq.Form.js"></script>
+<script>
+Syntaq.AccessToken = '[AccessTOKEN]';
+Syntaq.FormId = '@Model.Form.OriginalId.ToString()';
+Syntaq.createForm();
+</script></textarea>
+			<span class="form-text text-muted">
+				Copy this link to embed this authenticated form into your website.
+				@{
+					<a class="OnClickLink pull-right" name="CopyAuthEmbedLink" data-clipboard-action="copy" data-clipboard-target="#AuthEmbedTextarea"><i class="fa fa-copy"></i> Copy Authenticated Link</a>
+				}
+			</span>
+		</div>
+		<div class="form-group">
+			<label for="Form_Name"><strong>@L("UnauthEmbed")</strong></label>
+			<textarea class="form-control" id="UnauthEmbedTextarea" rows="3" spellcheck="false">Coming Soon!</textarea>
+			<span class="form-text text-muted">
+				Copy this link to embed this unauthenticated form into your website.
+				@{
+				<a class="OnClickLink pull-right" name="CopyUnauthEmbedLink" data-clipboard-action="copy" data-clipboard-target="#UnauthEmbedTextarea"><i class="fa fa-copy"></i> Copy Unauthenticated Link</a>
+				}
+			</span>
+		</div>
+	</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

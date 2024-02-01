@@ -1,0 +1,9 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common
+@model IOrganizationUnitsEditViewModel
+
+<div class="mb-5">
+    <input id="OrganizationTreeFilter" aria-label="@L("InputFilterText")" type="text" class="form-control" placeholder="@L("SearchWithThreeDot")">
+</div>
+<div class="organization-tree">
+    @await Html.PartialAsync("~/Areas/Falcon/Views/Common/_OrganizationUnitTreeItem.cshtml", new OrganizationUnitTreeItemModel(Model, null))
+</div>

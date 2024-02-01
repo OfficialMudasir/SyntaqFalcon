@@ -1,0 +1,28 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Forms.Dtos
+@using Syntaq.Falcon.Forms
+@model GetFormForEditOutput
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("SetAsLive") +": " + Model.Form.VersionName))
+<div class="modal-body">
+    <p>
+        <input type="hidden" name="FormId" value="@Model.Form.Id" />
+        <input type="hidden" name="FormOriginalId" value="@Model.Form.OriginalId" />
+        <input type="hidden" name="Name" value="@Model.Form.Name" />
+        <input type="hidden" name="FormVersion" value="@Model.Form.Version" />
+        <div class="form-group mb-3">
+
+            <label class="form-label" for="FormVersionName">@L("Version Name")</label>
+            <input class="form-control" id="FormVersionName" type="text" name="VersionName" maxlength="@FormConsts.MaxNameLength" minlength="@FormConsts.MinNameLength" value="@Model.Form.VersionName" readonly="readonly" />
+        </div>
+        <div>
+            <label  class="form-label"  for="VersionDescription">@L("Version") @L("Description")</label>
+            <textarea class="form-control" id="VersionDescription" type="text" name="VersionDescription" maxlength="@FormConsts.MaxNameLength" minlength="@FormConsts.MinNameLength"></textarea>
+        </div>
+    </p>
+</div>
+@*@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@
+<div class="modal-footer">
+    
+    <button id="setAlive" class="btn btn-primary">@L("SetAsLive")</button>
+    <button type="button" class="btn btn-secondary close-button" data-bs-dismiss="modal">@L("Save")</button>
+</div>

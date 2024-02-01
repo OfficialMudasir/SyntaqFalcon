@@ -1,0 +1,43 @@
+﻿@using Syntaq.Falcon.Web.Resources
+
+@inject IWebResourceManager WebResourceManager
+@{
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/morris.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/raphael.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.flot.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.waypoints.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.counterup.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/topojson.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.easypiechart.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/chartist.min.js");
+}
+
+@*<div class="kt-portlet kt-portlet--height-fluid NewUsersContainer">
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <div class="row row-no-padding row-col-separator-xl">
+            <div class="col-12">
+                <div class="kt-widget24">
+                    <div class="kt-widget24__details">
+                        <div class="kt-widget24__info">
+                            <h4 class="kt-widget24__title">@L("NewUsers")</h4>
+                            <span class="kt-widget24__desc">@L("RecentlyJoinedUsers")</span>
+                        </div>
+                        <span class="kt-widget24__stats kt--font-brand" id="newUsers"> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+  <div class="card card-custom bgi-no-repeat card-stretch gutter-b new-subscription-statistics h-100 NewUsersContainer">
+        <div class="card-body">
+            <div class="card-title text-left font-weight-bolder text-dark font-size-h6 mb-0 text-hover-state-dark d-block">
+                @L("NewUsers")
+            </div>
+            <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4">@L("RecentlyJoinedUsers")</span>
+            <div class="font-weight-bold text-muted font-size-sm text-left">
+                <span class="text-primary font-weight-bolder font-size-h2 me-2 dashboard-placeholder2 counterup" id="newUsers"></span>
+            </div>
+        </div>
+  </div>

@@ -1,0 +1,49 @@
+@*@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.MergeTexts
+@model CreateOrEditMergeTextModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditMergeText")) : L("CreateNewMergeText")))
+
+<div class="modal-body">
+		<div id="MergeTextInformationsTab">
+			<form name="MergeTextInformationsForm" role="form" novalidate class="form-validation">
+				@if (Model.IsEditMode)
+				{
+					<input type="hidden" name="id" value="@Model.MergeText.Id" />
+				}
+				<div class="form-group m-form__group">
+						<label for="MergeTextItemName">@L("MergeTextItem")</label>
+					<div class="input-group">
+							<input class="form-control" id="MergeTextItemName" name="mergeTextItemName" value="@Model.MergeTextItemName" type="text" disabled>
+						<div class="input-group-append">
+							<button class="btn btn-primary blue" id="OpenMergeTextItemLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+						</div> 
+						<div class="input-group-prepend">
+							<button class="btn btn-danger btn-icon" type="button" id="ClearMergeTextItemNameButton"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+				</div>
+
+				@if (Model.IsEditMode)
+				{
+					<input class="form-control" id="MergeText_MergeTextItemId" value="@Model.MergeText.MergeTextItemId" type="text" name="mergeTextItemId" required hidden/>
+				}
+					else
+				{ 
+					<input class="form-control" id="MergeText_MergeTextItemId" value="" type="text" name="mergeTextItemId" required hidden/>
+				}
+				
+				<div class="form-group">
+					<label for="MergeText_EntityType">@L("EntityType")</label>
+					<input class="form-control" id="MergeText_EntityType" value="@Model.MergeText.EntityType" type="text" name="entityType"  required  maxlength="@Syntaq.Falcon.MergeTexts.MergeTextConsts.MaxEntityTypeLength"  minlength="@Syntaq.Falcon.MergeTexts.MergeTextConsts.MinEntityTypeLength"  />
+				</div>
+					
+				<div class="form-group">
+					<label for="MergeText_EntityKey">@L("EntityKey")</label>
+					<input class="form-control" id="MergeText_EntityKey" value="@Model.MergeText.EntityKey" type="text" name="entityKey"  required  maxlength="@Syntaq.Falcon.MergeTexts.MergeTextConsts.MaxEntityKeyLength"  minlength="@Syntaq.Falcon.MergeTexts.MergeTextConsts.MinEntityKeyLength"  />
+				</div>
+			</form>
+		</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

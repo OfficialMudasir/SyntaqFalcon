@@ -1,0 +1,193 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Apps
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model AppsViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Apps;
+}
+<link href="~/Common/tagsinput.css" rel="stylesheet" />
+
+<style>
+
+    .modal {
+        overflow-y: auto;
+    }
+
+    table {
+        table-layout: fixed; 
+    }
+
+    td {
+        white-space:   ;
+    }
+</style>
+ 
+
+@section Scripts{
+
+    <script abp-src="/view-resources/Areas/Falcon/Views/Apps/Index.js" asp-append-version="true"></script>
+
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script src="~/Common/Scripts/jquery.serializejson.min.js"></script>
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+    <script src="~/Common/tagsinput.js"></script>
+
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+
+}
+ 
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Apps")" description="@L("AppsHeaderInfo")">
+        @if (IsGranted(AppPermissions.Pages_Administration_Users_Create))
+        {
+            <button id="CreateNewAppButton" class="btn btn-primary">
+            
+                <span class="d-none d-md-inline-block">
+                   @L("CreateNewApp")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+    <div class="@(await GetContainerClass())">
+       
+            <div class="row">
+                <div id="appsDivContainer" class="col-lg-12">
+                    <div class="card">
+                        <div class="kt-portlet kt-portlet--mobile">
+                            <div class="card-body">
+                                <div class="input-group text-white mb-4">
+                                    <input type="text" aria-label="@L("InputFilterText")" id="AppsTableFilter" class="form-control m-input" 
+                                    placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                   
+                                        <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                        <button id="GetAppsButton" aria-label="@L("Search")" class="btn btn-primary" type="button"><i class="fa fa-search" style="color:#ffffff; font-size:1rem"></i></button>
+                                 
+                                </div>
+
+                                <table id="AppsTable" class="display table table-hover dt-responsive">
+                                    <thead>
+                                        <tr>
+
+                                            <th >@L("Name")</th>
+                                            @*<th style="width:55%">@L("Description")</th>*@
+                                            <th style="width:20%">@L("LastUpdated")</th>
+                                            <th >@L("Actions")</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal  fade" id="appJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title w-100" id="exampleModalLongTitle">
+ 
+                            <span id="SelectedAppJobRightTitle"></span>
+ 
+                            @if (IsGranted(AppPermissions.Pages_Administration_OrganizationUnits_ManageMembers))
+                            {
+                                <span class="ml-auto">
+                                    <button type="button" id="AddJobToAppButton" class="btn  btn-primary pull-right  nowrap" style="float: right">
+                                    @L("CreateNewAppJob")
+                                    </button>
+                                </span>
+                            } 
+                        </h5>
+ 
+                      </div>
+                      <div class="modal-body"  style="min-height:30em">
+
+                        <form name="AppDataForm" role="form" novalidate class="form-validation">
+
+                            <div class="col-12 mb-3">
+                                <div class="mb-3">
+                                    <label for="AppName" class="form-label">@L("Name")</label>
+                                    <input type="text" class="form-control" id="AppName" name="Name" />
+                                </div>
+                                <div class="mb-5">
+                                    <label for="AppDescription" class="form-label">@L("Description")</label>
+                                    <input type="text" class="form-control" id="AppDescription" name="Description" />
+                                </div>
+                                                
+                            </div>
+
+                            <div id="SettingsTabPanel" class="tabbable-line col-12">
+                                <ul class="nav nav-tabs  m-tabs-line" role="tablist">
+                                    <li class="nav-item m-tabs__item ">
+                                        <a href="#AppJobsTab" class="nav-link m-tabs__link active show" data-bs-toggle="tab" role="tab" aria-selected="true">
+                                            @L("AppJobs")
+                                        </a>
+                                    </li>
+                                    <li class="nav-item m-tabs__item">
+                                        <a href="#AppDataTab" data-bs-toggle="tab" role="tab" class="nav-link m-tabs__link " aria-selected="false">
+                                            @L("AppData")
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active show" id="AppJobsTab" role="tabpanel">
+                                            <div class="row">
+
+
+                                                <div class="col-xl-12 py-3">
+                                                    <div id="AppJobsTable" class="w-100" >
+                                                        <table id="JobsTable" class="table align-middle table-row-dashed table-hover dt-responsive nowrap">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>@L("Job")</th>
+                                                                    <th >@L("Actions")</th>
+                                                                    @*<th></th>*@
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                        <div id="AppJobsEmptyInfo" class="text-muted">
+                                                            @L("SelectAnOrganizationUnitToSeeMembers")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="AppDataTab" role="tabpanel">
+                                    
+                                                <input type="hidden" id="AppId" name="Id" />
+
+                                                <div class="row mt-4">
+                                                    <div class="col-xl-6">
+                                                        <span class="fs-5">Test data for your App</span>
+                                                    </div>
+ 
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xl-12">
+                                                        <textarea id="AppData" aria-label="App Data" name="Data" class="w-100 mb-4" rows="16"></textarea>                                                    
+                                                    </div>
+                                                </div>
+                                     
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" id="btn-SaveAppData" class="btn btn-primary pull-right">@L("Save")</button>
+                        <button type="button" onclick="$('#appJobModal').modal('hide');" class="btn btn-secondary" data-dismiss="modal">@L("Close")</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+ 
+      </div>
+    </div>
+</div>

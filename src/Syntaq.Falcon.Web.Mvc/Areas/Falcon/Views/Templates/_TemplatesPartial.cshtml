@@ -1,0 +1,140 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Templates;
+@model TemplatesPartialViewModel
+<style>
+    .OnClickLink {
+        cursor: pointer;
+        color: #58a3dc !important;
+        font-size: small;
+    }
+
+        .OnClickLink:hover {
+            color: #287ebf !important;
+            text-decoration: underline !important;
+        }
+
+    table.dataTable tbody tr:hover {
+        background-color: #ecf0f1 !important;
+    }
+</style>
+<div class="kt-portlet kt-portlet--mobile">
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-caption">
+            <div class="kt-portlet__head-title">
+
+                <nav aria-label="breadcrumb" class="kt-portlet__head-text mt-3">
+
+                    <ol class="breadcrumb  font-weight-bold">
+                        <li class="breadcrumb-item">
+                            <i class="fa fa-home large text-mute" style="font-size:1.3em"></i>
+                        </li>
+                        @{
+                            var i = 0;
+                            foreach (var Breadcrumb in Model.BreadcrumbList)
+                            {
+                                    @if (@Breadcrumb.Id.ToString().ToUpper() == @Model.CurrentFolder.ToUpper())
+                                {
+                                        <li class="breadcrumb-item active droppable">
+                                            <span class="kt-nav__link kt-nav__link--icon">
+                                                <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary" name="Current">
+                                                    @Breadcrumb.Name
+                                                </span>
+                                                <input type="hidden" value="@Breadcrumb.Id" />
+                                            </span>
+                                        </li>
+                                }
+                                else
+                                {
+                                        <li class="breadcrumb-item active droppable">
+                                            <a href="#" onClick="(function(){$('#TemplateNavigationButton').trigger('click', '@Breadcrumb.Id.ToString()')})();" class=" ">
+                                                <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary">@Breadcrumb.Name</span>
+                                                <input type="hidden" value="@Breadcrumb.Id" />
+                                            </a>
+                                        </li>
+                                }
+                                i++;
+                            }
+                        }
+                    </ol>
+                </nav>
+
+            </div>
+        </div>
+        <div class="kt-portlet__head-tools">
+            <div class=" mt-3 ">
+
+            </div>
+        </div>
+    </div>
+    <div class="kt-portlet__body">
+        <div class="kt-form kt-form--label-align-right">
+            <div class="row align-items-center kt--margin-bottom-10">
+                <div class="col-xl-12">
+                    <div class="form-group kt-form__group align-items-center">
+                        <div class="input-group">
+                            <input id="TemplatesTableFilter" aria-label="@L("InputFilterText")" class="form-control" type="text" value="@Model.FilterText"placeholder="@L("SearchWithThreeDot")">
+                            <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button id="GetTemplatesButton" class="btn btn-primary" type="submit" aria-label="@L("Search")">
+                                <i class="fa fa-search" aria-label="@L("Search")"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="AdvacedAuditFiltersArea" style="display: none" class="row">
+            <div class="col-md-12">
+                <div class="kt-separator kt-separator--dashed"></div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="NameFilterId">@L("Name")</label>
+                    <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="MinVersionFilterId">@L("MinMax") @L("Version")</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control kt-input" placeholder="@L("MinValue")" name="minVersionFilter" id="MinVersionFilterId" />
+                        <input aria-label="Max Version Filter" type="number" class="form-control kt-input" placeholder="@L("MaxValue")" name="maxVersionFilter" id="MaxVersionFilterId" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="MinCurrentVersionFilterId">@L("MinMax") @L("CurrentVersion")</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control kt-input" placeholder="@L("MinValue")" name="minCurrentVersionFilter" id="MinCurrentVersionFilterId" />
+                        <input aria-label="Max Current Version Filter" type="number" class="form-control kt-input" placeholder="@L("MaxValue")" name="maxCurrentVersionFilter" id="MaxCurrentVersionFilterId" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="align-items-center mt-8">
+            <table id="TemplatesTable" class="display table align-middle table-row-dashed table-hover dt-responsive nowrap pt-0 mt-0" style="margin:0">
+                <thead>
+                    <tr style="width:50%" >
+                        <th style="width:80%">@L("Name")</th>
+                        <th style="width:3%">@L("Version")</th>
+                        <th style="width:12%">@L("LastUpdated")</th>
+                        <th style="width:5%">@L("Actions")</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+            <script>
+                $("#TemplatesTableFilter").keyup(function (event) {
+                    event.preventDefault();
+                    // On enter
+                    if (event.keyCode === 13) {
+                        console.log("From Templates");
+                    }
+                });
+            </script>

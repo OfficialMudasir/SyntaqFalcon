@@ -1,0 +1,496 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Newtonsoft.Json
+
+@model CreateOrEditFormModalViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Forms;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+<link href="~/assets/formio/dist/formio.full.css" rel="stylesheet" />
+
+<link href="~/Common/tagsinput.css" rel="stylesheet" />
+
+@*TODO Move to Style for Form*@
+<style>
+
+    .formio-dialog.formio-dialog-theme-default .formio-dialog-content {
+        -webkit-animation: formio-dialog-flyin .5s;
+        animation: formio-dialog-flyin .5s;
+        background: #f0f0f0;
+        border-radius: 5px;
+        font-family:  Poppins, Helvetica, "sans-serif";
+        font-size: 1.1em;
+        line-height: 1.5em;
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 1em;
+        position: relative;
+        width: 65%;
+    }
+
+    .formio-component-tabs{
+        padding:1em;
+    }
+    .control-label {
+        margin-bottom: 0.5rem;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #3F4254;
+    }
+
+    .formio-dialog-content .form-group{
+        margin-top: 1.5em;
+    }
+
+    .btn-group-xs > .btn, .btn-xs {
+        padding: .25rem .4rem;
+        font-size: .875rem;
+        line-height: .5;
+        border-radius: .2rem;
+    }
+ 
+    .btn-xxs, .btn-group-xxs > .btn, .component-btn-group .component-settings-button {
+        padding: 2px 2px;
+        font-size: 1em;
+        line-height: 1.2em;
+        border-radius: 0;
+        width: 28px;
+        height: 28px;
+    }
+
+    .btn-group-xxs > .btn, .btn-xxs, .component-btn-group .component-settings-button {
+        padding: 0 !important;
+        padding-top: .25em !important;
+        font-size: 1.2em !important;
+        line-height: 1.1em !important;
+        border-radius: 2px !important;
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .btn + .btn {
+        margin-left: 0px;
+    }
+
+    .builder-group-button {
+        font-weight: 700;
+        color: #575d62;
+        background-color: transparent;
+        white-space: normal;
+        text-align: left;
+    }
+
+    .form-control {
+        border-width: 2px;
+    }
+
+    .wizard-page-label {
+        padding: 1em;
+        font-size: 1em;
+    }
+
+ 
+    .btn-group-xxs > .btn, .btn-xxs, .component-btn-group .component-settings-button {
+        padding: 4px 4px;
+        font-size: 12px;
+        line-height: 1.2em;
+        border-radius: 0;
+        width: 22px;
+        height: 22px;
+    }
+ 
+
+    .table-bordered {
+        border: 2px solid #f4f5f8;
+    }
+
+    .formio-dialog.formio-dialog-theme-default {
+        padding-bottom: 40px;
+        padding-top: 40px;
+    }
+ 
+ 
+    .lead {
+        font-weight: 700;
+    }
+
+    .sectionfooter {
+        background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+ 
+    .edit-control {
+        display: inline;
+        width: 75%;
+    }
+
+    .formio-dialog.formio-dialog-theme-default .formio-dialog-content {
+        background: #fff;
+    }
+ 
+    .formcomponent, .formcomponent > i {
+        margin-top: 0.4rem;
+        padding: 8px 8px 8px 8px !important;
+        text-align: left;
+        color: #808080 !important;
+        background-color:  transparent !important;
+        border-color: #fff;
+        font-size: 1em !important;
+    }
+
+    .breadcrumb i {
+        color: #fff; 
+    }
+
+    .formcomponent > i {
+        color: #808080 !important;
+    }
+ 
+/*.btn.btn-primary {
+    color: #3F4254;
+    border-color: #E4E6EF;
+    background-color: #E4E6EF;
+}
+
+.btn-check:checked + .btn.btn-primary, .btn-check:active + .btn.btn-primary, .btn.btn-primary:focus:not(.btn-active), .btn.btn-primary:hover:not(.btn-active), .btn.btn-primary:active:not(.btn-active), .btn.btn-primary.active, .btn.btn-primary.show, .show > .btn.btn-primary {
+    color: #3F4254;
+    border-color: #B5B5C3;
+    background-color: #B5B5C3 !important;
+}*/
+
+    .component-btn-group {
+        position: absolute;
+        right: 0;
+        z-index: 90;
+        margin-top: -2px;
+    }
+
+    .formio-component:not(:hover) .component-btn-group {
+        display: none;
+    }
+
+    .fa-remove {
+        color: #FFF !important;
+    }
+
+    .formio-dialog .tab-content {
+        padding-top: 0;
+    }
+
+    .nav.nav-pills, .nav.nav-tabs {
+        margin-bottom: 0 !important;
+    }
+ 
+    .form-builder-panel .panel-body {
+        padding: 5px;
+    }
+
+    .formio-component-sfafile .fileSelector {
+        padding: 15px;
+        border: 2px dashed #ddd;
+        text-align: center;
+    }
+
+        .formio-component-sfafile .fileSelector.fileDragOver {
+            border-color: #127abe;
+        }
+
+        .formio-component-sfafile .fileSelector .fa {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+    .OnClickLink {
+        cursor: pointer;
+        /*color: #58a3dc !important;*/
+        font-size: small;
+    }
+
+        .OnClickLink:hover {
+            color: #287ebf !important;
+            text-decoration: underline !important;
+        }
+
+    #btn-rules, #btn-script-editor, #btn-save, #btn-save-open, #btn-open-live, #btn-open-test, #btn-embed, #btn-share, #btn-submission-settings, #btn-form-settings {
+        cursor: pointer;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background-color: #a5a5a5;
+        border-radius: 20px;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            top: 1px;
+            transition: all 0.3s;
+        }
+
+    .fldscheckbox {
+        display: none;
+    }
+
+        .fldscheckbox:checked + .switch::after {
+            left: 20px;
+        }
+
+        .fldscheckbox:checked + .switch {
+            background-color: #15C39A;
+        }
+
+    .switch-padding {
+        padding: 0.85rem 0.15rem;
+    }
+
+    .FieldNameStyle {
+        display: none;
+        position: absolute;
+        right: 0;
+        z-index: 90;
+        margin-top: 3vh;
+    }
+
+    .m-portlet__head {
+        padding-left: 1.2em;
+        padding-right: 1.2em;
+    }
+
+    .m-portlet .m-portlet__head {
+        border-right: 1px solid #ebedf2;
+        border-bottom: none !important;
+        border-left: 1px solid #ebedf2;
+    }
+
+    .m-portlet.m-portlet--tabs .m-portlet__head {
+        padding: 0 1.2rem;
+    }
+
+    .kt-portlet__head-title {
+        padding-top: 12px;
+        padding-left: 16px;
+        color: #7b7e8a;
+        font-size: 1.2rem;
+        margin-bottom: 0rem;
+        font-weight: 700 !important;
+    }
+
+    .accordion {
+        border: 1px solid #EFF2F5 !important;
+    }
+
+    .breadcrumb{
+        margin-bottom: 0.75rem !important;
+    }
+    li{
+        padding-right :.5em;
+    }
+
+</style>
+
+<style type="text/css" media="screen">
+    .btn-group {
+        height: 40px;
+    }
+</style>
+
+@section Scripts
+{
+    <script src="~/assets/formio/dist/formio.full.js"></script>
+
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+    <script src="~/assets/Prism/prism.js"></script>
+
+
+    <script src="~/Common/Scripts/jquery.serializejson.min.js"></script>
+    <script src="~/Common/tagsinput.js"></script>
+
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+
+    <script src="~/assets/formio/Builder.js"></script>
+
+    <script type="text/javascript">
+	var JSONObj = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.Form)));
+    </script>
+    <script type="text/javascript">
+        function showhideflds() {
+            if ($('#toggle').is(':checked')) {
+                $('.FieldNameStyle').toggle(true);
+            } else {
+                $('.FieldNameStyle').toggle(false);
+            }
+        }
+        setInterval(showhideflds, 250);
+
+        console.warn = () => { };
+        
+        $(document).ready(function () {
+            $( ".form-builder-group-header" ).click(function() {
+                $('.panel-collapse').removeClass("show");
+            });
+        });
+
+    </script>
+}
+<style>
+    .fa-remove {
+        color: #212529 !important;
+    }
+
+    .kt-subheader {
+        max-height: 7em !important;
+    }
+</style>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@Model.Form.Name" description="">
+
+        <div class="btn-group">
+            <button onclick="$('#btn-save-open').click();" class="btn-group btn btn-primary btn-save-open">
+                <span class="d-none d-md-inline-block mb-md-0">
+                    @L("SaveAndOpen")
+                </span>
+            </button>
+            <div class="btn-group">
+                <button type="button" id="btnGroupDrop1" class="btn btn-primary  dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-none d-md-inline-block mb-md-0">
+                        @L("Form")  
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                    <li><a class="dropdown-item" id="btn-save" href="#"> @L("Save")</a></li>
+                    <li><a class="dropdown-item" id="btn-save-open" href="#"> @L("SaveAndOpen")</a></li> 
+                    <li><a class="dropdown-item" id="btn-open-live" href="#"> @L("Open")</a></li> 
+                    <li><a class="dropdown-item" id="btn-embed" href="#"> @L("Embed")</a></li> 
+		            @if(Model.Form.UserACLPermission == "O"){
+                        <li><a class="dropdown-item" id="btn-share" href="#"> @L("Share")</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" id="btnGroupDrop2" class="btn btn-primary  dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-none d-md-inline-block mb-md-0">
+                        @L("Settings")  
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop2">
+                    <li><a class="dropdown-item" id="btn-submission-settings" href="#"> @L("SubmissionSettings")</a></li>
+                    <li><a class="dropdown-item" id="btn-form-settings" href="#"> @L("SettingsForm")</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" id="btnGroupDrop3" class="btn btn-primary  dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-none d-md-inline-block mb-md-0">
+                        @L("Logic")   
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop3">
+                    <li><a class="dropdown-item" id="btn-rules" href="#"> @L("RulesBuilder")</a></li>
+                    <li><a class="dropdown-item" id="btn-script-editor" href="#"> @L("ScriptEditor")</a></li>
+                </ul>
+            </div>
+            <div class="btn-group"  role="group">
+                <button type="button" id="btnGroupDrop4" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-none d-md-inline-block mb-md-0">
+                        @Model.Form.VersionName  
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop4">
+                     <li><a class="dropdown-item" id="btn-new-version" href="#"> @L("CreateNewVersion")</a></li>
+                    <li><span class="dropdown-divider"></span></li>
+              
+                        @{
+                            foreach (Syntaq.Falcon.Forms.Dtos.GetFormForView form in Model.VersionHistory)
+                            {
+                                <li>
+                                    <a class="dropdown-item" href="/Falcon/forms/build?OriginalId=@form.Form.OriginalId&version=@form.Form.Version">
+                                        @*<i class="far fa-circle m--font-@(form.Form.Version == form.Form.CurrentVersion? "success" : "warning")"></i>*@
+
+                                        <span class="fa-stack text-@(form.Form.Version == form.Form.CurrentVersion? "success" : "warning")">
+                                            <!-- The icon that will wrap the number -->
+                                            <span class="fa fa-circle-o fa-stack-2x"></span>
+                                            <!-- a strong element with the custom content, in this case a number -->
+                                            <strong class="fa-stack-1x">
+                                                @form.Form.Version
+                                            </strong>
+                                        </span>
+
+                                        @form.Form.VersionName
+                                    </a>
+                                </li>
+                            }
+                        }
+                 
+                </ul>
+            </div>
+        </div>
+
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="m-portlet__head-tools">
+                    <ul class="nav nav-tabs m-tabs-line m-tabs-line--primary m-tabs-line--2x" role="tablist">
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link active show" data-bs-toggle="tab" href="#m_portlet_tab_1_1" role="tab" aria-selected="true">
+                                  @L("FormBuilder")
+                            </a>
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-bs-toggle="tab" href="#m_portlet_tab_1_2" role="tab" aria-selected="false">
+                                  @L("Preview")
+                            </a>
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-bs-toggle="tab" href="#m_portlet_tab_1_3" role="tab" aria-selected="false">
+                                  @L("JSON")
+                            </a>
+                        </li>
+                        <li class="pull-right">
+                            <div class="btn-group ml-2 " role="group">
+                                <span class="switch-padding">
+                                    <input type="checkbox" id="toggle" class="fldscheckbox" onclick="showhideflds();" />
+                                    <label for="toggle" class="switch" title="Switch"></label>
+                                </span>
+                                <span class="switch-padding mr-3 kt-menu__link-text">show/hide field names</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="tab-content mt-4">
+                    <div class="tab-pane active show w-100" id="m_portlet_tab_1_1">
+                        <div id="builder"></div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="tab-pane  w-100" id="m_portlet_tab_1_2">
+                        <div id="formio" ></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="tab-pane  w-100" id="m_portlet_tab_1_3">
+                        <a href="/Falcon/Forms/GetSchemaForDownload?Id=@Html.Raw(Model.Form.Id.ToString())&version=@Html.Raw(Model.Form.Version.ToString())" class="btn btn-sm btn-secondary">  Export Form Schema</a>
+                        <a href="#" id="ImportFormSchemaLink" name="ImportFormSchemaLink"  class="btn btn-sm btn-secondary">  Import Form Schema</a>
+                        <a href="#" id="UploadFormRulesSchemaLink" name="UploadFormRulesSchemaLink" class="btn btn-sm btn-secondary">  Upload Form Rules</a>
+                        <div class="card card-body bg-light jsonviewer mt-3">
+                            <pre id="json"></pre>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

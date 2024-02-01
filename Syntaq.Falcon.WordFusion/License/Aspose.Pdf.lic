@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License>
+  <Data>
+    <LicensedTo>Zumesoft</LicensedTo>
+    <EmailTo>bfallen@zumesoft.com</EmailTo>
+    <LicenseType>Developer Small Business</LicenseType>
+    <LicenseNote>Limited to one developer, limited to one physical location</LicenseNote>
+    <OrderID>150729033402</OrderID>
+    <UserID>13520</UserID>
+    <OEM>This is not a redistributable license</OEM>
+    <Products>
+      <Product>Aspose.Pdf for .NET</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SerialNumber>caf9b4ad-7035-410e-904f-19de14c1e564</SerialNumber>
+    <SubscriptionExpiry>20160729</SubscriptionExpiry>
+    <LicenseExpiry>20150828</LicenseExpiry>
+    <ExpiryNote>This is a temporary license for non-commercial use only and it will expire on 2015-08-28.</ExpiryNote>
+    <LicenseVersion>3.0</LicenseVersion>
+    <LicenseInstructions>http://www.aspose.com/corporate/purchase/license-instructions.aspx</LicenseInstructions>
+  </Data>
+  <Signature>DWo5g3ksI5O5OLbSH6WRqa3REdNAhAZudVs7K53yvIFsn6N4hde0o3FR69ty+LR+FsD6DA/qcxsFhEfzQNSs+a6SK68754lgXoMFNv2JaS97h9Q6m5sbnQt6RxOCfPjr74vqCyZxjS1wOTKr0TgLzzRxS4CN7q2uszyTFfRe0IQ=</Signature>
+</License>

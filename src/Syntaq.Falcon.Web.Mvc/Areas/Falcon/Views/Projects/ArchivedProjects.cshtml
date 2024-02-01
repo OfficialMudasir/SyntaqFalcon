@@ -1,0 +1,197 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Projects
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model ProjectsViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Projects;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/Projects/ArchivedProjects.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script src="https://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+
+}
+
+<script>
+
+    //function showStartModal() {
+
+    //    console.log("hello");
+
+    //    var _startModal = new app.ModalManager({
+    //        viewUrl: abp.appPath + 'Falcon/Projects/StartProjectModal',
+    //        scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Projects/_StartProjectModal.js',
+    //        modalClass: 'StartProjectModal'
+    //    });
+
+    //    _startModal.open();
+
+    //}
+
+    function showStartModal() {
+
+        console.log("hello");
+
+        var _startProjectModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/Projects/StartProjectModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Projects/_StartProjectModal.js',
+            modalClass: 'StartProjectModal'
+        });
+
+        _startProjectModal.open();
+
+    }
+
+</script>
+
+<style>
+
+    .project-item {
+        background-color: lightgray
+    }
+</style>
+
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+
+    <div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass())">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span class="ml-2"> @L("Projects")</span>
+                </h3>
+                <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                @*<span class="kt-subheader__desc">
+                        @L("ProjectsHeaderInfo")
+                    </span>*@
+            </div>
+            <div class="kt-subheader__toolbar">
+                <div class="kt-subheader__wrapper">
+                    @if (IsGranted(AppPermissions.Pages_Projects_Create) || IsGranted(AppPermissions.Pages_Projects_Edit))
+                    {
+                        <button id="StartNewProjectButton" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> @L("NewProject")
+                        </button>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__body">
+                <div class="kt-form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="form-group align-items-center">
+                                <div class="input-group">
+                                    <input type="text" id="ProjectsTableFilter" aria-label="@L("InputFilterText")" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                    <span class="input-group-btn">
+                                        <button id="GetProjectsButton" aria-label="@L("Search")" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+                        <div class="kt-separator kt-separator--border-dashed"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="NameFilterId">@L("Name")</label>
+                            <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="DescriptionFilterId">@L("Description")</label>
+                            <input type="text" class="form-control" name="descriptionFilter" id="DescriptionFilterId">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="StatusFilterId">@L("Status")</label>
+                        <select class="form-control" name="StatusFilter" id="StatusFilterId">
+                            <option value="-1">@L("All")</option>
+                            <option value="0">@L("Enum_ProjectStatus_0")</option>
+
+                            <option value="1">@L("Enum_ProjectStatus_1")</option>
+
+                            <option value="2">@L("Enum_ProjectStatus_2")</option>
+
+                            @if (Model.StatusFilter != null)
+                            {
+                                <option value=@Model.StatusFilter.ToString() selected>@L("Enum_ProjectStatus_" + Model.StatusFilter.ToString())</option>
+                            }
+
+
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="TypeFilterId">@L("Type")</label>
+                        <select class="form-control" name="TypeFilter" id="TypeFilterId">
+                            <option value="-1">@L("All")</option>
+                            <option value="0">@L("Enum_ProjectType_0")</option>
+
+                            <option value="1">@L("Enum_ProjectType_1")</option>
+
+
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="RecordRecordNameFilterId">(@L("Record")) @L("RecordName")</label>
+                            <input type="text" class="form-control" name="recordRecordNameFilter" id="RecordRecordNameFilterId">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+
+                @*<ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand mb-2" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#projects_tab" role="tab" aria-selected="true">
+                            @L("My") @L("Projects")
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " data-bs-toggle="tab" href="#AchivedProject_tab" role="tab" aria-selected="true">
+                            @L("ArchivedProjects")
+                        </a>
+                    </li>
+                </ul>*@
+
+                <div class="row align-items-center">
+                    <table id="ArchivedProjectsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th class="all" style="width:50%">@L("Name")</th>
+                                @*<th style="width:70%">@L("Description")</th>*@
+                                <th class="all" style="width:3%">@L("Status")</th>
+                                @*<th>@L("Type")</th>*@
+                                @*<th>@L("RecordRecordName")</th>*@
+                                <th style="width:12%">@L("LastUpdated")</th>
+                                <th class="all" style="width:5%">@L("Actions")</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+
+                    @*end of archieved table*@
+
+                </div>
+        </div>
+    </div>

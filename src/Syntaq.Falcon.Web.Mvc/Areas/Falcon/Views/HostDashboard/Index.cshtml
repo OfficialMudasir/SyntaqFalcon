@@ -1,0 +1,179 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.HostDashboard
+@model HostDashboardViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Host.Dashboard;
+}
+
+@section Styles
+    {
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/HostDashboard/Index.css" asp-append-version="true" />
+}
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/_Bundles/host-dashboard-libs.js" asp-append-version="true"></script>
+}
+
+<div id="HostDashboard">
+
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+        <div class="kt-subheader kt-grid__item">
+            <div class="@(await GetContainerClass())">
+                <div class="kt-subheader__main">
+                    <h3 class="kt-subheader__title p-2">
+                        <span>@L("Dashboard")</span>
+                    </h3>
+                    <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                    <span class="kt-subheader__desc">
+                        @L("HostDashboardHeaderInfo")
+                    </span>
+                </div>
+                <div class="kt-subheader__toolbar">
+                    <div class="kt-subheader__wrapper d-none">
+                        <button name="RefreshButton" class="btn btn-primary">
+                            <i class="fa fa-sync"></i>
+                            <span class="d-none d-sm-inline-block">
+                                @L("Refresh")
+                            </span>
+                        </button>
+                        <a href="#" class="btn btn-primary dashboard-report-range">
+                            <i class="la la-calendar" aria-label="@L(" Expand")"></i>
+                            <span class="d-none d-sm-inline-block">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+            <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+                <div class="kt-portlet">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="kt-portlet income-statistics">
+                                <div class="kt-portlet__head">
+                                    <div class="kt-portlet__head-label">
+                                        <h3 class="kt-portlet__head-title">
+                                            <i class="la la-line-chart kt-font-info"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@L("IncomeStatistics")</span>
+                                            <small>
+                                                <span class="caption-helper"></span>
+                                            </small>
+                                        </h3>
+                                    </div>
+                                    <div class="kt-portlet__head-toolbar">
+                                        <div class="btn-group btn-group-devided" data-bs-toggle="buttons">
+                                            <label class="btn btn-secondary active">
+                                                <input type="radio" name="IncomeStatisticsDatePeriod" class="toggle" value="1" checked>@L("Daily")
+                                            </label>
+                                            <label class="btn btn-secondary">
+                                                <input type="radio" name="IncomeStatisticsDatePeriod" class="toggle" value="2">@L("Weekly")
+                                            </label>
+                                            <label class="btn btn-secondary">
+                                                <input type="radio" name="IncomeStatisticsDatePeriod" class="toggle" value="3">@L("Monthly")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kt-portlet__body">
+                                    <div class="chart income-statistics-chart">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="kt-portlet edition-statistics">
+                                <div class="kt-portlet__head">
+                                    <div class="kt-portlet__head-label">
+                                        <h3 class="kt-portlet__head-title">
+                                            <i class="la la-pie-chart kt-font-success"></i>
+                                            <span class="caption-subject font-green-seagreen">@L("EditionStatistics")</span>
+                                            <small>
+                                                <span class="caption-helper"></span>
+                                            </small>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="kt-portlet__body">
+                                    <div id="EditionStatisticsChart" class="chart edition-statistics-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12 col-sm-12">
+                            <div class="kt-portlet expiring-tenants">
+                                <div class="kt-portlet__head">
+                                    <div class="kt-portlet__head-label">
+                                        <h3 class="kt-portlet__head-title">
+                                            <i class="far fa-clock kt-font-danger"></i>
+                                            <span class="caption-subject kt-font-danger font-bold uppercase">@L("SubscriptionExpiringTenants")</span><br />
+                                            <small>
+                                                <span class="caption-helper"></span>
+                                            </small>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="kt-portlet__body">
+                                    <div class="scroller chart kt-scroll" data-always-visible="1" data-rail-visible="0" data-scrollable="true">
+                                        <table class="expiring-tenants-table display table table-striped table-bordered table-hover dt-responsive nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>@L("TenantName")</th>
+                                                    <th>@L("RemainingDay")</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="scroller-footer">
+                                        <div class="pull-right">
+                                            <a href="javascript:;" class="see-all-expiring-tenants">@L("SeeAllRecords")</a>
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-xs-12 col-sm-12">
+                            <div class="kt-portlet recent-tenants">
+                                <div class="kt-portlet__head">
+                                    <div class="kt-portlet__head-label">
+                                        <h3 class="kt-portlet__head-title">
+                                            <i class="fas fa-user-plus kt-font-primary"></i>
+                                            <span class="caption-subject kt-font-primary">@L("RecentTenants")</span><br />
+                                            <small>
+                                                <span class="caption-helper"></span>
+                                            </small>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="kt-portlet__body">
+                                    <div class="scroller chart kt-scroll" data-always-visible="1" data-rail-visible="0" data-scrollable="true">
+                                        <table class="recent-tenants-table display table table-striped table-bordered table-hover dt-responsive nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>@L("TenantName")</th>
+                                                    <th>@L("CreationTime")</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="scroller-footer">
+                                        <div class="pull-right">
+                                            <a href="javascript:;" class="see-all-recent-tenants">@L("SeeAllRecords")</a>
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,62 @@
+﻿#feedback-main {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0px;
+    display: none;
+    background-color: #00000080;
+}
+
+    #feedback-div {
+        background-color: #ffff;
+        padding: 1em;
+        width: 60em;
+        height: 38rem;
+        float: left;
+        left: 32%;
+        position: absolute;
+        margin-top: 2em;
+        -moz-border-radius: 7px;
+        -webkit-border-radius: 7px;
+        overflow:scroll;
+    }
+
+    .feedback-button {
+        height: 40px;
+        border: solid 1px #a09595;
+        /* background: #004eff; */
+        width: 100px;
+        line-height: 32px;
+        font-weight: 600;
+        color: white;
+        transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        text-align: center;
+        position: fixed;
+        right: -38px;
+        top: 80%;
+        z-index: 10001;
+    }
+
+    .feedbackClose {
+        padding: 0px;
+        font-size: 1em;
+        cursor: pointer;
+    }
+
+    #feedback-content > .list-inline {
+        float: right;
+    }
+
+    #feedback-content > .list-inline > .list-inline-item > .btn-form-nav-Save {
+        display: none;
+    }
+
+    #feedback-content > div > div.alert.alert-success {
+        display: none;
+    }

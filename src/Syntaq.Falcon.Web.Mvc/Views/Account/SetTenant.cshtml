@@ -1,0 +1,22 @@
+﻿@model Syntaq.Falcon.Web.Models.Account.SetTenantViewModel
+@using Abp.Json
+
+@section Scripts
+{
+    <script src="/AbpScripts/GetScripts" type="text/javascript"></script>
+    <script>
+
+        abp.multiTenancy.setTenantIdCookie(@Model.TenantId);
+
+        debugger;
+
+        var tenantid = abp.multiTenancy.getTenantIdCookie();
+        while (tenantid != @Model.TenantId) {
+            tenantid = abp.multiTenancy.getTenantIdCookie();
+        }
+
+        window.location = "@Model.ReturnUrl";
+
+    </script>
+ 
+}

@@ -1,0 +1,149 @@
+﻿@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptances
+
+@model List<UserAcceptanceViewModel>;
+@{
+  Layout = "~/Areas/Falcon/Views/Layout/_Layout.sm.cshtml";
+}
+
+@*TODO REFACTOR INTO BUNDLED SCRIPTS*@
+@section Styles{
+ 
+    <link href="~/assets/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+ 
+    <script src="~/assets/bootstrap-5.1.3/bootstrap.min.js"></script>
+ 
+    @*Included Script in Razor view to make use of *@
+    <script>
+
+        const params = new URLSearchParams(window.location.search)
+        let returnurl = params.get('ReturnUrl')
+                 
+        @if(Model.Count == 0){
+           @Html.Raw("window.location.replace(returnurl);");
+        }
+
+        var userAcceptanceDialogWarning = '@L("UserAcceptanceDialogWarning")';
+ 
+        $(document).ready(function(){
+            $('#modal').modal('show'); //display something
+        });
+
+        function save () {
+
+            var checked = $('#userAcceptanceChk').is(':checked');
+ 
+            if (checked===false) {
+                alert(userAcceptanceDialogWarning);
+                return false;
+            };
+ 
+            // manually build JSON
+            var data =[]; 
+            $( ".acceptance-type" ).each(function( index ) { 
+                var uatId = $(this).find('[name="UserAcceptanceTypeId"]').val();
+                var rmcId = $(this).find('[name="RecordMatterContributorId"]').val();                
+                data[index] = {"userAcceptanceTypeId": uatId, "recordMatterContributorId": rmcId};
+            });
+            
+            var _userAcceptancesService = abp.services.app.userAcceptances;
+			 _userAcceptancesService.accept(
+				data
+			 ).done(function () {                 
+               window.location.replace(returnurl);
+               abp.event.trigger('app.UserAcceptanceCompleted');
+			 }).always(function () {
+               _modalManager.setBusy(false);
+			});
+        };
+
+        $("#acceptAllBtn").click(function(){
+          save();
+        });
+ 
+    </script>
+
+    }
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered"  role="document">
+        <div class="modal-content"> 
+            <div class="modal-header text-center border-0">
+            <h5 class="modal-title w-100" id="exampleModalLabel">@L("UserAcceptanceDialogHeader")</h5>
+            </div>
+            <div class="text-center mb-3">
+                <p>@L("UserAcceptanceDialogDescription")</p>
+                   @{
+                        var index = 0;
+                        foreach (UserAcceptanceViewModel ua in Model){
+                            <a class="" href="javsacript:;" onclick="$('#dialog_@ua.UserAcceptance.UserAcceptanceType.Id').modal('show');" >
+                                @ua.UserAcceptance.UserAcceptanceType.Name
+                            </a>
+
+                            index++;
+                            if (Model.Count > index)
+                            {
+                                if (Model.Count > index + 1)
+                                {
+                                    <text>,</text>
+                                }
+                                else
+                                {
+                                    <text>@L("and") </text>
+                                }
+                            }
+                        }
+                    }
+                
+                <text>.</text>
+                <div class="mt-3"                    
+                    <input type="text" />
+                        <input  type="checkbox" value="true" id="userAcceptanceChk">
+                        <label class="form-check-label cursor-pointer" for="userAcceptanceChk">
+                        
+                        @L("UserAcceptanceDialogAccept")               
+                        @foreach (UserAcceptanceViewModel ua in Model){
+                            <span class="acceptance-type">
+                                @{var delimiter = Model.Count == 1 ? " " : ua == Model.Last() ? " " : ua == Model[Model.Count - 2] ? " " + @L("and") : ", ";}                                     
+                                <span>@ua.UserAcceptance.UserAcceptanceType.Name@delimiter</span>
+                                <input type="hidden" name="UserAcceptanceTypeId" value="@ua.UserAcceptance.UserAcceptanceType.Id" />   
+                                <input type="hidden" name="RecordMatterContributorId" value="@ua.UserAcceptance.RecordMatterContributorId" />                                       
+                            </span> 
+                        }
+                        </label>
+                </div>         
+                
+            </div>
+            <div class="modal-footer">
+                <button id='acceptAllBtn' type="button" class="btn btn-success  btn-bold">@L("Accept")</button>
+                <a href="/Account/Logout" class="btn btn-secondary  btn-bold">@L("Logout")</a>
+            </div>
+        </div>
+        </div>
+    </div>
+ 
+    @foreach (UserAcceptanceViewModel ua in Model){
+        <div class="modal  fade" id="dialog_@ua.UserAcceptance.UserAcceptanceType.Id" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" >
+            <div class="modal-dialog  modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content" style="height: 80%;" >
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> @ua.UserAcceptance.UserAcceptanceType.Name</h5>
+
+                </div>
+                <div class="modal-body" style="min-height:20em">
+                <div class="embed-responsive embed-responsive-21by9 w-100" style="min-height:18em">
+                    <embed class="embed-responsive-item w-100 h-100"  style="min-height:18em" src="@ua.UserAcceptance.UserAcceptanceType.TemplateContent">	
+                </div>	
+                </div>
+                <div class="modal-footer">                   
+                    <button type="button" class="btn btn-secondary  btn-bold" data-bs-dismiss="modal">@L("Close")</button>
+                </div>
+            </div>
+            </div>
+        </div>                            
+    } 

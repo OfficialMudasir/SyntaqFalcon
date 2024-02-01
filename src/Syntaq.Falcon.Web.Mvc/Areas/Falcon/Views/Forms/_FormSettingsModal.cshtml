@@ -1,0 +1,511 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@model FormSettingsViewModel
+@using Syntaq.Falcon.Forms.Dtos
+@*@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("FormSettings") + "XYZ"))*@
+ 
+@{
+    //URL must be matching Stripe Redirect URLS which are case sensitive
+    var JsonString = Uri.EscapeUriString("{\"Entity\":\"Form\",\"Key\":\"" + Model.FormId + "\",\"UserId\":\"" + AbpSession.UserId + "\",\"TenantId\":\"" + (AbpSession.TenantId != null ? AbpSession.TenantId.ToString() : null) + "\"}");
+    // var stripeurl = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_4hViPiy34RAG942jq8uZBog5H3KrtYsW&scope=read_write&state=" + JsonString + "&redirect_uri=https://" + Context.Request.Host.ToString() + "/falcon/payments/stripeconfirm".ToLower();
+    var stripeurl = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_4hViuZYu6vXAfhq4hfbHPP7fCELmDIZ1&scope=read_write&state=" + JsonString + "&redirect_uri=https://" + Context.Request.Host.ToString() + "/falcon/payments/stripeconfirm".ToLower();
+}
+<script type="text/javascript">
+	var JsonForSetting = JSON.parse($('#json').text());
+	$('#Form_Type').val(JsonForSetting.display);
+	$('#showWhenWizard').css("display", JsonForSetting.display === 'form' ? "none" : "");
+    $('#showFormTicksValidation').css("display", JsonForSetting.display === 'form' ? "none" : "");
+	if (JsonForSetting.buttons) {
+		$('#Form_Save_Button').val(JsonForSetting.buttons.save_label ? JsonForSetting.buttons.save_label : 'Save');
+		$('#Save_Button').prop('checked', JsonForSetting.buttons.save_disable === 'true' ? true : false);
+		$('#Hide_Save').prop('checked', JsonForSetting.buttons.save_hide === 'true' ? true : false);
+
+		$('#Form_Submit_Button').val(JsonForSetting.buttons.submit_label ? JsonForSetting.buttons.submit_label : 'Submit');
+		$('#Submit_Button').prop('checked', JsonForSetting.buttons.submit_disable === 'true' ? true : false);
+		$('#Hide_Submit').prop('checked', JsonForSetting.buttons.submit_hide === 'true' ? true : false);
+
+		$('#Form_Clear_Button').val(JsonForSetting.buttons.clear_label ? JsonForSetting.buttons.clear_label : 'Clear');
+		$('#Clear_Button').prop('checked', JsonForSetting.buttons.clear_disable === 'true' ? true : false);
+        $('#Hide_Clear').prop('checked', JsonForSetting.buttons.clear_hide === 'true' ? true : false);
+
+        //$('#Form_Draft_Button').val(JsonForSetting.buttons.draft_label ? JsonForSetting.buttons.draft_label : 'Draft');
+        //$('#Draft_Button').prop('checked', JsonForSetting.buttons.draft_disable === 'true' ? true : false);
+        //$('#Hide_Draft').prop('checked', JsonForSetting.buttons.draft_hide === 'true' ? true : false);
+
+		$('#Form_Next_Button').val(JsonForSetting.buttons.next_label ? JsonForSetting.buttons.next_label : 'Next');
+		$('#Next_Button').prop('checked', JsonForSetting.buttons.next_disable === 'true' ? true : false);
+		$('#Hide_Next').prop('checked', JsonForSetting.buttons.next_hide === 'true' ? true : false);
+
+		$('#Form_Previous_Button').val(JsonForSetting.buttons.previous_label ? JsonForSetting.buttons.previous_label : 'Previous');
+		$('#Previous_Button').prop('checked', JsonForSetting.buttons.previous_disable === 'true' ? true : false);
+		$('#Hide_Previous').prop('checked', JsonForSetting.buttons.previous_hide === 'true' ? true : false);
+	}
+    if (JsonForSetting.hasOwnProperty("isBuildTicks")) {
+        $('#Form_IsBuildTicks').prop('checked', JsonForSetting.isBuildTicks === true ? true : false);
+
+	}
+    if (JsonForSetting.hasOwnProperty("autoSaving")) {
+        $('#Form_AutoSaving').prop('checked', JsonForSetting.autoSaving === true ? true : false);
+
+	}
+    if (JsonForSetting.hasOwnProperty("feedbackForm")) {
+        $('#feedbackForm').val(JsonForSetting.feedbackForm);
+
+	}
+
+    if (JsonForSetting.hasOwnProperty("stickyMenu")) {
+        $('#Form_StickyMenu').prop('checked', JsonForSetting.stickyMenu === true ? true : false);
+
+    }
+	$('#StripeConnectButton').click(function (event, Id) {
+		var winstripe = window.open("@stripeurl", "Stripe Connect", "width=1024,height=640,top=80,left=50");
+		winstripe.focus();
+	});
+ 
+	$("input[data-type='currency']").on({
+		keyup: function () {
+			formatCurrency($(this));
+		},
+		blur: function () {
+			formatCurrency($(this), "blur");
+		}
+	});
+
+	function formatNumber(n) {
+		// format number 1000000 to 1,234,567
+		return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+	}
+
+	function formatCurrency(input, blur) {
+		// appends $ to value, validates decimal side
+		// and puts cursor back in right position.
+
+		// get input value
+		var input_val = input.val();
+
+		// don't validate empty input
+		if (input_val === "") { return; }
+
+		// original length
+		var original_len = input_val.length;
+
+		// initial caret position
+		var caret_pos = input.prop("selectionStart");
+
+		// check for decimal
+		if (input_val.indexOf(".") >= 0) {
+
+			// get position of first decimal
+			// this prevents multiple decimals from
+			// being entered
+			var decimal_pos = input_val.indexOf(".");
+
+			// split number by decimal point
+			var left_side = input_val.substring(0, decimal_pos);
+			var right_side = input_val.substring(decimal_pos);
+
+			// add commas to left side of number
+			left_side = formatNumber(left_side);
+
+			// validate right side
+			right_side = formatNumber(right_side);
+
+			// On blur make sure 2 numbers after decimal
+			if (blur === "blur") {
+				right_side += "00";
+			}
+
+			// Limit decimal to only 2 digits
+			right_side = right_side.substring(0, 2);
+
+			// join number by .
+			input_val = left_side + "." + right_side;
+
+		} else {
+			// no decimal entered
+			// add commas to number
+			// remove all non-digits
+			input_val = formatNumber(input_val);
+			input_val = input_val;
+
+			// On blur make sure 2 numbers after decimal
+			if (blur === "blur") {
+				input_val += ".00";
+			}
+		}
+
+		// send updated string to input
+		input.val(input_val);
+
+		// put caret back in the right position
+		var updated_len = input_val.length;
+		caret_pos = updated_len - original_len + caret_pos;
+		input[0].setSelectionRange(caret_pos, caret_pos);
+	}
+</script>
+
+<div class="modal-header">
+					<h4 class="  pt-0 pl-0">
+					@L("FormSettings")<span id="formsettingtitle"> @Model.FormName</span>
+				</h4>
+</div>
+
+<div class="modal-body">
+ 
+	 
+ 
+	 
+				<ul class="nav nav-tabs nav-tabs-bold nav-tabs-line nav-tabs-line-right nav-tabs-line-brand" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" data-bs-toggle="tab" href="#general_setting" role="tab" aria-selected="true">
+							@L("General")
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" data-bs-toggle="tab" href="#button_setting" role="tab" aria-selected="false">
+							 @L("Buttons")
+						</a>
+					</li>
+					@*PAYMENTS COMMENTED*@
+					<li class="nav-item">
+			            <a class="nav-link" data-bs-toggle="tab" href="#payment_setting" role="tab" aria-selected="false">
+				             @L("Payments")
+			            </a>
+		            </li>
+				</ul>
+		 
+ 
+			<div class="tab-content mt-4 ps-3 border-0">
+				<div class="tab-pane active " id="general_setting" role="tabpanel">
+					<div id="FormGeneralTab">
+                        <form name="FormGeneralInformations" role="form" novalidate class="form-validation">
+                            <input type="hidden" name="isIndex" value="2" />
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                    <label class="form-label" for="Form_Name">@L("Name")</label>
+                                    <input class="form-control" id="Form_Name" placeholder="Form Name" type="text" name="formName" maxlength="50" minlength="0" value="@Model.FormName">
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label  class="form-label" for="Form_Version_Name">@L("VersionName")</label>
+                                    <input class="form-control" id="Form_Version_Name" placeholder="Form Version Name" type="text" name="versionName" maxlength="50" minlength="0" value="@Model.FormVersionName">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                    <label  class="form-label" for="Form_Description">@L("Description")</label>
+                                    <input class="form-control" id="Form_Description" placeholder="Form Description" type="text"
+                                           name="description" maxlength="@Syntaq.Falcon.Forms.FormConsts.MaxDescriptionLength"
+                                           minlength="@Syntaq.Falcon.Forms.FormConsts.MinDescriptionLength" value="@Model.FormDescription" />
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                    <label  class="form-label" for="Form_Type">Type</label>
+                                    @*<select class="form-control " disabled="disabled"><option id="typeShowOnly" value=' '></option></select>*@
+                                    <input class="form-control" id="Form_Type" placeholder="Form Type" type="text" name="formType" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-12">
+                                    <label  class="form-label" for="feedbackForm">Feedback Form</label>
+                                    <select class="form-control" id="feedbackForm" name="feedbackForm">
+                                        <option value="">----------No Feedback Form Selected----------</option>
+                                        @foreach (FormListDto form in Model.FormsList)
+                                        {
+                                            <option value="@form.value">@form.label</option>
+
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_Toggle" name="formToggle" class="fldscheckbox" @(Model.IsEnabled ? "checked" : "") value=true>
+                                            <label for="Form_Toggle" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_Toggle_Label"> @L("EnableForm")</span>
+                                    </div>
+                                </div>
+
+                                <div id="autoSavingFrom" class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_AutoSaving" name="autoSaving" class="fldscheckbox" value=true>
+                                            <label for="Form_AutoSaving" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_AutoSaving_Label"> @L("AutoSaving")</span>
+                                    </div>
+                                </div>
+
+                                <div id="showFormTicksValidation" class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_IsBuildTicks" name="isBuildTicks" class="fldscheckbox" value=true>
+                                            <label for="Form_IsBuildTicks" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_IsBuildTicks_Label"> @L("FormTicksValidation")</span>
+                                    </div>
+                                </div>
+                                <div id="stickyMenu" class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_StickyMenu" name="stickyMenu" class="fldscheckbox" value=true>
+                                            <label for="Form_StickyMenu" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_StickyMenu_Label"> @L("FixedHeader")</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_LockOnBuild" name="LockOnBuild" class="fldscheckbox" @(Model.LockOnBuild ? "checked" : "") value=true>
+                                            <label for="Form_LockOnBuild" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_LockOnBuild_Label"> @L("LockOnBuild")</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_LockToTenant" name="LockToTenant" class="fldscheckbox" @(Model.LockToTenant ? "checked" : "") value=true>
+                                            <label for="Form_LockToTenant" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_LockToTenant_Label"> @L("LockToTenant")</span>
+
+                                    </div>
+                                    <label class="label label-info form-label">Note: Lock To Tenant only works if Requires Authentication is also enabled</label>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-bottom: 2%;">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <div class="btn-group" role="group">
+                                        <span class="switch-padding">
+                                            <input type="checkbox" id="Form_RequireAuth" name="RequireAuth" class="fldscheckbox" @(Model.RequireAuth ? "checked" : "") value=true>
+                                            <label  for="Form_RequireAuth" class="switch"></label>
+                                        </span>
+                                        <span class="switch-padding" id="Form_RequireAuth_Label"> @L("RequireAuth")</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+					</div>
+				</div>
+				<div class="tab-pane" id="button_setting" role="tabpanel">
+					<div id="FormButtonTab">
+						<form name="FormButtonSetting" role="form" novalidate class="form-validation">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                                    <div class="row" style="margin-top: 1%;">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <label  class="form-label" for="Form_Save_Button">@L("SaveButton")</label>
+                                            <input class="form-control" id="Form_Save_Button" value="Save" type="text" name="save_label"
+                                                   maxlength="50" minlength="0" placeholder="Button Label">
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-6">
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Save_Button" name="save_disable" class="fldscheckbox" value=true>
+                                                    <label for="Save_Button" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Disable")</span>
+                                            </div>
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Hide_Save" name="save_hide" class="fldscheckbox" value=true>
+                                                    <label for="Hide_Save" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Hidden")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                                    <div class="row" style="margin-top: 1%;">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <label  class="form-label" for="Form_Submit_Button">@L("SubmitButton")</label>
+                                            <input class="form-control" id="Form_Submit_Button" value="Submit" type="text" name="submit_label"
+                                                   maxlength="50" minlength="0" placeholder="Button Label">
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-6">
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Submit_Button" name="submit_disable" class="fldscheckbox" value=true>
+                                                    <label for="Submit_Button" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Disable")</span>
+                                            </div>
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Hide_Submit" name="submit_hide" class="fldscheckbox" value=true>
+                                                    <label for="Hide_Submit" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Hidden")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                                    <div class="row" style="margin-top: 1%;">
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <label  class="form-label" for="Form_Clear_Button">@L("ClearButton")</label>
+                                            <input class="form-control" id="Form_Clear_Button" value="Clear" type="text" name="clear_label"
+                                                   maxlength="50" minlength="0" placeholder="Button Label">
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-6">
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Clear_Button" name="clear_disable" class="fldscheckbox" value=true>
+                                                    <label for="Clear_Button" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Disable")</span>
+                                            </div>
+                                            <div class="btn-group col" role="group">
+                                                <span class="switch-padding">
+                                                    <input type="checkbox" id="Hide_Clear" name="clear_hide" class="fldscheckbox" value=true>
+                                                    <label for="Hide_Clear" class="switch"></label>
+                                                </span>
+                                                <span class="switch-padding"> @L("Hidden")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+ 
+                            </div>
+							<div id="showWhenWizard" class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+									<div class="row" style="margin-top: 1%;">
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+											<label  class="form-label" for="Form_Next_Button">@L("NextButton")</label>
+											<input class="form-control" id="Form_Next_Button" value="Next" type="text" name="next_label"
+												   maxlength="50" minlength="0" placeholder="Button Label">
+										</div>
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-6">
+											<div class="btn-group col" role="group">
+												<span class="switch-padding">
+													<input type="checkbox" id="Next_Button" name="next_disable" class="fldscheckbox" value=true>
+													<label for="Next_Button" class="switch"></label>
+												</span>
+												<span class="switch-padding"> @L("Disable")</span>
+											</div>
+											<div class="btn-group col" role="group">
+												<span class="switch-padding">
+													<input type="checkbox" id="Hide_Next" name="next_hide" class="fldscheckbox" value=true>
+													<label for="Hide_Next" class="switch"></label>
+												</span>
+												<span class="switch-padding"> @L("Hidden")</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<div class="row" style="margin-top: 1%;">
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+											<label  class="form-label" for="Form_Previous_Button">@L("PreviousButton")</label>
+											<input class="form-control" id="Form_Previous_Button" value="Previous" type="text" name="previous_label"
+												   maxlength="50" minlength="0" placeholder="Button Label">
+										</div>
+										<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-6">
+											<div class="btn-group col" role="group">
+												<span class="switch-padding">
+													<input type="checkbox" id="Previous_Button" name="previous_disable" class="fldscheckbox" value=true>
+													<label for="Previous_Button" class="switch"></label>
+												</span>
+												<span class="switch-padding"> @L("Disable")</span>
+											</div>
+											<div class="btn-group col" role="group">
+												<span class="switch-padding">
+													<input type="checkbox" id="Hide_Previous" name="previous_hide" class="fldscheckbox" value=true>
+													<label for="Hide_Previous" class="switch"></label>
+												</span>
+												<span class="switch-padding"> @L("Hidden")</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="tab-pane" id="payment_setting" role="tabpanel">
+					<button id="StripeConnectButton" class="btn btn-primary blue d-none"></button>
+					<div id="FormPaymentTab" class="mt-6">
+						@*Payments Partial View Goes Here*@
+					</div>
+				</div>
+				<div class="tab-pane " id="mtext_setting" role="tabpanel">
+					<div id="FormMtextTab" class="">
+						<div>
+							<div class="row">
+								<input class="form-control" id="MergeTextId" type="text" name="MergeTextId" placeholder="MergeTextId" @*value="Model.MtextListName" *@> @*Model.IsEditMode*@
+								<div class="col-3">
+									<button id="AddListButton" class="btn btn-sm btn-outline-brand m-btn m-btn--custom m-btn--outline-2x m-btn--bolder" style="width: 100%;"><i class="fas fa-plus"></i> @L("AddList")</button>
+									<div style="overflow: auto; max-height: 25.5em; margin-top:1em; margin-bottom:0em">
+										<ul id="mergetextbar" class="list-group" style="color: #083656; margin-top:0em">
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template1_value" style="text-decoration:none;color:#083656" href="#mergetext_template1">HisHerTheir </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template2_value" style="text-decoration:none;color:#083656" href="#mergetext_template2">HeSheThey </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template3_value" style="text-decoration:none;color:#083656" href="#mergetext_template3">HimHerThem </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template4_value" style="text-decoration:none;color:#083656" href="#mergetext_template4">HisHersTheirs </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template5_value" style="text-decoration:none;color:#083656" href="#mergetext_template5">HimHerTheir </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template6_value" style="text-decoration:none;color:#083656" href="#mergetext_template6">yesno </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template7_value" style="text-decoration:none;color:#083656" href="#mergetext_template7">DoDoNot </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template8_value" style="text-decoration:none;color:#083656" href="#mergetext_template8">DoesDoesNot </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template9_value" style="text-decoration:none;color:#083656" href="#mergetext_template9">SalHeShe </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template10_value" style="text-decoration:none;color:#083656" href="#mergetext_template10">SalHisHer </a>
+											<a class="list-group-item btn btn-sm btn-primary" id="mergetext_template11_value" style="text-decoration:none;color:#083656" href="#mergetext_template11">SalHimHer </a>
+										</ul>
+									</div>
+								</div>
+								<div class="col-9">
+									<div id="mergetext_template1" class="mergetext_template " style="margin-bottom: 2em" name="File[0]">
+										<div class="panel-heading">
+											<form class="row" name="FormMtextSetting">
+												<input class="form-control" id="MergeTextListId" type="text" name="MergeTextListId" placeholder="MergeTextListId" @*value="Model.MtextListName" *@> @*Model.IsEditMode*@
+												<input class="form-control" id="MtextListName" placeholder="Give your merge text a name that describes it e.g. HisHerThem." type="text" name="MtextListName" maxlength="50" minlength="0" style="margin-left: 5px; width: 90%;" @*value="Model.MtextListName" *@>
+												<a class="OnClickLink col-1" name="DeleteMtextListNameLink"><i class="fa fa-times text-danger"></i></a>
+											</form>
+										</div>
+										<div class="panel-body" style="max-height: 25em; overflow-x: hidden;">
+											<div class="row" style="margin: 0.25em; width: 100%;">
+												<label class="form-label col-3" style="padding-left: 5px;">@L("Key")</label>
+												<label class="form-label col-7" for="value">@L("Value")</label>
+											</div>
+											<form class="row" id="MTextKeyValueFormblock" style="margin-bottom: 0.5em;">
+												<div class="row formblock" style="margin-left: 1em; margin-bottom: 0.5em; width: 100%;">
+													<input class="form-control" id="MtextItemId" type="text" name="MTextList[][Id]" placeholder="MtextItemId" @*value="Model.MtextListName" *@>
+													<input class="form-control" id="MtextItemKey" type="text" name="MTextList[][Key]" maxlength="50" minlength="0" style="margin-left: 7.5px; width: 25%;" @*value="Model.MtextListName" *@>
+													<input class="form-control" id="MtextItemValue" type="text" name="MTextList[][Value]" maxlength="50" minlength="0" style="margin-left: 5px; width: 59.5%;" @*value="Model.MtextListName" *@>
+													<a class="OnClickLink col-1" name="DeleteMTextKeyValueLink" onclick="$(this).closest('.formblock').remove()"><i class="fa fa-times text-danger"></i></a>
+												</div>
+											</form>
+											<div id="mergetext_1_values_controls" class="col-12" style="display: block; height: 3.75em;">
+												<button id="AddItemButton" class="btn btn-sm btn-outline-brand m-btn m-btn--custom m-btn--outline-2x m-btn--bolder pull-right" style="margin-left: 5px;"><i class="fas fa-plus"></i> @L("AddItem")</button>
+												<button id="SaveListButton" class="btn btn-sm btn-outline-brand m-btn m-btn--custom m-btn--outline-2x m-btn--bolder pull-right"><i class="far fa-save"></i> @L("Save")</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		 
+ 
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+
+<div id="templates" class="d-none">
+	<div id="MTextKeyValueTemplate" class="row formblock" style="margin-left: 1em; margin-bottom: 0.5em; width: 100%;">
+		<input class="form-control" id="MtextItemId" type="text" name="MTextList[][Id]" @*value="Model.MtextListName" *@>
+		<input class="form-control" id="MtextItemKey" type="text" name="MTextList[][Key]" maxlength="50" minlength="0" style="margin-left: 7.5px; width: 25%;" @*value="Model.MtextListName" *@>
+		<input class="form-control" id="MtextItemValue" type="text" name="MTextList[][Value]" maxlength="50" minlength="0" style="margin-left: 5px; width: 59.5%;" @*value="Model.MtextListName" *@>
+		<a class="OnClickLink col-1" name="DeleteMTextKeyValueLink" onclick="$(this).closest('.formblock').remove()"><i class="fa fa-times text-danger"></i></a>
+	</div>
+</div>

@@ -1,0 +1,31 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records
+@model CreateOrEditRecordModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecord")) : L("CreateNewRecord")))
+
+<div class="modal-body">
+        <div id="RecordInformationsTab">
+            <form name="RecordInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Record.Id" />
+                }
+
+                @*<input class="form-control" value="@Model.Record.UserId" type="text" name="userId" hidden />
+                <input class="form-control" value="@Model.Record.OrganizationUnitId" type="text" name="organizationUnitId" hidden />*@
+
+                <div class="form-group">
+                    <label for="Record_RecordName">@L("RecordName")</label>
+                    <input class="form-control" id="Record_RecordName" value="@Model.Record.RecordName" type="text" name="recordName" required maxlength="@Syntaq.Falcon.Records.RecordConsts.MaxRecordNameLength" minlength="@Syntaq.Falcon.Records.RecordConsts.MinRecordNameLength" />
+                </div>
+
+                <input class="form-control" id="FolderId" value="@Model.Record.FolderId" type="hidden" name="FolderId" />
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

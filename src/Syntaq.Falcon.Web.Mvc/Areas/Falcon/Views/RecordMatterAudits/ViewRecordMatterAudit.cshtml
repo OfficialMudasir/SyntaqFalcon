@@ -1,0 +1,62 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterAudits
+@model RecordMatterAuditViewModel
+
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.RecordMatterAudits;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/RecordMatterAudits/CreateOrEdit.js" asp-append-version="true"></script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+
+                 <div class="kt-subheader kt-grid__item">
+                  <div class="@(await GetContainerClass())">
+                    <div class="kt-subheader__main">
+                        <h3 class="kt-subheader__title">
+                            <span>@L("Details")</span>
+                        </h3>
+                        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                        <div class="kt-subheader__breadcrumbs">
+                            <a href="/Falcon/RecordMatterAudits" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i>&thinsp;@L("RecordMatterAudits")</a>
+                            <span class="kt-subheader__breadcrumbs-separator"></span>
+                            <a href="javascript:;" class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">
+                               @L("Details")
+                            </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            
+
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile ">
+        <div class="kt-portlet__body ">
+             <div id="RecordMatterAuditInformationsTab">        
+                    <div class="row">
+                                    <div class="col-6 mb-3">
+                <h6>@L("Status") :</h6>
+                @L("Enum_RecordMatterStatus_" + (int)Model.RecordMatterAudit.Status)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Data") :</h6>
+                @Model.RecordMatterAudit.Data
+            </div>
+
+                                    <div class="col-6 mb-3">
+                <h6>(@L("User")) @L("Name") :</h6>
+                @Model.UserName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("RecordMatter")) @L("RecordMatterName") :</h6>
+                @Model.RecordMatterRecordMatterName
+            </div>
+
+                    </div>
+                </div>
+			</div>
+        </div>
+    </div>
+  </div>

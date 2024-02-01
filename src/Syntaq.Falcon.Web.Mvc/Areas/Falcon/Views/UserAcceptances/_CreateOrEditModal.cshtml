@@ -1,0 +1,100 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptances
+@model CreateOrEditUserAcceptanceModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditUserAcceptance")) : L("CreateNewUserAcceptance")))
+
+<div class="modal-body">
+        <div id="UserAcceptanceInformationsTab">
+            <form name="UserAcceptanceInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.UserAcceptance.Id" />
+                }
+
+				            
+								<div class="form-group m-form__group">
+										<label for="UserAcceptanceTypeName">@L("UserAcceptanceType")</label>
+									<div class="input-group">
+											<input class="form-control" id="UserAcceptanceTypeName" name="userAcceptanceTypeName" value="@Model.UserAcceptanceTypeName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenUserAcceptanceTypeLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearUserAcceptanceTypeNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.UserAcceptance.UserAcceptanceTypeId" type="text" name="userAcceptanceTypeId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="userAcceptanceTypeId"  hidden/>
+								}
+
+            
+								<div class="form-group m-form__group">
+										<label for="UserName">@L("User")</label>
+									<div class="input-group">
+											<input class="form-control" id="UserName" name="userName" value="@Model.UserName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenUserLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearUserNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.UserAcceptance.UserId" type="text" name="userId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="userId"  hidden/>
+								}
+
+            
+								<div class="form-group m-form__group">
+										<label for="RecordMatterContributorName">@L("RecordMatterContributor")</label>
+									<div class="input-group">
+											<input class="form-control" id="RecordMatterContributorName" name="recordMatterContributorName" value="@Model.RecordMatterContributorName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenRecordMatterContributorLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearRecordMatterContributorNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.UserAcceptance.RecordMatterContributorId" type="text" name="recordMatterContributorId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="recordMatterContributorId"  hidden/>
+								}
+
+
+
+				
+@*								<div class="form-group">
+									<label for="UserAcceptance_Accepted">@L("Accepted")</label>
+									<input class="form-control" id="UserAcceptance_Accepted" value="@Model.UserAcceptance.Accepted" type="text" name="accepted"   maxlength="@Syntaq.Falcon.Users.UserAcceptanceConsts.MaxAcceptedLength"  minlength="@Syntaq.Falcon.Users.UserAcceptanceConsts.MinAcceptedLength"  />
+								</div>*@
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

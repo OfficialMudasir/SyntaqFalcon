@@ -1,0 +1,40 @@
+﻿@using Syntaq.Falcon.Web.Resources
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-5.css" rel="stylesheet" />
+@inject IWebResourceManager WebResourceManager
+@{
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/morris.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/raphael.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.flot.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.waypoints.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.counterup.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/topojson.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.easypiechart.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/chartist.min.js");
+}
+
+<!--begin:: Widgets/Sale Reports-->
+<div class="card card-custom DailySalesContainer h-100" style="overflow: hidden;">
+    <div class="card-header align-items-center justify-content-start">
+        <h3 class="card-title align-items-start flex-column d-inline-block">
+            <span class="font-weight-bolder text-dark"> @L("MostRecentSubmissions") </span>
+        </h3>
+        <div class="tooltip-new d-inline-block">
+            <i class="fas fa-question-circle"></i>
+            <div class="tooltip-inner-new">
+                <caption>@L("MostRecentSubmissionTableCaption")</caption>
+            </div>
+        </div>
+
+    </div>
+    <button id="SubmissionModalButton" class="btn btn-primary" style="position: absolute; opacity: 0;"></button>
+    <div class="card-body">
+        <div class="kt-scroll" data-scrollable="true" data-height="800" data-mobile-height="800" style="height: 200px; overflow: auto;">
+            <div class="kt-list-timeline">
+                <div id="MostRecentSubTableContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end:: Widgets/Sale Reports-->
+</div>
+           

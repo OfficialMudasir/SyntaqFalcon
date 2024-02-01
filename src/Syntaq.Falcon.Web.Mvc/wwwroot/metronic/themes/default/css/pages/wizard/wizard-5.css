@@ -1,0 +1,88 @@
+
+.focusedRow td .h6 {
+    color: #5c8bd1 !important;
+    font-weight: bold !important;
+    /*color: #5c8bd1 !important;
+        background-color: #5c8bd1 !important;*/
+}
+
+
+#PtTable td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #ebedf2;
+}
+
+.tooltip-inner-new {
+    max-width: 200px;
+    padding: 0.75rem 1rem;
+    color: #3F4254;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 0.475rem;
+    display: none;
+    font-size: 0.925rem;
+    position: absolute;
+    left: 20px;
+    width: 200px;
+    text-align: left;
+    top: -20px;
+}
+
+    .tooltip-inner-new::before {
+        position: absolute;
+        top: 50%;
+        content: '';
+        left: -5px;
+        height: 5px;
+        width: 5px;
+        background: #000;
+    }
+
+.tooltip-new {
+    position: relative;
+    display: inline-block;
+}
+
+    .tooltip-new .tooltip-inner-new {
+        box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.1);
+    }
+
+    .tooltip-new i {
+        color: #646c9a;
+    }
+
+        .tooltip-new i:hover + .tooltip-inner-new {
+            display: block;
+        }
+
+    .tooltip-new .tooltip-inner-new {
+        position: absolute;
+        z-index: 99;
+    }
+
+element.style {
+}
+
+.tooltip-inner-new.kt-0 {
+    text-align: center;
+    position: -10px;
+}
+
+.tooltip-new .tooltip-inner-new {
+    position: absolute;
+    z-index: 99;
+}
+
+.tooltip-new .tooltip-inner-new {
+    box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.1);
+}
+
+.tooltip-new .tooltip-inner-new {
+    position: absolute;
+    z-index: 99;
+    top: -20px;
+}
+.tooltip-inner-new.kt-o {
+    top: -10px;
+}

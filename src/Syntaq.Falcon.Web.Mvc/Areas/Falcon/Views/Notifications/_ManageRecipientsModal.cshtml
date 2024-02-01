@@ -1,0 +1,47 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Notification
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model ManageNotificationRecipientsViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Notify")))
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 10051;
+    }
+</style>
+
+<div class="modal-header pl-4 pr-4 pt-3 pb-3" hidden>
+    <span id="entityName" hidden>@Model.EntityNames</span>
+    <div class="modal-title pl-0" >
+        <span class="overflow-auto" id="SetAliveHeader">@Model.DefaultMessage</span>
+    </div>
+</div>
+<div class="modal-body">
+	<label class="form-label">@L("NotificationChannel")</label>
+	<div class="radio-inline mb-5" id="NotificationChannel">
+		<label for="NotifyInPlatform" class="radio">
+			<input id="NotifyInPlatform" name="channel" type="radio">
+			<span></span>
+			@L("NotifyViaPlatform")
+		</label>
+		<label for="NotifyInPlatformAndEmail" class="radio">
+			<input id="NotifyInPlatformAndEmail" name="channel" type="radio">
+			<span></span>
+			@L("NotifyViaPlatformAndEmail")
+		</label>
+	</div>
+
+    <form name="NotificationReceipients" role="form" novalidate>
+        <div class="mb-5">
+            <label for="Assignees" class="form-label">@L("To")*</label>
+            <input id="Assignees" class="tagsinput-typeahead" type="text" name="Assignees" data-role="tagsinput" maxlength="512" minlength="0">
+        </div>
+    </form>
+    <div id="EmailBody" class="mb-5" hidden>
+        <label for="EmailBody" class="form-label">@L("EmailBody")*</label>
+        <textarea id="notificationMessage" rows="3" name="EmailBody" class="form-control" placeholder="Enter email body content here..."></textarea>
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="notify" type="button" class="btn btn-primary save-button"> @L("Notify") </button>
+</div>

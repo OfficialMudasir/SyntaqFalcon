@@ -1,0 +1,209 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms;
+@model FormLoadViewModel
+
+@section Styles
+{
+    <link href="~/assets/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/metronic/themes/default/css/pages/wizard/wizard-2.css" rel="stylesheet" />
+
+    <style>
+
+        html, body {
+            font-family: 'POPPINS' !important;
+            font-size: 13px;
+        }
+
+        .kt-wrapper {
+            padding-top: 4.4em !important;
+        }
+
+        .syntaq-component-sfanzbn table > thead > tr > td {
+            font-weight: bold;
+        }
+
+        .syntaq-component-sfanzbn table > tr:hover {
+            background-color: #e1e1ef;
+        }
+
+        .syntaq-component-sfanzbn table > tr {
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+        }
+
+        /*    .dropdown:hover .dropdown-content {
+            display: block;
+        }*/
+
+        .fa-remove {
+            color: #212529 !important;
+        }
+
+        .btn-group-xs > .btn, .btn-xs {
+            padding: .25rem .4rem;
+            font-size: .875rem;
+            line-height: .5;
+            border-radius: .2rem;
+        }
+
+        .component-btn-group {
+            position: absolute;
+            right: 0;
+            margin-top: -2px;
+            z-index: 90;
+        }
+
+            .component-btn-group .component-settings-button {
+                float: right;
+                z-index: 91;
+                margin: 4px 4px 0 0;
+                z-index: 91;
+                -webkit-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+                -moz-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+                box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+            }
+
+        /*.formio-component-datagrid .formio-datagrid-remove {
+            position: absolute;
+            top: 0;
+            right: 0;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 200ms linear, visibility 0ms 200ms;
+        }
+
+        .formio-component-datagrid .datagrid-table > tbody > tr > td:last-child {
+            position: relative;
+        }
+
+        .formio-component-datagrid .datagrid-table > tbody > tr:hover > td:last-child .formio-datagrid-remove {
+            visibility: visible;
+            opacity: 1;
+            transition: visibility 0ms, opacity 200ms linear;
+        }*/
+
+        .datagrid-group-label.collapsed > td {
+            display: none;
+        }
+
+        .datagrid-group-header.clickable {
+            cursor: pointer;
+        }
+
+        .datagrid-group-header.clickable .datagrid-group-label:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: '▾';
+            margin: 0 5px;
+        }
+
+        .datagrid-group-header.clickable.collapsed .datagrid-group-label:before {
+            content: '▸';
+        }
+
+        .contributor-btn-options {
+            left: -52px !important;
+        }
+
+        .table-bordered {
+            border: 2px solid #f4f5f8;
+        }
+
+        .wizard-page-label {
+            padding: 1em;
+            font-size: 1em;
+        }
+
+        .formio-component-systemRedirect, .formio-component-assignAcl {
+            /*opacity: 0;*/
+            /*display: none;*/
+        }
+
+        .sectionfooter {
+            background-color: rgba(0, 0, 0, 0.03) !important;
+        }
+
+        .formio-component-dataGrid {
+            border: 1px solid #dee2e6 !important;
+            border-radius: 0.25rem;
+        }
+
+        .formio-data-grid {
+            margin-bottom: 0px;
+        }
+
+        .formio-component-sfafile .fileSelector {
+            padding: 15px;
+            border: 2px dashed #ddd;
+            text-align: center;
+        }
+
+        .formio-component-sfafile .fileSelector.fileDragOver {
+            border-color: #127abe;
+        }
+
+        .formio-component-sfafile .fileSelector .fa {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        .header-fixed.toolbar-fixed .wrapper {
+            padding-top: calc(30px + var(--kt-toolbar-height));
+        }
+
+        #syntaq-contributor-content{
+        z-index:99 !important;
+        }
+
+
+    </style>
+}
+@section Scripts
+{
+    <script src="~/assets/sweetalert/sweetalert.min.js"></script>
+    <script src="~/view-resources/Areas/Falcon/Views/_Bundles/datatables-all.min.js"></script>
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script id="syntaq-script" src="~/assets/Syntaq/Syntaq.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            Syntaq.Project.Id = "@Model.ProjectId";
+            Syntaq.Project.Name = "@Model.ProjectName";
+            Syntaq.Project.ReleaseId = "@Model.ReleaseId";
+
+            Syntaq.ProjectName = "@Model.ProjectName";
+		    Syntaq.TenantName = "@Model.TenantName";
+		    Syntaq.AuthToken = "@Model.AuthToken";
+		    Syntaq.Form.FormId = "@Model.FormId";
+            Syntaq.TenantId = "@Model.TenantId"
+
+            // If Loading from release then 
+
+            Syntaq.Form.createForm();
+        });
+    </script>
+}
+
+<div class="@(await GetContainerClass()) content d-flex flex-column flex-column-fluid">
+    <div class="card mt-4">
+        <div id="syntaq-contributor-content" class="px-6 py-0 sticky-top bg-white" style="top:59px; z-index:3;">
+        </div>
+
+        <div id="syntaq-content" class="p-4"></div>
+    </div>
+    <script src="~/assets/formio/app/jquery/jquery.min.js"></script>
+</div>

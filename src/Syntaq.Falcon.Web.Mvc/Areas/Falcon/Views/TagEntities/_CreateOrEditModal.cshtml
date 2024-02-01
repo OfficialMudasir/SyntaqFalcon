@@ -1,0 +1,65 @@
+﻿@using Syntaq.Falcon.Tags;
+					
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagEntities
+@model CreateOrEditTagEntityModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditTagEntity")) : L("CreateNewTagEntity")))
+
+<div class="modal-body">
+        <div id="TagEntityInformationsTab">
+            <form name="TagEntityInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.TagEntity.Id" />
+                }
+
+				            
+								<div class="form-group m-form__group">
+										<label for="TagValueValue">@L("TagValue")</label>
+									    <div class="input-group">
+											<input class="form-control" id="TagValueValue" name="tagValueValue" value="@Model.TagValueValue" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenTagValueLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger btn-icon" type="button" id="ClearTagValueValueButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" id="TagEntity_TagValueId" value="@Model.TagEntity.TagValueId" type="text" name="tagValueId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" id="TagEntity_TagValueId" value="" type="text" name="tagValueId"  hidden/>
+								}
+
+
+
+				
+								<div class="form-group">
+									<label for="TagEntity_EntityId">@L("EntityId")</label>
+									<input class="form-control" id="TagEntity_EntityId" value="@Model.TagEntity.EntityId" type="text" name="entityId"     />
+								</div>
+					
+								@{
+					var selectListEntityType = Html.GetEnumSelectList(typeof(EntityType));
+					 foreach (var selectOption in selectListEntityType) { selectOption.Text = L("Enum_EntityType_" + selectOption.Value); }
+					}
+								<div class="form-group m-form__group">
+									<label for="TagEntity_EntityType">@L("EntityType")</label>
+										<select class="form-control m-input m-input--square" name="entityType" id="TagEntity_EntityType" asp-for="@Model.TagEntity.EntityType" asp-items="@selectListEntityType">
+									</select>
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

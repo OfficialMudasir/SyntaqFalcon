@@ -1,0 +1,118 @@
+﻿@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordPolicies
+@model CreateOrEditRecordPolicyModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordPolicy")) : L("CreateNewRecordPolicy")))
+
+<style>
+ 
+    .form-control-label {
+        margin-bottom: 0
+    }
+
+    .form-group.step-form-group {
+        margin-bottom: 1rem;
+    }
+
+    .focusedRow {
+        color: darkslategrey !important;
+        background-color: darkslategrey !important;
+    }
+
+    .dataTables_scroll {
+        overflow: auto;
+    }
+
+    #PtTable {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+    #PtTable tr {
+        border: 1px solid black;
+    }
+
+    #PtTable td {
+        border: none;
+    }
+</style>
+
+<div class="modal-body">
+
+    <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">@L("Details")</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">@L("Rules")</button>
+      </li>
+ 
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        
+            <form id="kt_wizard_form_step_2_form">
+                <div class="form-group">
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="RecordPolicy_Name">@L("Name")</label>
+                        <input class="form-control" id="RecordPolicy_Name" value="@Model.RecordPolicy.Name" type="text" name="name" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="RecordPolicy_AppiedTenant">@L("AppliedTenant")</label>
+                        <select class="form-control" id="AppliedTenantId" name="appliedTenantId" @(@Model.IsEditMode ? "disabled" : "")>
+                            <option value="-1">Default[All]</option>
+                            @foreach (Syntaq.Falcon.RecordPolicies.Dtos.TenantIdNameListDto tenant in Model.TenantList)
+                            {
+                                if (Model.RecordPolicy.AppliedTenantId == tenant.Id)
+                                {
+                                    <option value="@tenant.Id" selected>@tenant.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@tenant.Id">@tenant.Name</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="RecordPolicyId" name="id" value="@Model.RecordPolicy.Id" />
+
+                </div>
+            </form>
+
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="form-group" id="recordDeletePolicyBlock">
+                <div class="table-wrapper" style="max-height:28em; overflow:auto">
+
+                    <table id="RecordDeleteRuleTable" class="display table table-row-dashed  table-hover dt-responsive nowrap py-4">
+                        <thead>
+                            <tr>
+                                <th>@L("Name")</th>
+                                <th>@L("ExpireDays")</th>
+                                <th>@L("Type")</th>
+                                <th>@L("RecordStatus")</th>
+                                <th>@L("Active")</th>
+                                <th>@L("Actions")</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    @if (AbpSession.TenantId == null)
+                    {
+                        <button class="btn btn-primary pull-right my-3" id="create-rule">
+                            @L("CreateNewRule")
+                        </button>
+                    } 
+
+                </div>          
+           
+            </div>        
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,9 @@
+.SubmissionLimitContainer .card.card-custom > .card-body {
+  padding: 1rem 1.25rem !important;
+}
+.SubmissionLimitContainer .gutter-b {
+  margin-bottom: 0px !important;
+}
+.kt-widget24__title:hover {
+  color: #595d6e !important;
+}

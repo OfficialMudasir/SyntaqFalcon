@@ -1,0 +1,44 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.FormFeedbacks
+@model CreateOrEditFormFeedbackModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditFormFeedback")) : L("CreateNewFormFeedback")))
+
+<div class="modal-body">
+        <div id="FormFeedbackInformationsTab">
+            <form name="FormFeedbackInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.FormFeedback.Id" />
+                }
+				            
+				<div class="form-group m-form__group">
+						<label for="FormName">@L("Form")</label>
+						<div class="input-group">
+							<input class="form-control" id="FormName" name="formName" value="@Model.FormName" type="text" disabled>
+						<div class="input-group-append">
+							<button class="btn btn-primary blue" id="OpenFormLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+						</div> 
+						<div class="input-group-prepend">
+							<button class="btn btn-danger btn-icon" type="button" id="ClearFormNameButton"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+				</div>
+
+				@if (Model.IsEditMode)
+				{
+					<input class="form-control" id="FormFeedback_FormId" value="@Model.FormFeedback.FormId" type="text" name="formId"  hidden/>
+				}
+				else
+				{ 
+					<input class="form-control" id="FormFeedback_FormId" value="" type="text" name="formId"  hidden/>
+				}
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

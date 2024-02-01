@@ -1,0 +1,343 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTemplates
+@using Syntaq.Falcon.ProjectTemplates.Dtos
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Tags;
+@using Syntaq.Falcon.Tags.Dtos;
+@using Syntaq.Falcon.Forms.Dtos
+@model CreateOrEditProjectTemplateViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditProjectTemplate")) : L("CreateProjectTemplate")))
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-2.css" rel="stylesheet" />
+
+<script>
+    var wizard;
+    var JSONProjectTemplate = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model)));
+</script>
+<style>
+    .kt-form {
+        width: 100% !important;
+    }
+
+    .kt-heading {
+        margin: 1.25rem 0 1.75rem 0 !important;
+    }
+
+    .kt-wizard-v2__nav-item {
+        cursor: pointer;
+    }
+
+    .form-control-label {
+        margin-bottom: 0
+    }
+
+    .form-group.step-form-group {
+        margin-bottom: 1rem;
+    }
+</style>
+<div class="kt-portlet">
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <div class="kt-grid  kt-wizard-v2 kt-wizard-v2--white" id="kt_wizard_v2" data-ktwizard-state="first">
+            <div class="kt-grid__item kt-wizard-v2__aside pt-3">
+                <!--begin: Form Wizard Nav -->
+                <div class="kt-wizard-v2__nav">
+                    <div class="kt-wizard-v2__nav-items">
+                        <!--doc: Replace A tag with SPAN tag to disable the step link click -->
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="current">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+                                    @*<i class="flaticon-edit-1"></i>*@
+                                    @*<img src="~/Common/Images/Entities/edit-row.png" height="38" />*@
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                        @L("ProjectTemplateDetails")
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        @L("ProvideProjectDetails")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+                                    @*<i class="flaticon-file-2"></i>*@
+                                    @*<img src="~/Common/Images/Entities/ms-word.png" height="38" />*@
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                        @L("ProjectStepPlan")
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        @L("AddStepstoCompleteProject")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" href="#" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+                                    @*<i class="flaticon-interface-3"></i>*@
+                                    @*<img src="~/Common/Images/Entities/binders-folder.png" height="38" />*@
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                        @L("GeneralSettings")
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        @L("AccessibilityGeneralTemplateSettings")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Form Wizard Nav -->
+            </div>
+            <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper" style="overflow-y: auto; max-height: 52em;">
+                <!--begin: Form Wizard Form-->
+                <div class="kt-form pt-3" id="kt_form" novalidate="novalidate">
+                    <!--Was Wizard Form-->
+                    <!--begin: Form Wizard Step 1-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
+                  
+                        <div class="kt-form__section kt-form__section--first kt-form__section--first">
+                            <div class="kt-wizard-v2__form">
+                                <div class="form-group mb-4">
+                                    <label class="form-label">@L("Name")*</label>
+                                    <input aria-label="Name" type="text" class="form-control" name="ProjectTemplateName" placeholder="" value="@Model.ProjectTemplate.Name">
+                                    <span class="form-text text-muted">@L("EnterTemplateName")</span>
+                                </div>
+                                @*<div class="form-group">
+                                        <label>@L("TemplateGroup")*</label>
+                                        <select class="form-control form-control-sm kt-input" name="TemplateGroup">
+                                            <option selected>Procurement</option>
+                                            <option>Property</option>
+                                            <option>Social Services</option>
+                                        </select>
+                                        <span class="form-text text-muted">Please select a group for this Template.</span>
+                                    </div>*@
+                                <div class="form-group">
+                                    <label  class="form-label">@L("Description")</label>
+                                    <textarea aria-label="Description"  type="text" name="TemplateDescription" class="form-control " placeholder="">@Model.ProjectTemplate.Description</textarea>
+                                    <span class="form-text text-muted">@L("EnterTemplateDescription")</span>
+                                </div>
+                                <form id="kt_wizard_form_step_1_form" class="d-none">
+                                    @*TODO:-------if needs any hiden prefilled data*@
+                                    <input type="hidden" name="ProjectTemplateId" value="@Model.ProjectTemplate.Id" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 1-->
+                    <!--begin: Form Wizard Step 2-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+    
+                        <div class="kt-form__section kt-form__section--first mt-4">
+                            <form id="kt_wizard_form_step_2_form">
+                                @*TODO dynamic render*@
+                                @foreach (ProjectTemplateStepDto step in Model.ProjectTemplate.StepsSchema)
+                                {
+                                    <div class="kt-form__section kt-form__section--first formblock border rounded p-4 mb-4">
+                                        <input type="hidden" name="Steps[][RecordMatterId]" value="@(step.RecordMatterId)" />
+
+                                        <div class="form-group step-form-group mb-4">
+                                            <div class=" ">
+                                                <label class="form-label">@L("ProjectStepName")*</label>
+                                                <a class="pull-right btn-icon" onclick="$(this).closest('.formblock').remove()" href="#"><span class="fa fa-times text-danger"></span> @L("Remove")</a>
+                                                <input  aria-label="Step Name"  type="text" name="Steps[][StepName]" class="form-control form-control-sm  kt-input" placeholder="" value="@step.StepName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group step-form-group mb-4">
+                                            <label class="form-label">@L("Form")*</label>
+                                            <select aria-label="Select Form" class="form-control form-control-sm kt-input" name="Steps[][FormId]">
+                                                <option selected value="">----pleace select a form ----</option>
+                                                @foreach (FormListDto form in Model.FormsList)
+                                                {
+                                                    @if (@form.value == step.FormId.ToString())
+                                                    {
+                                                        <option value="@form.value" test="@step.FormId" selected>@form.label</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@form.value" test="@step.FormId">@form.label</option>
+
+                                                    }
+                                                }
+                                            </select>
+                                            <span class="form-text text-muted">Please select a Form for this step.</span>
+                                        </div>
+                                        <div class="form-group step-form-group mb-4">
+                                            <label  class="form-label">@L("Description")</label>
+                                            <textarea aria-label="Description" type="text" name="Steps[][Description]" class="form-control form-control-sm  kt-input" placeholder="">@step.Description</textarea>
+                                            <span class="form-text text-muted">Please enter a description for this step.</span>
+                                        </div>
+
+                                        <div class="form-group step-form-group mb-4">
+                                            <label  class="form-label">@L("FilterIf")</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                                </div>
+                                                <input aria-label="Steps[][Filter]" type="url" name="Steps[][Filter]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Field_yn='true']" value="@step.Filter">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mb-4">
+                                            <label class="kt-checkbox">
+
+                                                <input aria-label="Step Require Approval" type="checkbox" name="Steps[][RequireApproval]" @( step.RequireApproval ? "checked" : "") value="true"> @L("Approval Workflow Required")
+                                                <span></span>
+                                            </label>
+                                        </div>
+  
+                                        <div class="mb-4 ">
+                                            <label class="form-label" for="Steps[][Order]">@L("Order"):  </label>
+                                            <input aria-label="Steps Order" type="number" name="Steps[][Order]" min="0" class="form-control form-control-sm  kt-input" value="@Convert.ToInt16(step.Order)">
+                                        </div>
+                                        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                    </div>
+
+                                }
+                                @*---------*@
+                            </form>
+                            <a id="btn-add-ProjectStep" href="#" class="btn btn-sm btn-secondary "> @L("AddProjectStep")</a>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 2-->
+                    <!--begin: Form Wizard Step 3-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                        <div class="fs-5 mt-4">@L("TemplateSettings")</div>
+                        <div class="kt-form__section kt-form__section--first">
+                            <form id="kt_wizard_form_step_3_form mb-4">
+                                <div class=" ">
+                                    <label class="kt-checkbox">
+                                        <input aria-label="Enabled" type="checkbox" name="TemplateEnable" @( Model.ProjectTemplate.Enabled ? "checked" : "")> @L("EnableTemplate")
+                                        <span></span>
+                                    </label>
+                                </div>
+                                <div class="mb-4 d-none">
+                                    <label for="Assignees" class="form-label">@L("AssignACLTo"):</label>
+                                    <input id="Assignees" class="tagsinput-typeahead" type="text" name="Assignees" data-value='@Html.Raw(JsonConvert.SerializeObject(Model.ProjectTemplate.Assignees))' data-role="tagsinput" />
+                                </div>
+                            </form>
+
+                            <form id="kt_wizard_form_step_3_tags">
+
+                                <div class="fs-5 mt-6">
+                                    @L("Tags")
+                                </div>
+                                @foreach (GetTagEntityTypeForViewDto tag in Model.Tags.Items)
+                                {
+                                 
+                                    <div class="mt-2">
+                                        <div class="font-weight-bold mb-2"><span class="fa fa-tag text-primary fs-4"></span> @tag.TagName</div>
+                                        @foreach (TagValueDto tagvalue in tag.TagEntityType.Values)
+                                        {
+                                            <span class="ml-3">
+                                                <label class="kt-checkbox mb-2" for="tag@(tagvalue.Value)">
+                                                    <input id="tag@(tagvalue.Value)"
+                                                           @( Model.EntityTags.Items.Any(t => t.TagEntity.TagValueId == tagvalue.Id) ? "checked" : "")
+                                                           style="font-size:1.4em" type="checkbox" name="@(tagvalue.Id)"
+                                                           value="true" />
+                                                    @tagvalue.Value
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        }
+                                    </div>
+ 
+                                }
+
+                            </form>
+
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 3-->
+                    <!--begin: Form Actions -->
+                    <div class="kt-form__actions">
+                        <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-prev">
+                            <i class="fas fa-chevron-left"></i> @L("Previous")
+                        </button>
+
+                        <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-next">
+                            @L("Next") <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <!--end: Form Actions -->
+                </div>
+                <!--end: Form Wizard Form-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-save">
+            @L("Save")
+    </button>
+    <button type="button" class="btn btn-secondary font-weight-bold close-button me-2" data-bs-dismiss="modal"> @L("Close")</button>
+</div>
+ 
+
+
+<div id="tempaltes" class="d-none">
+    <div id="kt_wizard_form_step_2_formblock" class="kt-form__section kt-form__section--first formblock  border rounded p-4 mb-4">
+        <input type="hidden" name="Steps[][RecordMatterId]" value="" />
+        <div class="form-group step-form-group mb-4">
+            <div class=" ">
+                <label class="form-label">@L("ProjectStepName")*</label>
+                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                <input aria-label="Step Name" type="text" name="Steps[][StepName]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+        </div>
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label">@L("Form")*</label>
+            <select aria-label="Form" class="form-control form-control-sm kt-input" name="Steps[][FormId]">
+                <option selected value="">----pleace select a form ----</option>
+                @foreach (FormListDto form in Model.FormsList)
+                {
+                    <option value="@form.value">@form.label</option>
+                }
+            </select>
+            <span class="form-text text-muted">Please select a Form for this step.</span>
+        </div>
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label">@L("Description")</label>
+            <textarea aria-label="Description" type="text" name="Steps[][Description]" class="form-control form-control-sm  kt-input" placeholder=""></textarea>
+            <span class="form-text text-muted">Please enter a description for this step.</span>
+        </div>
+
+
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label" >@L("FilterIf")</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                </div>
+                <input aria-label="Steps[][Filter]" type="url" name="Steps[][Filter]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Field_yn='true']" value="">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="kt-checkbox">
+                <input aria-label="Approval Workflow Required" type="checkbox" name="Steps[][RequireApproval]" @*checked="checked"*@ value="true"> @L("Approval Workflow Required")
+                <span></span>
+            </label>
+        </div>
+
+        @*<div class="form-group">
+                <label class="kt-checkbox">
+                    <input type="checkbox" name="Steps[][RequireApproval]" value="true"> @L("Approval Required")
+                    <span></span>
+                </label>
+            </div>*@
+
+        <div class="mb-4 ">
+            <label class="form-label" for="Steps[][Order]">@L("Order"):  </label>
+            <input aria-label="Order" type="number" name="Steps[][Order]" min="0" class="form-control form-control-sm  kt-input" value="" placeholder="">
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+</div>

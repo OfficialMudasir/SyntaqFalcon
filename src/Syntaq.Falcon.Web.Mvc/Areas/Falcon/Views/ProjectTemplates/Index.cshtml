@@ -1,0 +1,157 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTemplates
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.ProjectTemplates;
+}
+
+@section Styles
+    {
+    <link href="~/Common/tagsinput.css" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/ProjectTemplates/Index.js"></script>
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+}
+<style>
+    .setLiveToast_Container {
+        position: fixed;
+        bottom: 5px;
+        right: 25px;
+        z-index: 4;
+    }
+
+    #notifyButton {
+        font-size: 14px;
+    }
+
+    #notifyButton:hover,
+    #notifyButton:focus {
+        cursor: pointer;
+        text-decoration: underline; 
+    }
+</style>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("ProjectTemplates")" description="@L("ProjectTemplatesHeaderInfo")">
+
+        @if (IsGranted(AppPermissions.Pages_ProjectTemplates_Create) || IsGranted(AppPermissions.Pages_ProjectTemplates_Edit))
+        {
+@*            <button id="ImportProjectTemplateButton" class="btn btn-primary nowrap">
+                 @L("ImportProjectTemplate")
+            </button>*@
+            <button id="CreateNewProjectTemplateButton" class="btn btn-primary nowrap">
+    
+                <span class="d-none d-md-inline-block">
+                    @L("CreateProjectTemplate")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="mb-5 align-items-center">
+                                <div class="input-group">
+                                    <input type="text" id="ProjectTemplatesTableFilter" aria-label="@L("InputFilterText")" class="form-control" placeholder="@L("SearchWithThreeDot")">
+                                    <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button id="GetProjectsButton" class="btn btn-primary" type="submit" aria-label="@L("Search")">
+                                        <i class="fa fa-search" aria-label="@L("Search")"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*add filter*@
+                    <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand mb-2" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#templates_tab" role="tab" aria-selected="true">
+                                @L("Your") @L("ProjectTemplates")
+                            </a>
+                        </li>
+@*                       <li class="nav-item" role="presentation">
+                            <a class="nav-link " data-bs-toggle="tab" href="#shared_tab" role="tab" aria-selected="true">
+                                @L("Shared") @L("ProjectTemplates")
+                            </a>
+                        </li>*@
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link " data-bs-toggle="tab" href="#deployment_tab" role="tab" aria-selected="true">
+                                @L("ProjectSubscriptions")
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content  mt-4  border-0">
+                    <div class="tab-pane active" id="templates_tab" role="tabpanel">
+                        <div id="TemplatesTab" class="align-items-center">
+                            <table id="ProjectTemplatesTable" class="table align-middle table-row-dashed table-hover gy-5 dataTable no-footer">
+                                <thead>
+                                    <tr>
+                                       
+                                        <th >@L("Name")</th>
+                                        @*<th style="width:100px">@L("Type")</th>*@
+                                        @*<th style="width:100px">@L("Enabled")</th>*@
+                                        <th style="width:400px">@L("LastUpdated")</th>
+                                         <th style="width:100px">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+
+
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="shared_tab" role="tabpanel">
+                        <div id="SharedTemplatesTab" class="align-items-center">
+                            <table id="SharedProjectTemplatesTable" class="table align-middle table-hover table-row-dashed table-hover  gy-5 dataTable no-footer">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th >@L("Name")  </th>
+                                        <th>@L("Shared") @L("By")</th>
+                                        <th style="width:150px">@L("Accepted")</th>
+                                        <th style="width:100px">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="deployment_tab" role="tabpanel">
+                        <div id="DeploymentsTab" class="align-items-center">                            
+                            <table id="ProjectTenantsTable" class="table  table-hoveralign-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                    <tr>                                     
+                                        <th>@L("Name")</th>
+                                        <th>@L("Environment")</th>
+                                        <th>@L("Enabled")</th>
+                                        <th>@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="toast setLiveToast_Container bg-white" id="setLiveToast">
+        <div class="toast-header" style="justify-content: space-between;">
+            <span hidden id="savedTemplateName"></span>
+            <strong id="notifyButton" data-bs-dismiss="modal">@L("NotifyYourTeam")</strong>
+            <button class="btn btn-close" id="closeNotificationButton" type="button" aria-label="Close">
+            </button>
+        </div>
+        <div class="toast-body" style="font-size: 13px !important;">
+            <span class="overflow-auto" id="SetAliveHeaderMessage"></span>
+        </div>
+    </div>

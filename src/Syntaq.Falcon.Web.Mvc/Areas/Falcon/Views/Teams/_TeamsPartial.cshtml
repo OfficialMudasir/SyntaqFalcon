@@ -1,0 +1,259 @@
+﻿@*@using Syntaq.Falcon.Authorization
+    @using Syntaq.Falcon.Web.Areas.Falcon.Models.Teams
+    @model TeamsPartialViewModel
+    <div class="m-portlet m-portlet--tabs">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        {Team Name Here} <small>{Possible Sub-Text}</small>
+                    </h3>
+                </div>
+            </div>
+            <div class="m-portlet__head-tools">
+                <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--accent  m-tabs-line--right" role="tablist">
+                    @*if (IsGranted(AppPermissions.Pages_Teams_Members))*@
+@*@if (@Model.TeamUserPermissions.Any(i => i.Name == "Pages.Teams.Members"))
+                    {
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_portlet_tab_1_1" role="tab">
+                                <i class="fa fa-users"></i>
+                                Members
+                            </a>
+                        </li>
+                    }
+                    @if (IsGranted(AppPermissions.Pages_Teams_Reports))
+                    {
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_portlet_tab_1_2" role="tab">
+                                <i class="fa fa-bar-chart"></i>
+                                Reports
+                            </a>
+                        </li>
+                    }
+                    @if (IsGranted(AppPermissions.Pages_Teams_Forms))
+                    {
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_portlet_tab_1_3" role="tab">
+                                <i class="fa fa-wpforms"></i>
+                                Forms
+                            </a>
+                        </li>
+                    }
+                    @if (IsGranted(AppPermissions.Pages_Teams_Records))
+                    {
+                        <li class="nav-item m-tabs__item">
+                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_portlet_tab_1_4" role="tab">
+                                <i class="fa fa-database"></i>
+                                Records
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="tab-pane" id="m_portlet_tab_1_1">
+                    <div id="TeamsMembersTable" style="display:none">
+                        <div class="col-xs-6 text-right">
+                            <button id="CreateNewPersonButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>
+                        </div>
+                        <table id="MembersTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>@L("Delete")</th>
+                                    <th>@L("UserName")</th>
+                                    <th>@L("AddedTime")</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div id="TeamMembersEmptyInfo" class="text-muted">
+                        @L("SelectAnOrganizationUnitToSeeMembers")
+                    </div>
+                </div>
+                <div class="tab-pane active show" id="m_portlet_tab_1_2">
+                    <div class="m-form m-form--label-align-right">
+                        <div class="row align-items-center m--margin-bottom-10">
+                            <div class="col-xl-12">
+                                <div class="form-group m-form__group align-items-center">
+                                    <div class="input-group">
+                                        <input type="text" id="TeamsTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                        <span class="input-group-btn">
+                                            <button id="GetTeamsButton" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AdvacedAuditFiltersArea" style="display: none" class="row m--margin-bottom-10">
+                        <div class="col-md-12">
+                            <div class="m-separator m-separator--dashed"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="TeamNameFilterId">@L("TeamName")</label>
+                                <input type="text" class="form-control" name="teamNameFilter" id="TeamNameFilterId">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row m--margin-bottom-10">
+                        <div class="col-xl-12">
+                            <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                            <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <table id="TeamsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>@L("Actions")</th>
+                                    <th>@L("TeamName")</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="m_portlet_tab_1_3">
+                    <div class="m-portlet__body">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row align-items-center m--margin-bottom-10">
+                                <div class="col-sm-12 col-md-10">
+                                    <div class="form-group m-form__group align-items-center">
+                                        <div class="input-group">
+                                            <input type="text" id="FormsTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                            <span class="input-group-btn">
+                                                <button id="GetFormsButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-2 text-right">
+                                    @if (IsGranted(AppPermissions.Pages_Forms_Create))
+                                    {
+                                        <button id="CreateNewFormButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewForm")</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="FormsAdvacedAuditFiltersArea" style="display: none" class="row m--margin-bottom-10">
+                            <div class="col-md-12">
+                                <div class="m-separator m-separator--dashed"></div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="DescriptionFilterId">@L("Description")</label>
+                                    <input type="text" class="form-control" name="descriptionFilter" id="DescriptionFilterId">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="DocPDFFilterId">@L("DocPDF")</label>
+                                <select class="form-control" name="DocPDFFilter" id="DocPDFFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="DocUserCanSaveFilterId">@L("DocUserCanSave")</label>
+                                <select class="form-control" name="DocUserCanSaveFilter" id="DocUserCanSaveFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="DocWordFilterId">@L("DocWord")</label>
+                                <select class="form-control" name="DocWordFilter" id="DocWordFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="DocWordPaidFilterId">@L("DocWordPaid")</label>
+                                <select class="form-control" name="DocWordPaidFilter" id="DocWordPaidFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="NameFilterId">@L("Name")</label>
+                                    <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="MinPaymentAmountFilterId">@L("MinMax") @L("PaymentAmount")</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control m-input" placeholder="@L("MinValue")" name="minPaymentAmountFilter" id="MinPaymentAmountFilterId" />
+                                        <input type="number" class="form-control m-input" placeholder="@L("MaxValue")" name="maxPaymentAmountFilter" id="MaxPaymentAmountFilterId" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="PaymentCurrFilterId">@L("PaymentCurr")</label>
+                                    <input type="text" class="form-control" name="paymentCurrFilter" id="PaymentCurrFilterId">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="PaymentEnabledFilterId">@L("PaymentEnabled")</label>
+                                <select class="form-control" name="PaymentEnabledFilter" id="PaymentEnabledFilterId">
+                                    <option value="-1">@L("All")</option>
+                                    <option value="0">@L("False")</option>
+                                    <option value="1">@L("True")</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="FormsFolderNameFilterId">(@L("FormsFolder")) @L("Name")</label>
+                                    <input type="text" class="form-control" name="formsFolderNameFilter" id="FormsFolderNameFilterId">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m--margin-bottom-10">
+                            <div class="col-xl-12">
+                                <span id="FormsShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                                <span id="FormsHideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div id="TeamFormsTable" style="display:none">
+                                <table id="FormsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>@L("Actions")</th>
+                                            <th>@L("Description")</th>
+                                            <th>@L("DocPDF")</th>
+                                            <th>@L("DocUserCanSave")</th>
+                                            <th>@L("DocWord")</th>
+                                            <th>@L("DocWordPaid")</th>
+                                            <th>@L("Name")</th>
+                                            <th>@L("PaymentAmount")</th>
+                                            <th>@L("PaymentCurr")</th>
+                                            <th>@L("PaymentEnabled")</th>
+                                            <th>@L("FormsFolderName")</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div id="TeamFormsEmptyInfo" class="text-muted">
+                                @L("SelectATeamToSeeForms")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="m_portlet_tab_1_4">
+                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.
+                </div>
+            </div>
+        </div>
+    </div>*@

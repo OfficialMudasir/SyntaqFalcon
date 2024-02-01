@@ -1,0 +1,57 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTenants
+@model CreateOrEditProjectTenantModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("Subscriber")) : L("Subscriber")))
+
+<div class="modal-body">
+    <div id="ProjectTenantInformationsTab">
+        <form name="ProjectTenantInformationsForm" role="form" novalidate class="form-validation">
+
+            @if (Model.IsEditMode)
+            {
+                <input type="hidden" name="id" value="@Model.ProjectTenant.Id" />
+            }
+
+            <input class="form-control" id="ProjectTenant_ProjectId" value="@Model.ProjectTenant.ProjectId" type="hidden" name="projectId" />
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectEnvironmentName">@L("ProjectEnvironment")</label>
+                <div class="input-group">
+                    <input class="form-control" id="ProjectEnvironmentName" name="projectEnvironmentName" value="@Model.ProjectEnvironmentName" type="text" disabled>
+                    <button class="btn btn-primary blue" id="OpenProjectEnvironmentLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                    <button class="btn btn-danger btn-icon" type="button" id="ClearProjectEnvironmentNameButton"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+
+            @if (Model.IsEditMode)
+            {
+            <input class="form-control" id="ProjectTenant_ProjectEnvironmentId" value="@Model.ProjectTenant.ProjectEnvironmentId" type="hidden" name="projectEnvironmentId"  />
+            }
+            else
+            {
+                <input class="form-control" id="ProjectTenant_ProjectEnvironmentId" value="" type="hidden" name="projectEnvironmentId" hidden />
+            }
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectTenant_SubscriberTenantName">@L("Tenant")</label>
+                <input class="form-control" id="ProjectTenant_SubscriberTenantId" value="@Model.ProjectTenant.SubscriberTenantId.ToString(CultureInfo.InvariantCulture)" type="number" hidden name="subscriberTenantId" />
+                <input class="form-control" id="ProjectTenant_SubscriberTenantName" value="@Model.ProjectTenant.SubscriberTenantName" type="text" name="subscriberTenantName" />
+            </div>
+
+ 
+
+            <label class="form-check form-check-custom">
+                <input id="ProjectTenant_Enabled" name="enabled" type="checkbox" class="form-check-input" value="true" @Html.Raw(Model.ProjectTenant.Enabled ?"checked=\"checked\"":"") />
+                <span class="form-check-label">
+                    @L("Enabled")
+                </span>
+            </label>
+
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,415 @@
+{
+  "type": "File",
+  "start": 0,
+  "end": 6217,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 240,
+      "column": 0
+    }
+  },
+  "program": {
+    "type": "Program",
+    "start": 0,
+    "end": 6217,
+    "loc": {
+      "start": {
+        "line": 1,
+        "column": 0
+      },
+      "end": {
+        "line": 240,
+        "column": 0
+      }
+    },
+    "sourceType": "module",
+    "body": [
+      {
+        "type": "ExportDefaultDeclaration",
+        "start": 30,
+        "end": 6186,
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 0
+          },
+          "end": {
+            "line": 238,
+            "column": 2
+          }
+        },
+        "declaration": {
+          "type": "ArrayExpression",
+          "start": 45,
+          "end": 6185,
+          "loc": {
+            "start": {
+              "line": 2,
+              "column": 15
+            },
+            "end": {
+              "line": 238,
+              "column": 1
+            }
+          },
+          "elements": [],
+          "leadingComments": [
+            {
+              "type": "CommentBlock",
+              "value": " eslint-disable max-len ",
+              "start": 0,
+              "end": 28,
+              "loc": {
+                "start": {
+                  "line": 1,
+                  "column": 0
+                },
+                "end": {
+                  "line": 1,
+                  "column": 28
+                }
+              }
+            }
+          ],
+          "innerComments": [
+            {
+              "type": "CommentBlock",
+              "value": "  {\r\n    weight: 10,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'label',\r\n    label: 'Label',\r\n    placeholder: 'Field Label',\r\n    tooltip: 'The label for this field that will appear next to it.',\r\n    validate: {\r\n      required: true\r\n    }\r\n  },\r\n  {\r\n    weight: 10,\r\n    type: 'checkbox',\r\n    label: 'Hide Label',\r\n    tooltip: 'Hide the label of this component. This allows you to show the label in the form builder, but not when it is rendered.',\r\n    key: 'hideLabel',\r\n    input: true\r\n  },\r\n  {\r\n    type: 'select',\r\n    input: true,\r\n    key: 'labelPosition',\r\n    label: 'Label Position',\r\n    tooltip: 'Position for the label for this field.',\r\n    weight: 20,\r\n    defaultValue: 'top',\r\n    dataSrc: 'values',\r\n    data: {\r\n      values: [\r\n        { label: 'Top', value: 'top' },\r\n        { label: 'Left (Left-aligned)', value: 'left-left' },\r\n        { label: 'Left (Right-aligned)', value: 'left-right' },\r\n        { label: 'Right (Left-aligned)', value: 'right-left' },\r\n        { label: 'Right (Right-aligned)', value: 'right-right' },\r\n        { label: 'Bottom', value: 'bottom' }\r\n      ]\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelWidth',\r\n    label: 'Label Width',\r\n    tooltip: 'The width of label on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '30',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelMargin',\r\n    label: 'Label Margin',\r\n    tooltip: 'The width of label margin on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '3',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'placeholder',\r\n    label: 'Placeholder',\r\n    placeholder: 'Placeholder',\r\n    tooltip: 'The placeholder text that will appear when this field is empty.'\r\n  },\r\n  {\r\n    weight: 200,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'description',\r\n    label: 'Description',\r\n    placeholder: 'Description for this field.',\r\n    tooltip: 'The description is text that will appear below the input field.'\r\n  },\r\n  {\r\n    weight: 300,\r\n    type: 'textarea',\r\n    input: true,\r\n    key: 'tooltip',\r\n    label: 'Tooltip',\r\n    placeholder: 'To add a tooltip to this field, enter text here.',\r\n    tooltip: 'Adds a tooltip to the side of this field.'\r\n  },\r\n  {\r\n    weight: 400,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'errorLabel',\r\n    label: 'Error Label',\r\n    placeholder: 'Error Label',\r\n    tooltip: 'The label for this field when an error occurs.'\r\n  },\r\n  {\r\n    weight: 500,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'customClass',\r\n    label: 'Custom CSS Class',\r\n    placeholder: 'Custom CSS Class',\r\n    tooltip: 'Custom CSS class to add to this component.'\r\n  },\r\n  {\r\n    weight: 600,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'tabindex',\r\n    label: 'Tab Index',\r\n    placeholder: 'Tab Index',\r\n    tooltip: 'Sets the tabindex attribute of this component to override the tab order of the form. See the <a href=\\\\\\'https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex\\\\\\'>MDN documentation</a> on tabindex for more information.'\r\n  },\r\n  {\r\n    weight: 700,\r\n    type: 'radio',\r\n    label: 'Persistent',\r\n    tooltip: 'A persistent field will be stored in database when the form is submitted.',\r\n    key: 'persistent',\r\n    input: true,\r\n    inline: true,\r\n    values: [\r\n      { label: 'None', value: false },\r\n      { label: 'Server', value: true },\r\n      { label: 'Client', value: 'client-only' },\r\n    ]\r\n  },\r\n  {\r\n    weight: 800,\r\n    type: 'checkbox',\r\n    label: 'Multiple Values',\r\n    tooltip: 'Allows multiple values to be entered for this field.',\r\n    key: 'multiple',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'checkbox',\r\n    label: 'Clear Value When Hidden',\r\n    key: 'clearOnHide',\r\n    tooltip: 'When a field is hidden, clear the value.',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1000,\r\n    type: 'checkbox',\r\n    label: 'Protected',\r\n    tooltip: 'A protected field will not be returned when queried via API.',\r\n    key: 'protected',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1100,\r\n    type: 'checkbox',\r\n    label: 'Hidden',\r\n    tooltip: 'A hidden field is still a part of the form, but is hidden from view.',\r\n    key: 'hidden',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1300,\r\n    type: 'checkbox',\r\n    label: 'Hide Input',\r\n    tooltip: 'Hide the input in the browser. This does not encrypt on the server. Do not use for passwords.',\r\n    key: 'mask',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1310,\r\n    type: 'checkbox',\r\n    label: 'Show Label in DataGrid',\r\n    tooltip: 'Show the label when in a Datagrid.',\r\n    key: 'dataGridLabel',\r\n    input: true,\r\n    customConditional: 'show = instance.root.editComponent.inDataGrid'\r\n  },\r\n  {\r\n    weight: 1400,\r\n    type: 'checkbox',\r\n    label: 'Disabled',\r\n    tooltip: 'Disable the form input.',\r\n    key: 'disabled',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1450,\r\n    type: 'checkbox',\r\n    label: 'Initial Focus',\r\n    tooltip: 'Make this field the initially focused element on this form.',\r\n    key: 'autofocus',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1500,\r\n    type: 'checkbox',\r\n    label: 'Table View',\r\n    tooltip: 'Shows this value within the table view of the submissions.',\r\n    key: 'tableView',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1550,\r\n    type: 'checkbox',\r\n    label: 'Always enabled',\r\n    tooltip: 'Make this field always enabled, even if the form is disabled',\r\n    key: 'alwaysEnabled',\r\n    input: true\r\n  }",
+              "start": 48,
+              "end": 6182,
+              "loc": {
+                "start": {
+                  "line": 3,
+                  "column": 0
+                },
+                "end": {
+                  "line": 237,
+                  "column": 5
+                }
+              }
+            }
+          ],
+          "trailingComments": [
+            {
+              "type": "CommentBlock",
+              "value": " eslint-enable max-len ",
+              "start": 6188,
+              "end": 6215,
+              "loc": {
+                "start": {
+                  "line": 239,
+                  "column": 0
+                },
+                "end": {
+                  "line": 239,
+                  "column": 27
+                }
+              }
+            }
+          ]
+        },
+        "leadingComments": [
+          {
+            "type": "CommentBlock",
+            "value": " eslint-disable max-len ",
+            "start": 0,
+            "end": 28,
+            "loc": {
+              "start": {
+                "line": 1,
+                "column": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 28
+              }
+            }
+          }
+        ],
+        "trailingComments": [
+          {
+            "type": "CommentBlock",
+            "value": " eslint-enable max-len ",
+            "start": 6188,
+            "end": 6215,
+            "loc": {
+              "start": {
+                "line": 239,
+                "column": 0
+              },
+              "end": {
+                "line": 239,
+                "column": 27
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "directives": []
+  },
+  "comments": [
+    {
+      "type": "CommentBlock",
+      "value": " eslint-disable max-len ",
+      "start": 0,
+      "end": 28,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": "CommentBlock",
+      "value": "  {\r\n    weight: 10,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'label',\r\n    label: 'Label',\r\n    placeholder: 'Field Label',\r\n    tooltip: 'The label for this field that will appear next to it.',\r\n    validate: {\r\n      required: true\r\n    }\r\n  },\r\n  {\r\n    weight: 10,\r\n    type: 'checkbox',\r\n    label: 'Hide Label',\r\n    tooltip: 'Hide the label of this component. This allows you to show the label in the form builder, but not when it is rendered.',\r\n    key: 'hideLabel',\r\n    input: true\r\n  },\r\n  {\r\n    type: 'select',\r\n    input: true,\r\n    key: 'labelPosition',\r\n    label: 'Label Position',\r\n    tooltip: 'Position for the label for this field.',\r\n    weight: 20,\r\n    defaultValue: 'top',\r\n    dataSrc: 'values',\r\n    data: {\r\n      values: [\r\n        { label: 'Top', value: 'top' },\r\n        { label: 'Left (Left-aligned)', value: 'left-left' },\r\n        { label: 'Left (Right-aligned)', value: 'left-right' },\r\n        { label: 'Right (Left-aligned)', value: 'right-left' },\r\n        { label: 'Right (Right-aligned)', value: 'right-right' },\r\n        { label: 'Bottom', value: 'bottom' }\r\n      ]\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelWidth',\r\n    label: 'Label Width',\r\n    tooltip: 'The width of label on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '30',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelMargin',\r\n    label: 'Label Margin',\r\n    tooltip: 'The width of label margin on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '3',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'placeholder',\r\n    label: 'Placeholder',\r\n    placeholder: 'Placeholder',\r\n    tooltip: 'The placeholder text that will appear when this field is empty.'\r\n  },\r\n  {\r\n    weight: 200,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'description',\r\n    label: 'Description',\r\n    placeholder: 'Description for this field.',\r\n    tooltip: 'The description is text that will appear below the input field.'\r\n  },\r\n  {\r\n    weight: 300,\r\n    type: 'textarea',\r\n    input: true,\r\n    key: 'tooltip',\r\n    label: 'Tooltip',\r\n    placeholder: 'To add a tooltip to this field, enter text here.',\r\n    tooltip: 'Adds a tooltip to the side of this field.'\r\n  },\r\n  {\r\n    weight: 400,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'errorLabel',\r\n    label: 'Error Label',\r\n    placeholder: 'Error Label',\r\n    tooltip: 'The label for this field when an error occurs.'\r\n  },\r\n  {\r\n    weight: 500,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'customClass',\r\n    label: 'Custom CSS Class',\r\n    placeholder: 'Custom CSS Class',\r\n    tooltip: 'Custom CSS class to add to this component.'\r\n  },\r\n  {\r\n    weight: 600,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'tabindex',\r\n    label: 'Tab Index',\r\n    placeholder: 'Tab Index',\r\n    tooltip: 'Sets the tabindex attribute of this component to override the tab order of the form. See the <a href=\\\\\\'https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex\\\\\\'>MDN documentation</a> on tabindex for more information.'\r\n  },\r\n  {\r\n    weight: 700,\r\n    type: 'radio',\r\n    label: 'Persistent',\r\n    tooltip: 'A persistent field will be stored in database when the form is submitted.',\r\n    key: 'persistent',\r\n    input: true,\r\n    inline: true,\r\n    values: [\r\n      { label: 'None', value: false },\r\n      { label: 'Server', value: true },\r\n      { label: 'Client', value: 'client-only' },\r\n    ]\r\n  },\r\n  {\r\n    weight: 800,\r\n    type: 'checkbox',\r\n    label: 'Multiple Values',\r\n    tooltip: 'Allows multiple values to be entered for this field.',\r\n    key: 'multiple',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'checkbox',\r\n    label: 'Clear Value When Hidden',\r\n    key: 'clearOnHide',\r\n    tooltip: 'When a field is hidden, clear the value.',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1000,\r\n    type: 'checkbox',\r\n    label: 'Protected',\r\n    tooltip: 'A protected field will not be returned when queried via API.',\r\n    key: 'protected',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1100,\r\n    type: 'checkbox',\r\n    label: 'Hidden',\r\n    tooltip: 'A hidden field is still a part of the form, but is hidden from view.',\r\n    key: 'hidden',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1300,\r\n    type: 'checkbox',\r\n    label: 'Hide Input',\r\n    tooltip: 'Hide the input in the browser. This does not encrypt on the server. Do not use for passwords.',\r\n    key: 'mask',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1310,\r\n    type: 'checkbox',\r\n    label: 'Show Label in DataGrid',\r\n    tooltip: 'Show the label when in a Datagrid.',\r\n    key: 'dataGridLabel',\r\n    input: true,\r\n    customConditional: 'show = instance.root.editComponent.inDataGrid'\r\n  },\r\n  {\r\n    weight: 1400,\r\n    type: 'checkbox',\r\n    label: 'Disabled',\r\n    tooltip: 'Disable the form input.',\r\n    key: 'disabled',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1450,\r\n    type: 'checkbox',\r\n    label: 'Initial Focus',\r\n    tooltip: 'Make this field the initially focused element on this form.',\r\n    key: 'autofocus',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1500,\r\n    type: 'checkbox',\r\n    label: 'Table View',\r\n    tooltip: 'Shows this value within the table view of the submissions.',\r\n    key: 'tableView',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1550,\r\n    type: 'checkbox',\r\n    label: 'Always enabled',\r\n    tooltip: 'Make this field always enabled, even if the form is disabled',\r\n    key: 'alwaysEnabled',\r\n    input: true\r\n  }",
+      "start": 48,
+      "end": 6182,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 237,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": "CommentBlock",
+      "value": " eslint-enable max-len ",
+      "start": 6188,
+      "end": 6215,
+      "loc": {
+        "start": {
+          "line": 239,
+          "column": 0
+        },
+        "end": {
+          "line": 239,
+          "column": 27
+        }
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "type": "CommentBlock",
+      "value": " eslint-disable max-len ",
+      "start": 0,
+      "end": 28,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 28
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "export",
+        "keyword": "export",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "export",
+      "start": 30,
+      "end": 36,
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "default",
+        "keyword": "default",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "default",
+      "start": 37,
+      "end": 44,
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 7
+        },
+        "end": {
+          "line": 2,
+          "column": 14
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "[",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 45,
+      "end": 46,
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 15
+        },
+        "end": {
+          "line": 2,
+          "column": 16
+        }
+      }
+    },
+    {
+      "type": "CommentBlock",
+      "value": "  {\r\n    weight: 10,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'label',\r\n    label: 'Label',\r\n    placeholder: 'Field Label',\r\n    tooltip: 'The label for this field that will appear next to it.',\r\n    validate: {\r\n      required: true\r\n    }\r\n  },\r\n  {\r\n    weight: 10,\r\n    type: 'checkbox',\r\n    label: 'Hide Label',\r\n    tooltip: 'Hide the label of this component. This allows you to show the label in the form builder, but not when it is rendered.',\r\n    key: 'hideLabel',\r\n    input: true\r\n  },\r\n  {\r\n    type: 'select',\r\n    input: true,\r\n    key: 'labelPosition',\r\n    label: 'Label Position',\r\n    tooltip: 'Position for the label for this field.',\r\n    weight: 20,\r\n    defaultValue: 'top',\r\n    dataSrc: 'values',\r\n    data: {\r\n      values: [\r\n        { label: 'Top', value: 'top' },\r\n        { label: 'Left (Left-aligned)', value: 'left-left' },\r\n        { label: 'Left (Right-aligned)', value: 'left-right' },\r\n        { label: 'Right (Left-aligned)', value: 'right-left' },\r\n        { label: 'Right (Right-aligned)', value: 'right-right' },\r\n        { label: 'Bottom', value: 'bottom' }\r\n      ]\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelWidth',\r\n    label: 'Label Width',\r\n    tooltip: 'The width of label on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '30',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    type: 'number',\r\n    input: true,\r\n    key: 'labelMargin',\r\n    label: 'Label Margin',\r\n    tooltip: 'The width of label margin on line in percentages.',\r\n    clearOnHide: false,\r\n    weight: 30,\r\n    placeholder: '3',\r\n    suffix: '%',\r\n    validate: {\r\n      min: 0,\r\n      max: 100\r\n    },\r\n    conditional: {\r\n      json: {\r\n        and: [\r\n          { '!==': [{ var: 'data.labelPosition' }, 'top'] },\r\n          { '!==': [{ var: 'data.labelPosition' }, 'bottom'] },\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'placeholder',\r\n    label: 'Placeholder',\r\n    placeholder: 'Placeholder',\r\n    tooltip: 'The placeholder text that will appear when this field is empty.'\r\n  },\r\n  {\r\n    weight: 200,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'description',\r\n    label: 'Description',\r\n    placeholder: 'Description for this field.',\r\n    tooltip: 'The description is text that will appear below the input field.'\r\n  },\r\n  {\r\n    weight: 300,\r\n    type: 'textarea',\r\n    input: true,\r\n    key: 'tooltip',\r\n    label: 'Tooltip',\r\n    placeholder: 'To add a tooltip to this field, enter text here.',\r\n    tooltip: 'Adds a tooltip to the side of this field.'\r\n  },\r\n  {\r\n    weight: 400,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'errorLabel',\r\n    label: 'Error Label',\r\n    placeholder: 'Error Label',\r\n    tooltip: 'The label for this field when an error occurs.'\r\n  },\r\n  {\r\n    weight: 500,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'customClass',\r\n    label: 'Custom CSS Class',\r\n    placeholder: 'Custom CSS Class',\r\n    tooltip: 'Custom CSS class to add to this component.'\r\n  },\r\n  {\r\n    weight: 600,\r\n    type: 'textfield',\r\n    input: true,\r\n    key: 'tabindex',\r\n    label: 'Tab Index',\r\n    placeholder: 'Tab Index',\r\n    tooltip: 'Sets the tabindex attribute of this component to override the tab order of the form. See the <a href=\\\\\\'https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex\\\\\\'>MDN documentation</a> on tabindex for more information.'\r\n  },\r\n  {\r\n    weight: 700,\r\n    type: 'radio',\r\n    label: 'Persistent',\r\n    tooltip: 'A persistent field will be stored in database when the form is submitted.',\r\n    key: 'persistent',\r\n    input: true,\r\n    inline: true,\r\n    values: [\r\n      { label: 'None', value: false },\r\n      { label: 'Server', value: true },\r\n      { label: 'Client', value: 'client-only' },\r\n    ]\r\n  },\r\n  {\r\n    weight: 800,\r\n    type: 'checkbox',\r\n    label: 'Multiple Values',\r\n    tooltip: 'Allows multiple values to be entered for this field.',\r\n    key: 'multiple',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 100,\r\n    type: 'checkbox',\r\n    label: 'Clear Value When Hidden',\r\n    key: 'clearOnHide',\r\n    tooltip: 'When a field is hidden, clear the value.',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1000,\r\n    type: 'checkbox',\r\n    label: 'Protected',\r\n    tooltip: 'A protected field will not be returned when queried via API.',\r\n    key: 'protected',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1100,\r\n    type: 'checkbox',\r\n    label: 'Hidden',\r\n    tooltip: 'A hidden field is still a part of the form, but is hidden from view.',\r\n    key: 'hidden',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1300,\r\n    type: 'checkbox',\r\n    label: 'Hide Input',\r\n    tooltip: 'Hide the input in the browser. This does not encrypt on the server. Do not use for passwords.',\r\n    key: 'mask',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1310,\r\n    type: 'checkbox',\r\n    label: 'Show Label in DataGrid',\r\n    tooltip: 'Show the label when in a Datagrid.',\r\n    key: 'dataGridLabel',\r\n    input: true,\r\n    customConditional: 'show = instance.root.editComponent.inDataGrid'\r\n  },\r\n  {\r\n    weight: 1400,\r\n    type: 'checkbox',\r\n    label: 'Disabled',\r\n    tooltip: 'Disable the form input.',\r\n    key: 'disabled',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1450,\r\n    type: 'checkbox',\r\n    label: 'Initial Focus',\r\n    tooltip: 'Make this field the initially focused element on this form.',\r\n    key: 'autofocus',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1500,\r\n    type: 'checkbox',\r\n    label: 'Table View',\r\n    tooltip: 'Shows this value within the table view of the submissions.',\r\n    key: 'tableView',\r\n    input: true\r\n  },\r\n  {\r\n    weight: 1550,\r\n    type: 'checkbox',\r\n    label: 'Always enabled',\r\n    tooltip: 'Make this field always enabled, even if the form is disabled',\r\n    key: 'alwaysEnabled',\r\n    input: true\r\n  }",
+      "start": 48,
+      "end": 6182,
+      "loc": {
+        "start": {
+          "line": 3,
+          "column": 0
+        },
+        "end": {
+          "line": 237,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "]",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 6184,
+      "end": 6185,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 0
+        },
+        "end": {
+          "line": 238,
+          "column": 1
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ";",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 6185,
+      "end": 6186,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 1
+        },
+        "end": {
+          "line": 238,
+          "column": 2
+        }
+      }
+    },
+    {
+      "type": "CommentBlock",
+      "value": " eslint-enable max-len ",
+      "start": 6188,
+      "end": 6215,
+      "loc": {
+        "start": {
+          "line": 239,
+          "column": 0
+        },
+        "end": {
+          "line": 239,
+          "column": 27
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "eof",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 6217,
+      "end": 6217,
+      "loc": {
+        "start": {
+          "line": 240,
+          "column": 0
+        },
+        "end": {
+          "line": 240,
+          "column": 0
+        }
+      }
+    }
+  ]
+}

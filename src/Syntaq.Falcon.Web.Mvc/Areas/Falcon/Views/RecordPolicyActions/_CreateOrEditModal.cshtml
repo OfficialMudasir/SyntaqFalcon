@@ -1,0 +1,89 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordPolicyActions
+@model CreateOrEditRecordPolicyActionModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordPolicyAction")) : L("CreateNewRecordPolicyAction")))
+
+
+<div class="modal-body">
+    <div id="RecordPolicyActionInformationsTab">
+        <form name="RecordPolicyActionInformationsForm" role="form" novalidate class="form-validation">
+
+            @if (Model.IsEditMode)
+            {<input type="hidden" name="id" value="@Model.RecordPolicyAction.Id" />
+            }
+
+
+            @*  <input type="hidden" name="policytype" value="@Model.RecordPolicyAction.Type" />*@
+
+            <input type="hidden" name="recordPolicyId" value="@Model.RecordPolicyAction.RecordPolicyId" />
+
+            <input type="hidden" name="appliedTenantId" value="@Model.RecordPolicyAction.AppliedTenantId" />
+
+
+            <div class="form-group mb-3">
+                <label class="form-label" for="RecordPolicyAction_Name">@L("Name")</label>
+                <input class="form-control" id="RecordPolicyAction_Name" value="@Model.RecordPolicyAction.Name" type="text" name="name" />
+            </div>
+
+            @if (@Model.IsEditMode)
+            {
+                <div class="form-group mb-3">
+                    <label class="form-label"  for="TypeFilterId">@L("Type")</label>
+                    <select class="form-control" name="type" id="ExpireRuleTypeId" @(@Model.IsEditMode ? "disabled" : "")>
+                        <option value=@Model.RecordPolicyAction.Type>@Model.RecordPolicyAction.Type</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3" id="archieveRules">
+                    <label class="form-label"  for="RecordPolicyAction_Rules">Project Status</label>
+                    <select class="form-control" name="recordStatus" id="RecordStatusType" @(@Model.IsEditMode ? "disabled" : "")>
+                        <option value=@Model.RecordPolicyAction.RecordStatus>@Model.RecordPolicyAction.RecordStatus</option>
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div class="form-group mb-3">
+                    <label  class="form-label"  for="TypeFilterId">@L("Type")</label>
+                    <select class="form-control" name="type" id="ExpireRuleTypeId">
+                        <option value="0">@L("Enum_RecordPolicyActionType_0")</option>
+                        <option value="1">@L("Enum_RecordPolicyActionType_1")</option>
+                        <option value="2">@L("Enum_RecordPolicyActionType_2")</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3" id="archieveRules">
+                    <label class="form-label"  for="RecordPolicyAction_Rules">Project Status</label>
+                    <select class="form-control" name="recordStatus" id="RecordStatusType">
+                        <option value="0">@L("Enum_RecordStatusType_0")</option>
+                        <option value="1">@L("Enum_RecordStatusType_1")</option>
+                        <option value="2">@L("Enum_RecordStatusType_2")</option>
+                    </select>
+                </div>
+            }
+
+            <div class="form-group mb-3" id="softHardDeleteRules">
+                <label  class="form-label"  for="RecordPolicyAction_ExpireDays">@L("ExpireDays")</label>
+                <input class="form-control m-input" id="RecordPolicyAction_ExpireDays" value="@Model.RecordPolicyAction.ExpireDays.ToString(CultureInfo.InvariantCulture)" type="number" name="expireDays" />
+            </div> @*<div class="form-group">
+                    <label for="RecordPolicyAction_Type">@L("Type")</label>
+                    <input class="form-control m-input" id="RecordPolicyAction_Type" value="@Model.RecordPolicyAction.Type.ToString(CultureInfo.InvariantCulture)" type="number" name="type" />
+                </div>*@
+
+            <div class="m-checkbox-list">
+                <label  class="form-label"  for="RecordPolicyAction_Active" class="kt-checkbox">
+                    <input id="RecordPolicyAction_Active" type="checkbox" name="active" value="true" @Html.Raw(Model.RecordPolicyAction.Active ? "checked=\"checked\"" : "") />
+                    @L("Active")
+                    <span></span>
+                </label>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

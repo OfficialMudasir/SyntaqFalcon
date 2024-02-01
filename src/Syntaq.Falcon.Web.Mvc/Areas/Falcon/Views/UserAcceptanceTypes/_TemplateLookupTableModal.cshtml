@@ -1,0 +1,46 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptanceTypes
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model TemplateLookupTableViewModel
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/UserAcceptanceTypes/_TemplateLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickTemplate")))
+
+<div class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class=" p-4 align-items-center m--margin-bottom-10">
+                    <div class="col-xl-12">
+                        <div class="form-group m-form__group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="TemplateTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                <span class="input-group-btn">
+                                    <button id="GetTemplateButton" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+
+                        <table id="TemplateTable" class="display table table-striped  table-bordered table-hover   nowrap">
+                            <thead>
+                                <tr>
+                                    @*<th style="width:5%; ">@L("Actions")</th>*@
+                                    <th>@L("Name")</th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+ 
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

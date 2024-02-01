@@ -1,0 +1,29 @@
+﻿@*@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Teams
+@model AssignOrRemoveRolesModalViewModel
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("MODAL HEADER"))
+<div class="modal-body">
+    <div id="TeamRoleInformationsTab">
+        <form name="TeamRoleInformationsForm" role="form" novalidate class="form-validation">
+            <div class="team-user-role-checkbox-list">
+                @foreach (var role in Model.Roles)
+                {
+                    <div class="m-checkbox-list">
+                        @*<label for="EditUser_@(role.RoleName)" class="m-checkbox">
+                    <input id="EditUser_@(role.RoleName)" type="checkbox" name="@(role.RoleName)" value="true" @Html.Raw(role.IsAssigned ? "checked=\"checked\"" : "")>
+                    @role.RoleDisplayName
+                    <span></span>
+                </label>
+                        <label for="@(role.RoleId)" class="m-checkbox">
+                            <input id="@(role.RoleId)" type="checkbox" name="@(role.RoleName)" value="true" @Html.Raw(role.IsAssigned ? "checked=\"checked\"" : "")>
+                            @role.RoleDisplayName
+                            <span></span>
+                        </label>
+                    </div>
+                }
+                <input id="UserId"  type="text" name="UserId" value="@(Model.TeamUserRole.UserId)" hidden />
+            </div>
+        </form>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

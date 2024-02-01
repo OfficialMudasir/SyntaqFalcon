@@ -1,0 +1,248 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms;
+@model FormsPartialViewModel
+<style>
+	.OnClickLink {
+		cursor: pointer;
+		color: #58a3dc !important;
+		font-size: small;
+	}
+
+		.OnClickLink:hover {
+			color: #287ebf !important;
+			text-decoration: underline !important;
+		}
+
+	table.dataTable tbody tr:hover {
+		background-color: #ecf0f1 !important;
+	}
+</style>
+<div class="card-body">
+	<div class="">
+		<div class="">
+            <div class="">
+                <nav aria-label="breadcrumb" class="kt-portlet__head-text mt-3 mb-3">
+
+                    <ol class="breadcrumb font-weight-bold" >
+                        <li class="breadcrumb-item">
+                            <i class="fa fa-home large text-mute" style="font-size:1.3em"></i>
+                        </li>
+                        @{
+                            var i = 0;
+                            foreach (var Breadcrumb in Model.BreadcrumbList)
+                            {
+                                @if (@Breadcrumb.Id.ToString().ToUpper() == @Model.CurrentFolder.ToUpper())
+                                {
+                                    <li class="breadcrumb-item active droppable">
+                                        <span class="kt-nav__link kt-nav__link--icon">
+                                            <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary" name="Current">
+                                                @Breadcrumb.Name
+                                            </span>
+                                            <input type="hidden" value="@Breadcrumb.Id" />
+                                        </span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="breadcrumb-item active droppable">
+                                        <a href="#" onClick="(function(){$('#FormNavigationButton').trigger('click', '@Breadcrumb.Id.ToString()')})();" class=" ">
+                                            <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary">@Breadcrumb.Name</span>
+                                            <input id="SelectedFolderId" hidden value="@Breadcrumb.Id" />
+                                        </a>
+                                    </li>
+                                }
+                                @*if ((Model.TotalBreadcrumbCount - 1) > i)
+                                {
+                                    <li class="breadcrumb-item text-primary p-0">/</li>
+                                }*@
+                                i++;
+                            }
+                        }
+                    </ol>
+                </nav>
+            </div>
+		</div>
+ 
+	</div>
+    <div class=" ">
+        <div class=" ">
+            <div class="row align-items-center kt--margin-bottom-10">
+                <div class="col-xl-12">
+                    <div class="form-group kt-form__group align-items-center">
+                        <div class="input-group">
+                            <input id="FormsTableFilter" class="form-control" aria-label="@L("InputFilterText")" type="text" value="@Model.FilterText" placeholder="@L("SearchWithThreeDot")">
+                            <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button id="GetFormsButton" class="btn btn-primary" type="submit" aria-label="@L("Search")">
+                                <i class="fa fa-search" aria-label="@L("Search")"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="AdvacedAuditFiltersArea" style="display: none" class="row kt--margin-bottom-10">
+            <div class="col-md-12">
+                <div class="kt-separator kt-separator--dashed"></div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="DescriptionFilterId">@L("Description")</label>
+                    <input type="text" class="form-control" name="descriptionFilter" id="DescriptionFilterId">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="DocPDFFilterId">@L("DocPDF")</label>
+                <select class="form-control" name="DocPDFFilter" id="DocPDFFilterId">
+                    <option value="-1">@L("All")</option>
+                    <option value="0">@L("False")</option>
+                    <option value="1">@L("True")</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="DocUserCanSaveFilterId">@L("DocUserCanSave")</label>
+                <select class="form-control" name="DocUserCanSaveFilter" id="DocUserCanSaveFilterId">
+                    <option value="-1">@L("All")</option>
+                    <option value="0">@L("False")</option>
+                    <option value="1">@L("True")</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="DocWordFilterId">@L("DocWord")</label>
+                <select class="form-control" name="DocWordFilter" id="DocWordFilterId">
+                    <option value="-1">@L("All")</option>
+                    <option value="0">@L("False")</option>
+                    <option value="1">@L("True")</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="DocWordPaidFilterId">@L("DocWordPaid")</label>
+                <select class="form-control" name="DocWordPaidFilter" id="DocWordPaidFilterId">
+                    <option value="-1">@L("All")</option>
+                    <option value="0">@L("False")</option>
+                    <option value="1">@L("True")</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="NameFilterId">@L("Name")</label>
+                    <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="MinPaymentAmountFilterId">@L("MinMax") @L("PaymentAmount")</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control m-input" placeholder="@L("MinValue")" name="minPaymentAmountFilter" id="MinPaymentAmountFilterId" />
+                        <input type="number" aria-label="Max Payment Amount Filter" class="form-control m-input" placeholder="@L("MaxValue")" name="maxPaymentAmountFilter" id="MaxPaymentAmountFilterId" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="PaymentCurrFilterId">@L("PaymentCurr")</label>
+                    <input type="text" class="form-control" name="paymentCurrFilter" id="PaymentCurrFilterId">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="PaymentEnabledFilterId">@L("PaymentEnabled")</label>
+                <select class="form-control" name="PaymentEnabledFilter" id="PaymentEnabledFilterId">
+                    <option value="-1">@L("All")</option>
+                    <option value="0">@L("False")</option>
+                    <option value="1">@L("True")</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="FormsFolderNameFilterId">(@L("FormsFolder")) @L("Name")</label>
+                    <input type="text" class="form-control" name="formsFolderNameFilter" id="FormsFolderNameFilterId">
+                </div>
+            </div>
+
+        </div>
+
+        @if (IsGranted(AppPermissions.Pages_Administration))
+        {
+
+            <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand mt-4 mb-4" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#forms_tab" role="tab" aria-selected="true">
+                        @L("My") @L("Forms")
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " data-bs-toggle="tab" href="#sharedforms_tab" role="tab" aria-selected="true">
+                        @L("Shared") @L("Forms")
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content col-12 border-0">
+
+                <div class="tab-pane active  " id="forms_tab" role="tabpanel">
+                    <div id="FormsTab">
+                        <div class="row">
+                            <table id="FormsTable" class="display table align-middle table-row-dashed table-hover dt-responsive nowrap">
+                                <thead>
+                                    <tr>                                  
+                                        <th style="width:80%">@L("Name")</th>
+                                        <th style="width:3%">@L("Version")</th>
+                                        <th style="width:12%">@L("LastUpdated")</th>
+                                        <th style="width:5%">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="sharedforms_tab" roles="tabpanel">
+                    <div id="SharedFormsTab">
+                        <div class="row">
+                            <table id="SharedFormsTable" class="display table align-middle table-row-dashed table-hover dt-responsive nowrap">
+                                <thead>
+                                    <tr>                                       
+                                        <th style="width:80%">@L("Name")</th>
+                                        <th style="width:3%">@L("Shared") @L("By")</th>
+                                        <th style="width:12%">@L("Accepted")</th>
+                                        <th style="width:5%">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+
+            <div id="FormsTab">
+                <div class="row mt-4">
+                    <table id="FormsTable" class="display table align-middle table-row-dashed table-hover dt-responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th style="width:80%">@L("Name")</th>
+                                <th style="width:3%">@L("Version")</th>
+                                <th style="width:12%">@L("LastUpdated")</th>
+                                <th style="width:5%">@L("Actions")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+        }
+    </div>
+    </div>
+ 
+
+<style>
+	.datatable td div {
+		max-width: 200px;
+		display: block;
+		overflow: hidden;
+	}
+</style>

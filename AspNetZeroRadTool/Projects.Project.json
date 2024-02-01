@@ -1,0 +1,151 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "Projects",
+  "EntityName": "Project",
+  "EntityNamePlural": "Projects",
+  "TableName": "sfaProjects",
+  "PrimaryKeyType": "Guid",
+  "BaseClass": "FullAuditedEntity",
+  "EntityHistory": true,
+  "AutoMigration": false,
+  "UpdateDatabase": false,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": true,
+  "IsNonModalCRUDPage": true,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "Name",
+      "Type": "string",
+      "MaxLength": 128,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Description",
+      "Type": "string",
+      "MaxLength": 2048,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Status",
+      "Type": "ProjectStatus",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Type",
+      "Type": "ProjectType",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0,
+        "MaximumValue": 0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "Syntaq.Falcon.Records",
+      "ForeignEntityName": "Record",
+      "IdType": "Guid",
+      "IsNullable": true,
+      "PropertyName": "RecordId",
+      "DisplayPropertyName": "RecordName",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    }
+  ],
+  "EnumDefinitions": [
+    {
+      "Name": "ProjectStatus",
+      "Namespace": "Syntaq.Falcon.Projects",
+      "EnumProperties": [
+        {
+          "Name": "NotStarted",
+          "Value": 0
+        },
+        {
+          "Name": "InProgress",
+          "Value": 1
+        },
+        {
+          "Name": "Reviewed",
+          "Value": 2
+        },
+        {
+          "Name": "Approved",
+          "Value": 3
+        }
+      ]
+    },
+    {
+      "Name": "ProjectType",
+      "Namespace": "Syntaq.Falcon.Projects",
+      "EnumProperties": [
+        {
+          "Name": "Template",
+          "Value": 0
+        },
+        {
+          "Name": "User",
+          "Value": 1
+        }
+      ]
+    }
+  ],
+  "DbContext": null
+}

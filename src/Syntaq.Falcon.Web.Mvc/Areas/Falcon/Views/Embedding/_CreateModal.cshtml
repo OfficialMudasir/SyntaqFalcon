@@ -1,0 +1,284 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Embedding
+@model GenerateEmbedCodeModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Type== "Record" ? L("GenerateRecordsEmbedCode") : L("GenerateFormEmbedCode")))
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-2.css" rel="stylesheet" />
+<link href="~/assets/Prism/prism.css" rel="stylesheet" />
+<style>
+	.kt-form {
+		width: 100% !important;
+		/*padding: 4rem  2rem 2rem !important;*/
+	}
+
+	.kt-heading {
+		margin: 1.25rem 0 1.75rem 0 !important;
+	}
+
+	.kt-wizard-v2__nav-item {
+		cursor: pointer;
+	}
+
+	label {
+		display: inline-block;
+		margin-top: .5rem;
+		margin-bottom: 0rem;
+	}
+
+	.OnClickLink {
+		cursor: pointer;
+		font-size: small;
+	}
+
+	.OnClickLink:hover {
+		color: #287ebf !important;
+		text-decoration: underline !important;
+	}
+    @@media (max-width: 768px) {
+        .kt-grid > .scriptscroll {
+            max-width: 100%;
+        }
+    }
+
+    @@media (max-width: 1024px) and (min-width: 924px) {
+        .kt-grid > .scriptscroll {
+            max-width: 55%;
+        }
+    }
+
+    @@media (max-width: 925px) and (min-width: 835px) {
+        .kt-grid > .scriptscroll {
+            max-width: 50%;
+        }
+    }
+
+    @@media (max-width: 834px) and (min-width: 768px) {
+        .kt-grid > .scriptscroll {
+            max-width: 45%;
+        }
+    }
+
+    @@media (min-width: 1024px) {
+        .kt-grid > .scriptscroll {
+            max-width: 59%;
+        }
+    }
+
+    .scriptscroll > .pr-5 {
+        padding-right: 1rem !important;
+    }
+</style>
+
+<script>
+	var JsFormId = "@Html.Raw(Model.FormId)";
+    var JsType = "@Html.Raw(Model.Type)";	
+    var TenancyName = "@Html.Raw(Model.TenancyName)"; 
+</script>
+
+<div class="kt-portlet">
+	<div class="kt-portlet__body kt-portlet__body--fit">
+		<div class="kt-grid  kt-wizard-v2 kt-wizard-v2--white" id="kt_wizard_v2" data-ktwizard-state="first">
+			<div class="kt-grid__item kt-wizard-v2__aside pt-3">
+				<!--begin: Form Wizard Nav -->
+				<div class="kt-wizard-v2__nav">
+                    <div class="kt-wizard-v2__nav-items">
+                        <!--doc: Replace A tag with SPAN tag to disable the step link click -->
+                        @if (Model.Type == "Form")
+                        {
+                            <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="current">
+                                <div class="kt-wizard-v2__nav-body">
+                                    <div class="kt-wizard-v2__nav-icon">
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label">
+                                        <div class="kt-wizard-v2__nav-label-title">
+                                            @L("ConfigureEmbedCode")
+                                        </div>
+                                        <div class="kt-wizard-v2__nav-label-desc">
+                                            @L("ChooseVersionType")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                        @L("Authentication")
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        @L("ConfigureEmbedCodeAuthentication")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                        @L("GenerateCode")
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        @L("CopyYourGeneratedEmbedCode")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+				<!--end: Form Wizard Nav -->
+			</div>
+			<div class="scriptscroll kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper">
+				<!--begin: Form Wizard Form-->
+                <div class="kt-form pt-3 pl-5 pr-5" id="kt_form" novalidate="novalidate">
+                    <!--Was Wizard Form-->
+                    <!--begin: Form Wizard Step 1-->
+                    @if (Model.Type == "Form")
+                    {
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
+                            <div class="kt-heading kt-heading--md">@L("ChooseVersionType")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div class="kt_wizard_form_step_1">
+                                    <div class="">
+                                        @*<div class="form-group">
+                                            <label>@L("ChooseEmbedType")</label>
+                                            <div class="kt-radio-inline">
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="EmbedType" @{ if (Model.Type == "Form")
+                                                        { <text> checked="checked" </text>  } } value="Forms"> @L("Forms")
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="EmbedType" @{ if (Model.Type == "Record")
+                                                        { <text> checked="checked" </text>  } } value="Records"> @L("Records")
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            <span class="form-text text-muted">@L("SelectFalconViewToEmbedHelp")</span>
+                                        </div>*@
+                                        <div class="form-group" id="VersionTypeDiv">
+                                        
+                                            <div class="kt-radio-inline">
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="VersionType" value="Live" id="LiveForm"> @L("LiveForm")
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="VersionType" value="Specific"> @L("SpecificVersion")
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            <span class="form-text text-muted">@L("SelectVersionTypeToEmbedHelp")</span>
+                                        </div>
+                                        <div class="form-group row" id="VersionDiv">
+                                            <div class="col-6">
+                                                @{
+                                                    List<SelectListItem> FormVersions = new List<SelectListItem>();
+                                                    Model.VersionHistory?.ForEach(i =>
+                                                    {
+                                                        FormVersions.Add(new SelectListItem { Value = Convert.ToString(i.Form.Version), Text = i.Form.VersionName });
+                                                    });
+                                                }
+                                                @Html.DropDownList("FormVersionsDropdown", FormVersions, new { @class = "form-control" })
+                                                <span class="form-text text-muted">@L("SelectVersionToEmbedHelp")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                        <!--end: Form Wizard Step 1-->
+                        <!--begin: Form Wizard Step 2-->
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                            <div class="kt-heading kt-heading--md">@L("ConfigureAuthenticationType")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div id="kt_wizard_form_step_2">
+                                    @if (Model.Type == "Form")
+                                    {
+                                        <div class="form-group">
+                                            <label>@L("ChooseAccessType")</label>
+                                            <div class="kt-radio-inline">
+
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="AccessType" id="AccessAuth" value="Auth"> @L("Authenticated")
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="AccessType" checked="checked" id="AccessAnon" value="Annon"> @L("Anonymous")
+                                                    <span></span>
+                                                </label>
+                                                
+
+                                            </div>
+                                            <span class="form-text text-muted">@L("HowEmbedAccessHelp")</span>
+                                        </div>
+                                     }
+                                        <div class="form-group" id="AuthTypeDiv">
+                                            <label>@L("ChooseAuthenticationType")</label>
+                                            <div class="kt-radio-inline">
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="AuthType" value="Login"> @L("LoginRegister")
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input type="radio" name="AuthType" value="Token"> @L("AuthenticationToken")
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                            <span class="form-text text-muted">@L("HowEmbedAuthenticateHelp")</span>
+                                        </div>
+                                        <div class="form-group row" id="AuthTokenDiv">
+                                            <div class="col-lg-12">
+                                                <label for="AuthToken">@L("AuthenticationToken")</label>
+                                                <textarea class="form-control" id="AuthToken" rows="3" spellcheck="false"></textarea>
+                                                <span class="kt-form__help">@L("SupplyAccessTokenHelp")</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <!--end: Form Wizard Step 2-->
+                        <!--begin: Form Wizard Step 3-->
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                            <div class="kt-heading kt-heading--md">@L("GenerateCode")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div id="kt_wizard_form_step_3">
+                                    <pre class="language-html mb-6"><code id="GeneratedCode"></code></pre>
+                                    <span class="form-text text-muted mt-6">
+                                   @*     @L("CopyEmbedCode")*@
+                                   &nbsp;
+                                        <span class="pull-right mb-6">
+                                            <a class="  btn btn-secondary btn-sm" onclick="abp.notify.success('', 'Copied Embed Code', {'positionClass': 'toast-bottom-right'})" name="CopyGeneratedCodeLink" data-clipboard-action="copy" data-clipboard-target="#GeneratedCode"> @L("Copy")</a>
+                                            &nbsp;
+                                            <a class=" btn btn-secondary btn-sm" name="DownloadGeneratedCodeLink"> @L("Download")</a>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end: Form Wizard Step 3-->
+                        <!--begin: Form Actions -->
+                        <div class="kt-form__actions">
+                            <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-prev">
+                                <i class="fa fa-chevron-left"></i>&nbsp;@L("Back")
+                            </button>
+                            <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-next">
+                                @L("Next")&nbsp; <i class="fa fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <!--end: Form Actions -->
+                    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

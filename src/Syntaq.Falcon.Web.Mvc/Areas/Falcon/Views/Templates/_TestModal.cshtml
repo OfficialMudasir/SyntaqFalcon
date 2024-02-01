@@ -1,0 +1,38 @@
+﻿@*@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Templates
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AccessControlList
+@model CreateOrEditTemplateModalViewModel
+@model ManageACLModalViewModel
+<style>
+    ul.ui-autocomplete {
+        z-index: 10051;
+    }
+</style>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("TestModal")))
+<div class="modal-body pl-4 pr-4 pt-3 pb-2">
+    <div class="row" id="GrantNewACL">
+        <form name="GrantNewACLForm" role="form" novalidate class="form-validation form-inline w-100">
+            <input id="EntityId" name="EntityId" value="@Model.EntityId" hidden />
+            <input id="Type" name="Type" value="True" hidden />
+            <div class="form-group">
+                <div class="input-group mb-2">
+                    <label class="form-control-label">Assign ACL To:</label>
+                    <input class="tagsinput-typeahead" type="text" name="Assignees" @*data-value='@record.UserIds'  data-role="tagsinput">
+                </div>
+                <div class="input-group mb-2">
+                    <label for="Role" class="col-md-1 col-form-label text-center mr-2 m--font-bolder">@L("Role"):</label>
+                    <select id="Role" class="form-control m-input form-control-sm" name="Role" style="margin-right: 15px;" required>
+                        <option value="V">Can View</option>
+                        <option value="E">Can Edit</option>
+                        <option value="O">Set Owner</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-2">
+                <button id="GrantACL" type="button" class="btn btn-outline-secondary btn-sm m-btn m-btn--custom pull-right" style="line-height: 1.25;">Share</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    @await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

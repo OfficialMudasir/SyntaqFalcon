@@ -1,0 +1,32 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagEntities
+@model TagEntityViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="TagEntityInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("EntityId") :</h6>
+                @Model.TagEntity.EntityId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("EntityType") :</h6>
+                @L("Enum_EntityType_" + (int)Model.TagEntity.EntityType)
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("TagValue")) @L("Value") :</h6>
+                @Model.TagValueValue
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

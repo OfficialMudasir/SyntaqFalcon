@@ -1,0 +1,98 @@
+﻿@using System.Globalization
+@using Abp.Extensions
+@using Abp.MultiTenancy
+@using Syntaq.Falcon.Identity
+@model Syntaq.Falcon.Web.Models.Account.LoginFormViewModel
+@inject SignInManager SignInManager
+
+@{
+    Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.cshtml";
+}
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Views/Account/Login.js" asp-append-version="true"></script>
+}
+
+@if (!Model.SuccessMessage.IsNullOrEmpty())
+{
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    @Model.SuccessMessage
+    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+}
+
+<div class="m-login__signin">
+
+    <div class="m-login__form m-form login-form">
+
+        <div class="form-group  ">
+            <input class="form-control m-input" type="text" placeholder="@L("UserNameOrEmail")" name="usernameOrEmailAddress" autocomplete="off" value="@(Model.UserNameOrEmailAddress ?? "")" required>
+        </div>
+        <div class="form-group  ">
+            <input class="form-control m-input m-login__form-input--last" type="password" placeholder="@L("Password")" name="password" autocomplete="off">
+        </div>
+
+        <div class="m-login__form-action">
+            <button type="button" onclick="Syntaq.Account.submitLogin(onLoginComplete);" class="btn btn-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder bold mr-2">@L("LogIn")</button>
+
+            @if (Model.IsSelfRegistrationEnabled)
+            {
+                <a  href="#" id="register-btn" class="m-link m-link--primary m-login__account-link bottom">@L("CreateAnAccount")</a>
+                @*<span class="pipe-divider">  </span>*@
+            }
+
+        </div>
+    </div>
+</div>
+
+@{
+    var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync())
+        .Where(s => !s.DisplayName.IsNullOrWhiteSpace())
+        .ToList();
+
+    Func<string, string> getSocialIconClass = (provider) =>
+    {
+        provider = provider.ToLower(CultureInfo.InvariantCulture);
+
+        return provider;
+    };
+}
+
+@if ((AbpSession.MultiTenancySide != MultiTenancySides.Host || !ViewBag.IsMultiTenancyEnabled) && loginProviders.Count > 0)
+{
+<div class="login-options">
+    <h4>@L("LoginWith")</h4>
+    <ul class="social-icons">
+        <form asp-action="ExternalLogin" method="post">
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <input type="hidden" name="provider" value="" />
+            <input type="hidden" name="ss" value="@ViewBag.SingleSignIn" />
+
+            @foreach (var p in loginProviders)
+                {
+                    <li>
+                        <a class="social-login-icon social-icon-color @getSocialIconClass(p.DisplayName)"
+                           title="@p.DisplayName"
+                           data-provider="@p.DisplayName"
+                           href="javascript:;"></a>
+                    </li>
+                }
+        </form>
+    </ul>
+</div>
+}
+
+<div class="m-stack__item m-stack__item--center">
+    <div class="m-login__account">
+
+        @*@if (Model.IsTenantSelfRegistrationEnabled)
+        {
+        <a href="@Url.Action("SelectEdition", "TenantRegistration")" id="register-btn" class="m-link m-link--primary m-login__account-link">@L("NewTenant")</a>
+        <span class="pipe-divider"> | </span>
+        }*@
+        @*<a href="@Url.Action("EmailActivation", "Account")" id="email-activation-btn" class="m-link m-link--primary m-login__account-link">@L("EmailActivation")</a>*@
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.EntityVersionHistories
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+@model EntityVersionHistoryViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+
+<script type="text/javascript">
+    try {
+        var JSONObj = @Html.Raw(JsonConvert.DeserializeObject<JObject>(Model.EntityVersionHistory.Data, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None }));
+        var previousData = @Html.Raw(JsonConvert.DeserializeObject<JObject>(Model.EntityVersionHistory.PreviousData??"{}", new JsonSerializerSettings { DateParseHandling = DateParseHandling.None }));
+        var newData = @Html.Raw(JsonConvert.DeserializeObject<JObject>(Model.EntityVersionHistory.NewData??"{}", new JsonSerializerSettings { DateParseHandling = DateParseHandling.None }));
+    } catch (err) {
+		alert(err.message);
+    }
+</script>
+
+<div class="modal-body">
+    <div id="EntityVersionHistoryInformationsTab">
+
+
+        <div class="form-group row">
+            <label  class="col-sm-2 form-label" >@L("Name")</label>
+            <div class="col-sm-10">
+                @Model.EntityVersionHistory.Name
+            </div>
+
+            <label  class="col-sm-2 form-label" >@L("Type")</label>
+            <div class="col-sm-10">
+                @Model.EntityVersionHistory.Type
+            </div>
+
+            <label class="col-sm-2 form-label" >@L("Version") @L("Name")</label>
+            <div class="col-sm-10">
+                @Model.EntityVersionHistory.VersionName
+            </div>
+
+            <label  class="col-sm-2 form-label" >@L("Description")</label>
+            <div class="col-sm-10">
+                <div style="overflow-y: scroll; max-height: 6em;"><div style=" white-space: pre-wrap;">@Model.EntityVersionHistory.Description</div></div>
+            </div>
+
+        </div>
+
+        <div class="">
+            <hr />
+            <div class=" ">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a href="#newEntity_tab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                            @L("NewSchema")
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#previousEntity_tab" data-bs-toggle="tab" role="tab" class="nav-link">
+                            @L("SchemaBeforeChange")
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content border-0 pt-3">
+                    <div class="tab-pane active" id="newEntity_tab" role="tabpanel">
+                        <div class="col-12">
+                            <div class="card card-body bg-light jsonviewer" id="json" style="height: 30em; overflow: auto;">
+                                <DIV ID="outputdiv"></DIV>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="previousEntity_tab" role="tabpanel">
+                        <div class="col-12">
+                            <div class="jsonviewer" id="json-renderer" style="height: 30em; overflow: auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

@@ -1,0 +1,98 @@
+{
+  "IsRegenerate": false,
+  "MenuPosition": "main",
+  "RelativeNamespace": "Tags",
+  "EntityName": "TagEntityType",
+  "EntityNamePlural": "TagEntityTypes",
+  "TableName": "SfaTagEntityTypes",
+  "PrimaryKeyType": "Guid",
+  "BaseClass": "CreationAuditedEntity",
+  "EntityHistory": false,
+  "AutoMigration": false,
+  "UpdateDatabase": false,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": false,
+  "IsNonModalCRUDPage": false,
+  "IsMasterDetailPage": false,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "EntityType",
+      "Type": "EntityType",
+      "MaxLength": 0,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "Syntaq.Falcon.Tags",
+      "ForeignEntityName": "Tag",
+      "IdType": "Guid",
+      "IsNullable": true,
+      "PropertyName": "TagId",
+      "DisplayPropertyName": "Name",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    }
+  ],
+  "NavigationPropertyOneToManyTables": [],
+  "EnumDefinitions": [
+    {
+      "Name": "EntityType",
+      "Namespace": "Syntaq.Falcon.Tags",
+      "EnumProperties": [
+        {
+          "Name": "Folder",
+          "Value": 0
+        },
+        {
+          "Name": "Record",
+          "Value": 1
+        },
+        {
+          "Name": "RecordMatter",
+          "Value": 2
+        },
+        {
+          "Name": "RecordMatterItem",
+          "Value": 3
+        },
+        {
+          "Name": "DocumentTemplate",
+          "Value": 4
+        },
+        {
+          "Name": "App",
+          "Value": 5
+        },
+        {
+          "Name": "Form",
+          "Value": 6
+        },
+        {
+          "Name": "RecordMatterAudit",
+          "Value": 7
+        }
+      ]
+    }
+  ],
+  "DbContext": null
+}

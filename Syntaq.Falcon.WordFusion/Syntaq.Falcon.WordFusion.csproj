@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Aspose.Words.lic" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Aspose.Words.lic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspose.Words" Version="11.8.0" />
+    <PackageReference Include="DeepCloner" Version="0.10.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="MergeError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeErrorType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeFieldEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeFieldFormatter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeFieldSwitch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeImageFieldEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeRegion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeRegionData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MergeRegionType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Web References\SVC.Library\Reference.cs">
+      <DependentUpon>Reference.map</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Web References\SVC.Library\Reference.map">
+      <LastGenOutput>Reference.cs</LastGenOutput>
+      <Generator>MSDiscoCodeGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

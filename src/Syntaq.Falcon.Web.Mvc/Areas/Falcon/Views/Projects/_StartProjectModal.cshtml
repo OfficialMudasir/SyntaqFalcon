@@ -1,0 +1,210 @@
+﻿@*Start a New Project for a User*@
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Projects
+@using Syntaq.Falcon.Tags.Dtos;
+@model ProjectsViewModel
+@*@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("NewProject")))
+*@
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-4.css" rel="stylesheet" />
+<script src="~/metronic/common/js/wizard/wizard-4.js"></script>
+
+<style>
+
+     .focusedRow td .h6 {
+        color: #5c8bd1 !important;
+        font-weight: bold !important;
+        /*color: #5c8bd1 !important;
+        background-color: #5c8bd1 !important;*/
+    }
+    
+  
+      #PtTable td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #ebedf2; 
+        white-space: normal;
+      }
+</style>
+
+<div class="modal-header">
+    <div class="modal-title d-block">
+        <div class=h5>@Html.Raw(L("NewProject"))</div>
+        <div class="form-label">@Html.Raw(L("CreateSingleOrBundleDocuments"))</div>
+    </div>
+    
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body mt-3">
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <div class="kt-grid  kt-wizard-v4 kt-wizard-v4--white" id="kt_wizard_v4" data-ktwizard-state="first" data-wizard-clickable="true">
+            <div class="kt-grid__item kt-wizard-v4__aside pt-3 " style="display:none">
+
+                <div class="row">
+                    <div class="col-4" style="margin-left: 3em !important">
+                        <div class="kt-wizard-v4__nav">
+                            <div class="kt-wizard-v4__nav-items">
+                                <div class="kt-wizard-v4__nav-item" data-ktwizard-type="step" data-ktwizard-state="current">
+                                    <div class="kt-wizard-v4__nav-body">
+                                        <div class="kt-wizard-v4__nav-icon">
+                                        </div>
+                                        <div class="kt-wizard-v4__nav-label">
+                                            <div class="kt-wizard-v4__nav-label-title">
+                                                @L("Type")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kt-wizard-v4__nav-item wizard-steps" data-ktwizard-type="step" data-ktwizard-state="pending">
+                                    <div class="kt-wizard-v4__nav-body">
+                                        <div class="kt-wizard-v4__nav-icon">
+                                        </div>
+                                        <div class="kt-wizard-v4__nav-label">
+                                            <div class="kt-wizard-v4__nav-label-title">
+                                                @L("Details")
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div style=" max-height: 47em;" class="row">
+
+                <div class="col-12" id="kt_form" novalidate="novalidate">
+
+                    <div class="col-12 mb-6" data-ktwizard-type="step-content" data-ktwizard-state="current">
+                        <div class="kt-form__section kt-form__section--first pb-4 row">
+
+                            @{
+                                if (Model.Tags.Items.Count > 0)
+                                {
+                                                    <form id="tagValues" class="col-4" style="  max-height: 32em; overflow: auto;">
+
+                                                        @foreach (GetTagEntityTypeForViewDto tag in Model.Tags.Items)
+                                        {
+                                                          <fieldset class="card mb-4">
+                                                                <div id="tag_@tag.TagName" class="card-body">
+                                                                    <legend><div class="h6 card-title"><span class="fa fa-tags"></span> @(tag.TagName)</div></legend>
+
+                                                                    @foreach (TagValueDto tagvalue in tag.TagEntityType.Values)
+                                                        {                                                            
+                                                                        <div>
+                                                                            <label class="kt-checkbox mb-2 me-2" for="@tagvalue.Id"  tabindex="0"><input id="@tagvalue.Id" style="font-size:1.4em" type="checkbox" class="me-2" name="@tagvalue.Id" value="true"><span>@tagvalue.Value</span><span></span></label>
+                                                                        </div>
+                                                        }
+                                                                </div>
+                                                            </fieldset>    
+                                        }
+
+                                                    </form>
+                                }
+                            }
+
+                            <div @(Model.Tags.Items.Count > 0 ? "class=col-8" : "class=col-12" )>
+                                @* begin add a table*@
+                                <div class="input-group">
+                                    <input type="text" id="searchTable"aria-label="@L("InputFilterText")"  class="form-control" placeholder="@L("SearchWithThreeDot")" value="">
+                                    <button class="btn btn-secondary" id="clearbtnModal" type="button" aria-label="@L("Clear")">
+                                        <span class="fas fa-times"></span>
+                                    </button>
+                                    <button id="searchTableModalButton" aria-label="@L("Search")" class="btn btn-primary" type="submit">
+                                        <span class="fa fa-search" aria-label="@L("Search")"></span>
+                                    </button>
+                                </div>
+
+                                <div class="table-wrapper mt-3 mb-6" style="max-height:28em; overflow:auto">
+                                    <table id="PtTable" class="display table align-middle table-row-dashed table-hover table-hover dt-responsive nowrap">
+                                          <thead>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <input class="form-control" name="selectProjectId" value="" type="hidden">
+                        <input class="form-control" name="selectReleaseId" value="" type="hidden">
+                    </div>
+
+                    <div class="col-12" data-ktwizard-type="step-content" style="  padding-left:3em; padding-right:3em; padding-bottom:2em">
+                        <div id="formContent" class="kt-form__section kt-form__section--first ">
+                            <form id="kt_wizard_form_step_2_form">
+                                <div class="form-group">
+                                    <div class="form-group mb-5">
+                                        <label class="font-weight-bold form-label"  for="ProjectNameInput">@L("Name")*</label>  <i class="fas fa-question-circle" data-bs-toggle="tooltip" data-placement="right" title="Give your project a short name to help you distinguish it from others"></i>
+                                        <input type="text" class="form-control" name="ProjectName" placeholder="Your Project name here" id="ProjectNameInput" value="">
+                                    </div>
+
+                                    <div class="form-group mb-5">
+                                        <label class="font-weight-bold form-label"  for="Template_Description">@L("Description")</label>
+                                        <textarea rows="6" type="text" name="TemplateDescription" id="Template_Description" class="form-control " placeholder="Project Description"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <a id="showReleaseNotes" href="javascript:;" onclick="$('#showReleaseNotes').hide();$('#releaseContent').show();$('#formContent').hide()" class="btn btn-sm btn-secondary  ">
+                            @L("Release") @L("Notes")
+                        </a>
+
+                        <div id="releaseContent"  class="form-group mb-5">
+                       
+                            <label class="font-weight-bold form-label"  for="Template_Description">@L("Release") @L("Notes")</label>
+
+                            <span class="pull-right">
+                                <label class="font-weight-bold form-label">@L("Version")</label>  
+                                <span id="releaseVersionMajor"></span>.<span id="releaseVersionMinor"></span>.<span id="releaseVersionRevision"></span>
+                                <label class="font-weight-bold form-label">@L("Date")</label> 
+                                <span id="releaseDate"></span> 
+                            </span>
+
+                            <div style=" max-height:200px;  overflow-y:auto" id="releaseNotes">
+                                @L("Release") @L("Notes")
+                            </div>
+
+                            <a href="javascript:;" id="hideReleaseNotes" onclick="$('#showReleaseNotes').show();$('#releaseContent').hide();$('#formContent').show()" class="btn btn-sm btn-secondary ">
+                                @L("Close")  @L("Release") @L("Notes")
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer col-12 ">
+
+                    <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-prev">
+                        <i class="fas fa-chevron-left"></i>@L("Previous")
+                    </button>
+                    <button id="btn-next" class="btn btn-primary kt-font-bold pull-right d-none" data-ktwizard-type="action-next">
+                        @L("Next")&nbsp; <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="btn btn-success kt-font-bold pull-right" data-ktwizard-type="action-save">
+                        @L("Start")
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<style>
+
+    td {
+        word-wrap: break-word;
+        /*max-width: 1px;*/
+    }
+
+    #PtTable thead {
+        display: none;
+    }
+</style>
+
+

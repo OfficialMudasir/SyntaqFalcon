@@ -1,0 +1,58 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.VoucherEntities
+@model CreateOrEditVoucherEntityModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditVoucherEntity")) : L("CreateNewVoucherEntity")))
+
+<div class="modal-body">
+        <div id="VoucherEntityInformationsTab">
+            <form name="VoucherEntityInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.VoucherEntity.Id" />
+                }
+				            
+								<div class="form-group m-form__group">
+										<label for="VoucherTenantId">@L("Voucher")</label>
+									<div class="input-group">
+											<input class="form-control" id="VoucherTenantId" name="voucherTenantId" value="@Model.VoucherTenantId" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenVoucherLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearVoucherTenantIdButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.VoucherEntity.VoucherId" type="text" name="voucherId" required hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="voucherId" required hidden/>
+								}
+
+
+
+				
+								<div class="form-group">
+									<label for="VoucherEntity_EntityKey">@L("EntityKey")</label>
+									<input class="form-control" id="VoucherEntity_EntityKey" value="@Model.VoucherEntity.EntityKey" type="text" name="entityKey"     />
+								</div>
+					
+								<div class="form-group">
+									<label for="VoucherEntity_EntityType">@L("EntityType")</label>
+									<input class="form-control" id="VoucherEntity_EntityType" value="@Model.VoucherEntity.EntityType" type="text" name="entityType"  required  maxlength="@Syntaq.Falcon.VoucherEntitites.VoucherEntityConsts.MaxEntityTypeLength"  minlength="@Syntaq.Falcon.VoucherEntitites.VoucherEntityConsts.MinEntityTypeLength"  />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

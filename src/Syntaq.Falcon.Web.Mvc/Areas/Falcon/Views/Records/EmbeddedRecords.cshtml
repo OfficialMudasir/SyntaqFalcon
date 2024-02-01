@@ -1,0 +1,66 @@
+﻿@model Syntaq.Falcon.Web.Areas.Falcon.Views.Records.EmbeddedRecordsModel
+
+<style>
+	tr {
+		cursor: pointer;
+	}
+
+	.m-nav_link_item {
+		cursor: pointer;
+	}
+
+	.OnClickLink {
+		cursor: pointer;
+		color: #58a3dc !important;
+		font-size: small;
+	}
+
+	.OnClickLink:hover {
+		color: #287ebf !important;
+		text-decoration: underline !important;
+	}
+
+	.w-25 {
+		width: 25% !important;
+	}
+
+	table.dataTable tbody tr:hover {
+		background-color: #ecf0f1 !important;
+	}
+
+	a:not([href]):not([tabindex]) {
+		color: inherit;
+		text-decoration: none;
+	}
+</style>
+
+@{
+	Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.notheme.cshtml";
+}
+<div class="m-portlet m-portlet--mobile">
+	<div class="m-portlet__head">
+		@*<button id="RecordNavigationButton" class="btn btn-primary blue d-none"></button>*@
+	</div>
+	<div class="m-portlet__body">
+		<div class="container-fluid" style="padding-top: 1em; padding-bottom: 1em;">
+			<div id="container">
+
+				<div class="align-items-center">
+					<table id="RecordsTable" class="display table  table-bordered table-hover dt-responsive nowrap" style="margin-top:0!important">
+						<thead>
+							<tr>
+								<th class="w-25">@L("Record")</th>
+								<th>@L("RecordMatter")</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts
+	{
+	
+}

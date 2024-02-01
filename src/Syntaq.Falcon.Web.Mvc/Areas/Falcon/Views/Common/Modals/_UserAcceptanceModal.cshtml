@@ -1,0 +1,71 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptances
+@using Syntaq.Falcon.Users.Dtos
+@model UserAcceptancesAcceptViewModel
+<style>
+    [id*="userAcceptanceDocument"] {
+        cursor: pointer;
+        color: blue;
+    }
+
+    #userAcceptanceButton:disabled {
+        background-color: grey;
+        color: white;
+        border-color: grey;
+        cursor: text;
+    }
+</style>
+<input class="form-control" value="@Model.ActiveUserAcceptanceTypesList.Count" type="text" name="countOfActiveUseAcceptanceTypes" hidden />
+<div class="modal-header text-center border-0">
+    <h5 class="w-100">
+        <span>@L("PrivacyPolicy")</span>
+    </h5>
+</div>
+<div class="modal-body-acceptance text-center">
+    <div class="mb-2">
+        <text id="userAcceptanceMessage">
+            @L("UserAcceptanceMessage")
+        </text>
+    </div>
+    @if (Model.ActiveUserAcceptanceTypesList.Count > 0)
+    {
+        var index = 0;
+        foreach (UserAcceptanceTypeDto userAcceptanceType in @Model.ActiveUserAcceptanceTypesList)
+        {
+            <form name="UserAcceptanceInformationsForm@(index)" role="form" novalidate class="form-validation" hidden>
+                <input class="form-control" value="@Model.RecordMatterContributorId" type="text" name="recordMatterContributorId" hidden />
+                <input class="form-control" value="@Model.UserId" type="text" name="userId" hidden />
+                <input class="form-control userAcceptanceDocument@(index)" value="@userAcceptanceType.Id" type="text" name="userAcceptanceTypeId" hidden />
+                <input class="form-control" value="@userAcceptanceType.CurrentAcceptanceDocTemplateVersion" type="text" name="acceptedDocTemplateVersion" hidden />
+            </form>
+
+            <u id="userAcceptanceDocument@(index)"> @userAcceptanceType.Name</u>
+            index++;
+            if (Model.ActiveUserAcceptanceTypesList.Count > index)
+            {
+                if (Model.ActiveUserAcceptanceTypesList.Count > index + 1)
+                {
+                    <text>,</text>
+                }
+                else
+                {
+                    <text>@L("and") </text>
+                }
+
+            }
+        }
+        <text>.</text>
+    }
+    <div class="form-check mt-3">
+        <input class="form-check-input" type="checkbox" value="" id="userAcceptanceChecked">
+        <label class="form-check-label" for="userAcceptanceChecked">
+            @L("ConsentToPrivacyPolicy")
+        </label>
+    </div>
+    <button id="userAcceptanceButton" type="button" class="btn btn-sm btn-success mt-2" disabled>@L("Accept")</button>
+</div>
+
+
+

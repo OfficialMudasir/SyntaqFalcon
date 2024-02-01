@@ -1,0 +1,222 @@
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Vouchers
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.VoucherEntities
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@model CreateOrEditVoucherModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditVoucher")) : L("CreateNewVoucher")))
+
+@section Styles
+    {
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/Vouchers/Index.css" asp-append-version="true" />
+}
+
+<script type="text/javascript">
+    var JSONIsEditMode = @Convert.ToString(Model.IsEditMode).ToLower(); @*// @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.IsEditMode)));*@
+</script>                                  @*  // BOOL = simple                                         //complex  *@
+
+<div class="modal-body">
+    <div id="VoucherInformationsTab">
+        <form name="VoucherInformationsForm" role="form" novalidate class="form-validation">
+            <div class="col-12">
+
+                @if (!Model.IsEditMode)
+                {
+                    //CREATE
+                    <input class="form-control m-input" readonly type="hidden" name="voucherId" id="voucher_ID" value="" />
+                }
+                else
+                {
+                    //EDIT
+                    <input readonly type="hidden" name="voucherId" id="voucher_ID" value="@Model.Voucher.Id.ToString()" />
+                }
+            </div>
+
+            <div class="row form-group mb-4">
+                <div class="col-4">
+ 
+                    <label class="form-label" for="Voucher_Key">@L("Key")</label>
+                    <input readonly class="form-control" id="Voucher_Key" value="@Model.Voucher.Key" type="text" name="Key" required maxlength="@Syntaq.Falcon.Vouchers.VoucherConsts.MaxKeyLength" minlength="@Syntaq.Falcon.Vouchers.VoucherConsts.MinKeyLength" />
+                </div>
+                <div class="col-4">
+                    <label  class="form-label"  for="DiscountType">@L("DiscountType")</label>
+                    @{
+                        List<SelectListItem> ProcessItems = new List<SelectListItem>(); 
+                        //ProcessItems.Add(new SelectListItem { Value = "Choose", Text = L("Choose"), Selected = @Model.Voucher.DiscountType == "Choose" ? true : false });
+                        ProcessItems.Add(new SelectListItem { Value = "Fixed", Text = L("Fixed"), Selected = @Model.Voucher.DiscountType == "Fixed" ? true : false });
+                        ProcessItems.Add(new SelectListItem { Value = "Percentage", Text = L("Percentage"), Selected = @Model.Voucher.DiscountType == "Percentage" ? true : false });
+                    }
+                    @Html.DropDownList("DiscountType", ProcessItems, new { @class = "form-select", @name = "DiscountType" })
+                </div>
+                <div class="col-4">
+                    <label class="form-label"  for="Voucher_Value">@L("Value")</label>
+                    <div class="input-group">
+                        <!-- CONDITIONAL ON DISCOUNT_TYPE -->
+                        <div class="input-group-prepend">
+                            <div id="voucherValueSymbol" class="input-group-text" style="height:100%"> </div>
+                        </div>
+                        <input class="form-control m-input"
+                               id="Voucher_Value"
+                               value="@Model.Voucher.Value.ToString(CultureInfo.InvariantCulture)"
+                               type="number"
+                               name="Value" />
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group mb-4">
+                <div class="col-6">
+                    <label class="form-label"  for="Voucher_NoOfUses">@L("NoOfUses")</label>
+                    <input class="form-control m-input"
+                           id="Voucher_NoOfUses"
+                           type="number"
+
+                           name="NoOfUses" aria-describedby="noOfUsesTip"
+                           value="@Model.Voucher.NoOfUses?.ToString(CultureInfo.InvariantCulture)"
+                           min="@Syntaq.Falcon.Vouchers.VoucherConsts.MinNoOfUsesValue" max="@Syntaq.Falcon.Vouchers.VoucherConsts.MaxNoOfUsesValue" />
+                    <small id="noOfUsesTip" class="form-text text-muted"> Leave blank to allow unlimited use </small>
+                </div>
+                <div class="col-6">
+                    <label class="form-label"  for="Voucher_Expiry">@L("Expiry")</label>
+                    <input class="form-control m-input date-picker"
+                           id="Voucher_Expiry"
+                           type="text"
+                           name="Expiry"
+                           value="@Model.Voucher.Expiry" aria-describedby="expiryTip" />
+                    <small id="expiryTip" class="form-text text-muted"> Select the date that the voucher will expire by </small>
+                </div>
+            </div>
+            <div class="row form-group mb-4">
+                <div class="col-12">
+                    <label class="form-label"  for="Voucher_Description">@L("Description")</label>
+                    <textarea class="form-control" rows="3"
+                              id="Voucher_Description"
+                              type="text"
+                              name="Description"
+                              value=""
+                              maxlength="@Syntaq.Falcon.Vouchers.VoucherConsts.MaxDescriptionLength"
+                              minlength="@Syntaq.Falcon.Vouchers.VoucherConsts.MinDescriptionLength">@Model.Voucher.Description</textarea>
+                </div>
+            </div>
+
+            <div class="row form-group mb-4">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               id="RestrictVoucherCheck"
+                               type="checkbox"
+                               value=""
+                               @(Model.Voucher.VoucherEntities.Count() >= 1 ? "checked" : "")
+                               name="checkRestrict"
+                               aria-describedby="RestrictTip" />
+                        <label class="form-check-label" for="RestrictVoucherCheck">Restrict Voucher Usage?</label>
+                        <small id="RestrictTip" class="form-text text-muted">
+                            Please check this box if you would like to restrict voucher usage to a specific entity type(s)
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- IF CHECK BOX TICKED, SHOW ITEMS BELOW -->
+        <div id="HiddenEntitySection">
+            <form id="voucherEntity_formblock">
+                <!-- add script here to pull count into var so can be used in .js???  -->
+                <script type="text/javascript">
+                    var vEntitiesCount = @Convert.ToString(Model.Voucher.VoucherEntities.Count()); 
+                </script>                                
+
+                @if (Model.Voucher.VoucherEntities.Count >= 1)
+                {
+                    @foreach (Syntaq.Falcon.VoucherEntitites.Dtos.CreateOrEditVoucherEntityDto voucherEntity in Model.Voucher.VoucherEntities)
+                    {
+                        <div class="row form-group formblock  mt-4">
+                            <div class="col-12">
+                                <button type="button" class="pull-right pull-right btn btn-danger btn-sm" onclick="$(this).closest('.formblock').remove()" href="#">
+                                    <i class="fa fa-times text-danger"></i>
+                                     @L("Remove")
+                                </button>
+                            </div>
+                            <div>
+                                <input readonly type="hidden" class="form-control m-input vEntity_vID" id="vouchID" value="@voucherEntity.VoucherId.ToString()" name="Entity[][VoucherId]" />  <!-- voucher ID -->
+                                <input readonly type="hidden" class="form-control m-input" id="Entity_ID" value="@voucherEntity.Id.ToString()" name="Entity[][Id]" />  <!-- voucher-entity ID -->
+                                <input readonly type="hidden" class="form-control m-input" id="Entity_Key" value="@voucherEntity.EntityKey.ToString()" name="Entity[][EntityKey]" />  <!-- form/doc ID from picker modal -->
+                            </div>
+
+                            <div class="col-8">
+                                <label class="form-label"  for="DisplayName">Entity Name</label>
+                                <input readonly class="form-control m-input readonly" id="DisplayName" value="@voucherEntity.EntityName.ToString()" type="text" name="Entity[][EntityName]" placeholder="to show form/doc name" />
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label"  for="Entity_Type">@L("EntityType")</label>
+                                <input readonly class="form-control m-input readonly" id="Entity_Type" value="@voucherEntity.EntityType.ToString()" type="text" name="Entity[][EntityType]" />
+                            </div>
+                            <div class="col-12 mt-2">
+                                <!-- PICK LINK?? -->
+
+                                <button type="button" class="pull-right pull-right btn btn-danger btn-sm"  onclick="$(this).closest('.formblock').remove()">
+                                    <span class="fas fa-times"></span>
+                                </button>
+
+                                <button type="button" class="pull-right btn btn-secondary btn-sm me-2 OpenEntityLookupTableButton"><i class="fa fa-search"></i>@L("PickEntity")</button>
+                                <!-- CLEAR LINK?? -->
+@*                                <button type="button" class="pull-right btn btn-secondary btn-sm" onclick="$(this).closest('.formblock-record').find('[name*=EntityId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=EntityName]').val(''); "  >
+                                    Clear
+                                </button>*@
+
+                            </div>
+                            <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                        </div>
+                        <div class="row form-group">
+                        </div>
+                        <!-- clone into here -->
+                    }
+                }
+            </form>
+        </div>
+        <div class="row " id="HiddenEntitySectionBtn">
+            <!-- NEEDS EVENT - ONCLICK REPEAT/DUPLICATE SECTION ABOVE -->
+            <div class="col-12 text-right">
+                <button id="addEntityBtn" type="button" class="btn btn-secondary btn-sm">@L("Add") @L("Entity") </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+
+<div id="templates" class="d-none">
+    <div id="EntityGroup_Template" class="formblock mt-4">
+
+        <div class="row form-group formblock">
+            <div class="col-12">
+                <input readonly type="hidden" class="form-control m-input vEntity_vID" name="Entity[][VoucherId]" id="" value="" /> <!-- voucher ID -->
+                <input readonly type="hidden" class="form-control m-input" name="Entity[][Id]" id="Entity_ID" value="" />  <!-- voucher-entity ID -->
+                <input readonly type="hidden" class="form-control m-input" id="Entity_Key" value="" name="Entity[][EntityKey]" />  <!-- form/doc ID from picker modal -->
+            </div>
+            <div class="col-8">
+                <label for="DisplayName">Entity Name</label>
+                <input readonly class="form-control readonly m-input" id="DisplayName" value="" type="text" name="Entity[][EntityName]" />
+            </div>
+            <div class="col-4">
+                <label for="Entity_Type">@L("EntityType")</label>
+                <input readonly class="form-control readonly m-input" id="Entity_Type" value="" type="text" name="Entity[][EntityType]" />
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12 mt-2">
+                <!-- CLEAR/PICK LINK?? -->
+                <button type="button" class="pull-right pull-right btn btn-danger btn-sm"  onclick="$(this).closest('.formblock').remove()">
+                   <span class="fas fa-times"></span>
+                </button>
+
+                <button type="button" class="pull-right btn btn-secondary btn-sm OpenEntityLookupTableButton pull-right me-2" ><i class="fa fa-search"></i>@L("Pick")</button>
+@*                <button class="pull-right btn btn-secondary btn-sm me-2" onclick="$(this).closest('.formblock-record').find('[name*=EntityId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=EntityName]').val(''); "  >
+                    <i class="fa fa-times"></i> Clear  
+                </button>*@
+ 
+            </div>
+        </div>
+        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+    </div>
+</div>

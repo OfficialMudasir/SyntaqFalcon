@@ -1,0 +1,53 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterContributors
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model RecordMatterContributorUserLookupTableViewModel
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/RecordMatterContributors/_RecordMatterContributorUserLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickUser")))
+ 
+ 
+<div class="modal-body">
+ 
+        <div class="row align-items-center mb-4">
+            <div class="col-xl-12">
+                <div class="kt-group align-items-center">
+                    <div class="input-group">
+                        <input type="text" id="UserTableFilter" aria-label="@L("InputFilterText")" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                           
+                            <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                <span class="fas fa-times"></span>
+                            </button>
+                            <button id="GetUserButton" aria-label="@L("Search")" class="btn btn-primary" type="button"><i class="fa fa-search" style="color:#ffffff; font-size:1rem"></i></button>
+                           
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+    <div class="row align-items-center">
+        <table id="UserTable" class="table align-middle table-hover table-row-dashed fs-6 gy-5 dataTable no-footer">
+            <thead>
+                <tr>
+                    <th class="all" style="width:30%">@L("Name")</th>
+                    <th class="all" style="width:30%">@L("Surname")</th>
+                    <th class="all" style="width:30%">@L("Email")</th>
+                    <th class="all" @*style="width:3%"*@></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+@*
+<div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"><div class="dataTables_length" id="RecordPolicyActionsTable_length"><label>Show <select name="RecordPolicyActionsTable_length" aria-controls="RecordPolicyActionsTable" class="form-select form-select-sm form-select-solid"><option value="5">5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option><option value="250">250</option><option value="500">500</option></select> entries</label></div><div class="dataTables_info" id="RecordPolicyActionsTable_info" role="status" aria-live="polite">Showing 1 to 1 of 1 entries</div></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_bootstrap_full_number" id="RecordPolicyActionsTable_paginate"><ul class="pagination" style="visibility: visible;"><li class="paginate_button page-item prev disabled"><a href="#" class="page-link" title="First"><i class="fa fa-angle-double-left"></i></a></li><li class="paginate_button page-item prev disabled"><a href="#" class="page-link" title="Previous"><i class="fa fa-angle-left"></i></a></li><li class="active paginate_button page-item"><a href="#" class="page-link">1</a></li><li class="paginate_button page-item next disabled"><a href="#" class="page-link" title="Next"><i class="fa fa-angle-right"></i></a></li><li class="paginate_button page-item next disabled"><a href="#" class="page-link" title="Last"><i class="fa fa-angle-double-right"></i></a></li></ul></div></div></div>
+*@
+
+</div>
+ 
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

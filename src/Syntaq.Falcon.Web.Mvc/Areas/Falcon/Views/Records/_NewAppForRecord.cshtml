@@ -1,0 +1,42 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+
+@model NewAppForRecordModal
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("New App for Record"))
+
+
+<script type="text/javascript">
+	try {
+		var JSONObj = @Html.Raw(JsonConvert.DeserializeObject<JObject>(Model.Data, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None }));
+	} catch (err) {
+		alert(err.message);
+	}
+
+</script>
+
+<div class="modal-body">
+    <div id="RecordInformationsTab">
+        <form name="NewFormForRecordForm" role="form" novalidate class="form-validation">
+            <input type="hidden" name="rid" value="@Model.RecordID" />
+
+            <select id="formselect" name="appid" class="form-control">
+                @{
+                    var appslist = Model.AppsList;
+                    foreach (var app in appslist)
+                    {
+                        @:<option value="@app.Id">@app.Name</option>
+                    }
+                }
+            </select>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary save-button"><span>@L("Run")</span></button>
+    <button type="button" class="btn btn-secondary close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+</div>

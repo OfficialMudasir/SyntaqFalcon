@@ -1,0 +1,37 @@
+﻿@using Syntaq.Falcon.Web.Resources
+
+@inject IWebResourceManager WebResourceManager
+@{
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/morris.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/raphael.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.flot.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.waypoints.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.counterup.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/topojson.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.easypiechart.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/chartist.min.js");
+}
+
+<div class="card card-custom bgi-no-repeat card-stretch gutter-b new-subscription-statistics h-100 TodaySubmissionsContainer">
+    <div class="card-body">
+        <div class="row row-no-padding row-col-separator-xl">
+            <div class="col-12">
+                <div class="kt-widget24">
+                    <div class="card-title text-left font-weight-bolder text-dark font-size-h6 mb-0 text-hover-state-dark d-block">
+                        @L("TodaysSubmissions")
+                    </div>
+                    <span class="text-muted font-weight-bold text-left float-left col-12 p-0 mb-4">@L("TotalSubmissionsCreatedToday")</span>
+                    <div class="font-weight-bold text-primary font-size-sm font-weight-bold text-left">
+                        <span class="counterup todaysSubmissions">0</span>
+                    </div>
+               
+                    <div class="progress progress--sm">
+                        <div class="progress-bar text-primary" aria-valuemax="100" aria-valuemin="0" aria-valuenow="50" role="progressbar" id="todaySubmissionPercentage" style="width: 100%;"></div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-2"><span class="text-muted me-2 font-size-sm font-weight-bold">Change </span><span class="text-muted font-size-sm font-weight-bold"><span class="submissionChangePercent"></span>% </span></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

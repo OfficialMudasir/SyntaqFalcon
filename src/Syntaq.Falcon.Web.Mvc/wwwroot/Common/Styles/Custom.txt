@@ -1,0 +1,46 @@
+﻿/*table.dataTable.dtr-column > tbody > tr > td.control:before, table.dataTable.dtr-column > tbody > tr > th.control:before {
+	top: 0 !important;
+	left: -5px !important;
+	height: initial !important;
+	width: initial !important;
+	margin-top: initial !important;
+	margin-left: initial !important;
+	display: initial !important;
+	position: absolute;
+	color: #008000;
+	border: initial !important;
+	border-radius: initial !important;
+	box-shadow: initial !important;
+	box-sizing: initial !important;
+	text-align: center;
+	text-indent: initial !important;
+	font-family: 'Font Awesome 5 Free';
+	line-height: initial !important;
+	content: "\f055";
+	cursor: pointer;
+	background-color: inherit !important;
+}
+
+td.control.responsive {
+	cursor: pointer;
+}
+
+	td.control.responsive:before {
+		content: "\f055";
+		font-family: Font Awesome 5 Free;
+		left: -5px;
+		position: absolute;
+		top: 0;
+	}
+
+tr.odd.parent td.control.responsive {
+	cursor: pointer;
+}
+
+	tr.odd.parent td.control.responsive:before {
+		content: "\f056";
+		font-family: Font Awesome 5 Free;
+		left: -5px;
+		position: absolute;
+		top: 0;
+	}*/

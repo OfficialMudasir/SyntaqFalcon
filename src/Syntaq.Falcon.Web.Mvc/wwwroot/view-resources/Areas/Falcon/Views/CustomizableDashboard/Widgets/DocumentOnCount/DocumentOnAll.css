@@ -1,0 +1,7 @@
+﻿.DocumentOnAllContainer .card.card-custom > .card-body {
+    padding: 1rem 1.25rem !important;
+}
+
+.DocumentOnAllContainer .gutter-b {
+    margin-bottom: 0px !important;
+}

@@ -1,0 +1,372 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTemplates
+@using Syntaq.Falcon.ProjectTemplates.Dtos
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Tags;
+@using Syntaq.Falcon.Tags.Dtos;
+@using Syntaq.Falcon.Forms.Dtos
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+
+@model CreateOrEditProjectTemplateViewModel
+
+
+@section Styles
+{
+    <link href="~/Common/tagsinput.css" rel="stylesheet" />
+    <link href="~/metronic/themes/default/css/pages/wizard/wizard-2.css" rel="stylesheet" />
+ 
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/demo-ui-components.css" asp-append-version="true"/>
+ 
+}
+
+@section Scripts
+{
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+    <script abp-src="/view-resources/Areas/Falcon/Views/ProjectTemplates/CreateOrEdit.js" asp-append-version="true"></script>
+
+    <script> 
+        $(document).ready(function() { 
+            if ($('[name="ProjectTemplateName"]').val() == '') { 
+                $('#projectSettingsModal').modal('show');
+            }
+        });
+    </script>
+ 
+    <script abp-src="/view-resources/Areas/Falcon/Views/_Bundles/demo-ui-components.js" asp-append-version="true"></script>
+}
+ 
+<script>
+    var wizard;
+    var JSONProjectTemplate = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model)));
+</script>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+    <abp-page-subheader title="@Model.ProjectTemplate.Name">
+
+
+        <div class="btn-group">
+            <button id="saveProjectTemplateButton" class="btn btn-primary nowrap">
+                 @L("Save")
+            </button>
+            <button onclick="$('#projectSettingsModal').modal('show');" class="btn-group btn btn-primary btn-save-open">
+                <span class="d-none d-md-inline-block mb-md-0">
+                     @L("Settings")
+                </span>
+            </button>
+            <button id="btn-releases-open" class="btn-group btn btn-primary btn-save-open">
+                <span class="d-none d-md-inline-block mb-md-0">
+                     @L("Releases")
+                </span>
+            </button> 
+            <div class="btn-group" role="group">
+                <button type="button" id="btnGroupDrop4" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="d-none d-md-inline-block mb-md-0">
+                        @L("Version") @Model.ProjectTemplate.Version  
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop4">
+                    <li><a class="dropdown-item btn btn-sm btn-primary" id="newVersionButton" href="javsacript:;">@L("NewProjectVersion") </a></li>
+                    <li><span class="dropdown-divider"></span></li>              
+                        @{
+                            foreach (GetProjectTemplateForView project in Model.VersionHistory)
+                            {
+                                <li>
+                                    <a class="dropdown-item" href="/Falcon/ProjectTemplates/createoredit?Id=@project.Id">
+
+                                        <span class="fa-stack text-@(project.Version == Model.ProjectTemplate.Version ? "primary" : "secondary-dark")">
+                                            <!-- The icon that will wrap the number -->
+                                            <span class="fa fa-circle-o fa-stack-2x"></span>
+                                            <!-- a strong element with the custom content, in this case a number -->
+                                            <strong class="fa-stack-1x">
+                                                @L("Version") @project.Version
+                                            </strong>
+                                        </span>
+
+                                                        
+                                    </a>
+                                </li>
+                            }
+                        }                
+                </ul>
+            </div>
+        </div>  
+
+
+        @if (IsGranted(AppPermissions.Pages_ProjectTemplates_Create) || IsGranted(AppPermissions.Pages_ProjectTemplates_Edit))
+        {
+@*            <button id="PublishProjectTemplateButton" class="btn btn-primary nowrap">
+                @L("CreateNewProjectRelease")
+            </button>   
+            <button id="saveProjectTemplateButton" class="btn btn-success nowrap">
+                 @L("Save")
+            </button>*@
+            
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+ 
+            <div class="card-body">
+
+                    <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand " role="tablist">
+@*                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#general_tab" role="tab" aria-selected="true">
+                                @L("General")
+                            </a>
+                        </li>*@
+                        <li class="nav-item" role="presentation">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#steps_tab" role="tab" aria-selected="true">
+                                @L("Steps") 
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link " data-bs-toggle="tab" href="#tenants_tab" role="tab" aria-selected="true">
+                                @L("Subscribers") 
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content border border-1">
+                                          
+                        @*Start Steps Tab*@
+                        <div class="tab-pane active p-6" id="steps_tab" role="tabpanel">
+
+                            <form id="kt_wizard_form_step_2_form" class="row">
+
+                                @{var index = 1;}
+
+                                <div class="col-3">
+                                    <div id="steps_nav" class="list-group mb-4">
+                                        @foreach (ProjectTemplateStepDto step in Model.ProjectTemplate.StepsSchema)
+                                        {                                        
+                                            <a href="#" id="step_label_@index" class="list-group-item p-2 step-label list-group-item-action @(index==1? "active": "")" onclick=";$('.list-group a').removeClass('active');$(this).addClass('active'); $('.step').addClass('d-none');$('#step_@index').removeClass('d-none');">@step.StepName</a>         
+                                            index++;
+                                        }
+                                    </div>
+
+                                    <a id="btn-add-ProjectStep" href="#" class="btn btn-sm btn-primary"> @L("AddProjectStep")</a>
+            
+                                </div>
+
+                                @{index = 1;}
+                                <div id="steps_container" class="col-9">
+                                   @foreach (ProjectTemplateStepDto step in Model.ProjectTemplate.StepsSchema)
+                                    {
+                                        <div id="step_@index" class="step kt-form__section kt-form__section--first formblock border rounded p-6 @(index > 1? "d-none": "") ">
+                                        <input type="hidden" name="Steps[][RecordMatterId]" value="@(step.RecordMatterId)" />
+
+                                            <div class="form-group step-form-group mb-4">
+                                                <div class=" ">
+                                                    <label class="form-label"> <b>@L("Step") @(index)</b></label>
+
+                                                    <a class="pull-right btn-icon" onclick="$(this).closest('.formblock').remove(); $('#steps_nav > a.active').remove(); $('#steps_nav a').last().click()" href="#"><span class="fa fa-times text-danger"></span> @L("Remove")</a>
+                                                    <input aria-label="Step Name"  type="text" name="Steps[][StepName]" data-step="@index" class="form-control form-control  kt-input step_name" placeholder="" value="@step.StepName">
+
+                                                    @{
+                                                        index++;
+                                                    }
+
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group step-form-group mb-4">
+                                                <label class="form-label">@L("Form")*</label>
+                                                <select aria-label="Select Form" class="form-control form-control kt-input" name="Steps[][FormId]">
+                                                    <option selected value="">@L("SelectForm")</option>
+                                                    @foreach (FormListDto form in Model.FormsList)
+                                                    {
+                                                        @if (@form.value == step.FormId.ToString())
+                                                        {
+                                                            <option value="@form.value" test="@step.FormId" selected>@form.label</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@form.value" test="@step.FormId">@form.label</option>
+
+                                                        }
+                                                    }
+                                                </select>
+                                                <span class="form-text text-muted">Please select a Form for this step.</span>
+                                            </div>
+                                            <div class="form-group step-form-group mb-4">
+                                                <label  class="form-label">@L("Description")</label>
+                                                <textarea aria-label="Description"  type="text" name="Steps[][Description]" class="form-control form-control  kt-input" placeholder="">@step.Description</textarea>
+                                                <span class="form-text text-muted">Please enter a description for this step.</span>
+                                            </div>
+
+                                            <div class="form-group step-form-group mb-4">
+                                                <label  class="form-label">@L("FilterIf")</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <input aria-label="Steps[][Filter]" type="url" name="Steps[][Filter]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Field_yn='true']" value="@step.Filter">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group mb-4">
+                                                <label class="kt-checkbox">
+                                                    <input aria-label="Step Require Approval" type="checkbox" name="Steps[][RequireApproval]" @( step.RequireApproval ? "checked" : "") value="true"> @L("Approval Workflow Required")
+                                                    <span></span>
+                                                </label>
+                                            </div>
+  
+                                            <div class="mb-4 ">
+                                                <label class="form-label" for="Steps[][Order]">@L("Order"):  </label>
+                                                <input aria-label="Steps Order" type="number" name="Steps[][Order]" min="0" class="form-control form-control-sm  kt-input" value="@Convert.ToInt16(step.Order)">
+                                            </div>
+                                            <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                        </div> 
+                                    }
+                                </div>
+
+ 
+                            </form>
+
+                        </div>
+                        @*End Steps Tab*@
+
+                        @*Start Tenants Tab*@
+                        <div class="tab-pane  p-6" id="tenants_tab" role="tabpanel">
+                            
+
+                            <div class="d-flex flex-row flex-row-reverse mb-3">
+                                <button id="AddProjectTenantButton" class="btn btn-primary nowrap pull-right">
+                                    @L("Add") @L("Subscriber")
+                                </button>
+                            </div>
+
+                            <div class="row">
+
+                                <table id="ProjectTenantsTable" class="table table-hover align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th>@L("Tenant")</th>
+                                            <th>@L("Enabled")</th>
+                                            <th>@L("ProjectEnvironmentName")</th>
+                                            <th>@L("Actions")</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        @*End Tenants Tab*@
+
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="tempaltes" class="d-none">
+    <div id="kt_wizard_form_step_2_formblock" class="step kt-form__section kt-form__section--first formblock   rounded p-2 mb-4">
+        <input type="hidden" name="Steps[][RecordMatterId]" value="" />
+        <div class="form-group step-form-group mb-4">
+            <div class=" ">
+                <label class="form-label">@L("ProjectStepName")*</label>
+                <a class="pull-right" onclick="$(this).closest('.formblock').remove(); $('#steps_nav > a.active').remove(); $('#steps_nav a').last().click()" href="#"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                <input aria-label="Step Name" type="text" name="Steps[][StepName]" class="form-control step_name form-control  kt-input" placeholder="" value="">
+            </div>
+        </div>
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label">@L("Form")*</label>
+            <select aria-label="Form" class="form-control form-control kt-input" name="Steps[][FormId]">
+                <option selected value="">----pleace select a form ----</option>
+                @foreach (FormListDto form in Model.FormsList)
+                {
+                    <option value="@form.value">@form.label</option>
+                }
+            </select>
+            <span class="form-text text-muted">Please select a Form for this step.</span>
+        </div>
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label">@L("Description")</label>
+            <textarea aria-label="Description" type="text" name="Steps[][Description]" class="form-control form-control  kt-input" placeholder=""></textarea>
+            <span class="form-text text-muted">Please enter a description for this step.</span>
+        </div>
+
+
+        <div class="form-group step-form-group mb-4">
+            <label  class="form-label" >@L("FilterIf")</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                </div>
+                <input aria-label="Steps[][Filter]" type="url" name="Steps[][Filter]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Field_yn='true']" value="">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="kt-checkbox">
+                <input aria-label="Approval Workflow Required" type="checkbox" name="Steps[][RequireApproval]" @*checked="checked"*@ value="true"> @L("Approval Workflow Required")
+                <span></span>
+            </label>
+        </div>
+
+        <div class="mb-4 ">
+            <label class="form-label" for="Steps[][Order]">@L("Order"):  </label>
+            <input aria-label="Order" type="number" name="Steps[][Order]" min="0" class="form-control form-control  kt-input" value="" placeholder="">
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+</div>
+
+
+@*START PROJECT GENERAL SETTINGS MODAL*@
+
+<input type="hidden" class="form-control" name="ProjectVersion" id="ProjectVersion" placeholder="" value="@Model.ProjectTemplate.Version">                
+<input type="hidden" class="form-control" name="ProjectId" id="ProjectId" placeholder="" value="@Model.ProjectTemplate.ProjectId">                
+<input type="hidden" class="form-control" name="Id" id="Id" placeholder="" value="@Model.ProjectTemplate.Id">
+
+<div class="modal  fade" id="projectSettingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title w-100" id="exampleModalLongTitle">
+            @L("Settings")
+        </h5>
+ 
+        </div>
+        <div class="modal-body"  style="min-height:30em">
+
+        @*Start General Tab*@
+        <div class="tab-pane " id="general_tab" role="tabpanel">
+
+            <div id="ProjectInformationsTab mb-8 border-bottom">
+
+
+                <div class="row  mb-6">
+                    <div class="form-group mb-4">
+                        <label class="form-label">@L("Name")*</label>
+                        <input aria-label="Name" type="text" class="form-control" name="ProjectTemplateName" placeholder="" value="@Model.ProjectTemplate.Name">
+                        <span class="form-text text-muted">@L("EnterTemplateName")</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="form-label">@L("Description")</label>
+                        <textarea rows="6" aria-label="Description"  type="text" name="TemplateDescription" class="form-control " placeholder="">@Model.ProjectTemplate.Description</textarea>
+                        <span class="form-text text-muted">@L("EnterTemplateDescription")</span>
+                    </div>
+                </div>
+
+            </div>
+ 
+        </div>
+        @*Start General Tab*@
+
+        </div>
+        <div class="modal-footer"> 
+            <button type="button" onclick="$('#projectSettingsModal').modal('hide');" class="btn btn-primary" data-dismiss="modal">@L("Ok")</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+@*END PROJECT GENERAL SETTINGS*@
+ 

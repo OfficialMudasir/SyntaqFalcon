@@ -1,0 +1,1082 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Projects
+@using Syntaq.Falcon.Projects.Dtos
+@model ProjectViewModel
+@using Newtonsoft.Json
+ 
+@{
+    //ViewBag.CurrentPageName = FalconPageNames.Common.Projects;
+}
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/assets/json-viewer/jquery.json-viewer.css" asp-append-version="true" />
+}
+@section Scripts
+{
+    <script src="~/assets/json-viewer/jquery.json-viewer.js" asp-append-version="true"></script>
+    <script src="~/assets/Diff/diff_match_patch.js" asp-append-version="true"></script>
+  
+    <script abp-src="/view-resources/Areas/Falcon/Views/Projects/CreateOrEdit.js" asp-append-version="true"></script>
+
+    <script src="~/assets/json-viewer/jquery.json-viewer.js" asp-append-version="true"></script>
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+
+    <script>
+        var viewproject = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model)));
+        console.log(viewproject);
+
+        var url = window.location.href;
+        if (url.lastIndexOf('&RecordMatterId') !== -1) {
+            url = url.substring(0, url.lastIndexOf('&'));
+        }
+
+        var _createOrEditModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/RecordMatterContributors/CreateOrEditModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/RecordMatterContributors/_CreateOrEditModal.js',
+            modalClass: 'CreateOrEditRecordMatterContributorModal'
+        });
+
+        var _recordMatterContributorsService = abp.services.app.recordMatterContributors;
+        var _projectsService = abp.services.app.projects;
+        var _submissionsService = abp.services.app.submissions;
+
+        var _viewRecordsJSONModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/Records/ViewRecordsJSONModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Records/_ViewRecordsJSONModal.js',
+            modalClass: 'ViewRecordsJSONModal'
+        });
+
+
+        var _viewRecordMatterItemHistoryModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/RecordMatterItemHistories/ViewrecordMatterItemHistoryModal',
+            modalClass: 'ViewRecordMatterItemHistoryModal'
+        });
+
+        function showDocumentHistory(id) {
+            _viewRecordMatterItemHistoryModal.open({ id: id });
+        }
+
+        function viewJson(rmaId) {
+            _viewRecordsJSONModal.open({ id: rmaId });
+        }
+
+        //change project step status when share the project steps
+        abp.event.on('app.createOrEditRecordMatterContributorSaved', function (recordMatterId) {
+            _projectsService.publishStep({
+                id: recordMatterId, publish: true
+            }).done(function () {
+                window.location.replace(url);
+                abp.notify.success(app.localize('Awaiting Step Reviewed'));
+            });
+        });
+
+        viewproject.Project.Record.RecordMatters.forEach(myFunction);
+
+        function myFunction(value, index, array) {
+            value.RecordMatterItems.every(function (item, index, arry) {
+                 if (item.SubmissionStatus === "Complete" || item.SubmissionStatus === "Rejected") {
+                    return true;
+                }
+                else {
+                    poll = setTimeout(pollSubmission(item.SubmissionId), 1000);
+                    return false;
+                }
+            })
+
+        }
+
+        function pollSubmission(submissionId) {
+
+            _submissionsService.getSubmissionForView({ id: submissionId })
+                .done(function (data) {
+                    if (data !== null) {
+                        console.log(data);
+                        if (data.submission.submissionStatus === 'Rejected') {
+                            clearTimeout(poll);
+                            return;
+                        }
+                        else if (data.submission.submissionStatus === 'Complete') {
+                            clearTimeout(poll);
+                            console.log("finish");
+                            window.location.reload();
+                            return;
+                        }
+                        else {
+                            poll = setTimeout(pollSubmission(submissionId), 3000);
+                            return;
+                        }
+
+                    }
+                }).fail(function () {
+                    //abp.message.error(e.error.message);
+                });
+
+        }
+
+    </script>
+}
+
+<script>
+    
+    // $("#Updated_RecordMatterId").val("");
+    function unlockform(recordmatterId) {
+
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+                if (isConfirmed) {
+                    _projectsService.finaliseUnlockedStep({
+                        id: recordmatterId, finaliseUnlock: true
+                    }).done(function () {
+                        window.location.replace(url);
+ 
+                        abp.notify.success(app.localize('Success'));
+                    });
+ 
+                }
+            }
+        );
+
+    }
+ 
+
+    function deleteRecordMatterContributor(recordMatterContributorId) {
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+                if (isConfirmed) {
+                    _recordMatterContributorsService.delete({
+                        id: recordMatterContributorId
+                    }).done(function () {
+                        // window.location.reload(false);
+                        //getRecordMatterContributors(true);
+                        abp.notify.success(app.localize('SuccessfullyDeleted'));
+                    });
+                }
+            }
+        );
+    }
+
+    function enableRecordMatterContributor(recordMatterContributorId) {
+        var checked = $("#Form_Toggle" + recordMatterContributorId);
+
+        var enabled = false;
+        if (checked.length > 0) {
+            enabled = checked[0].checked;
+        }
+
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+
+                if (isConfirmed) {
+                    if (enabled) {
+                        _recordMatterContributorsService.enable({
+                            id: recordMatterContributorId
+                        }).done(function () {
+                            abp.notify.success(app.localize('Success'));
+                            window.location.replace(url);
+                        });
+                    }
+                    else {
+                        _recordMatterContributorsService.disable({
+                            id: recordMatterContributorId
+                        }).done(function () {
+                            abp.notify.success(app.localize('Success'));
+                            window.location.replace(url);
+                        });
+                    }
+                } else {
+                    checked[0].checked = !enabled;
+                }
+            }
+        );
+    }
+
+    function copyAccessURL(recordMatterContributorId, userId) {
+        var input = { id: recordMatterContributorId, userId: userId };
+        _recordMatterContributorsService.getAccessURL(
+            input
+        ).done(function (data) {
+            copytext(data);
+        });
+    }
+
+    function copytext(str) {
+        const el = document.createElement('textarea');
+        el.value = str;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    };
+
+    function resendInvite(recordMatterContributorId, userId) {
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+                if (isConfirmed) {
+                    var input = { id: recordMatterContributorId, userId: userId };
+                    _recordMatterContributorsService.sendInvite(
+                        input
+                    ).done(function () {
+                        abp.notify.success(app.localize('InviteSent'));
+                        getRecordMatterContributors(true);
+                    });
+                }
+            }
+        );
+    }
+
+    function showComments(comments) {
+
+        if (comments == '') {
+            comments = 'No comments';
+        }
+
+        abp.message.info(comments);
+    }
+
+</script>
+
+
+<style>
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background-color: #a5a5a5;
+        border-radius: 20px;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            top: 1px;
+            transition: all 0.3s;
+        }
+
+    .fldscheckbox {
+        display: none;
+    }
+
+        .fldscheckbox:checked + .switch::after {
+            left: 20px;
+        }
+
+        .fldscheckbox:checked + .switch {
+            background-color: #15C39A;
+        }
+
+    .switch-padding {
+        padding: 0
+    }
+
+    /* .dropdown-menu {
+        min-width: 9rem;
+    }*/
+
+    .form-group {
+        margin-bottom: 0.25rem;
+    }
+
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 0;
+        }
+
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 40px;
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #22c0e8;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 0;
+            }
+
+            ul.timeline > li:last-child:before {
+                border: 3px solid #ffb822;
+            }
+
+            ul.timeline > li:first-child:before {
+                border: 3px solid #1dc9b7;
+            }
+</style>
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@Model.RecordRecordName"></abp-page-subheader>
+    <!--<div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass())">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span> @Model.RecordRecordName</span>
+                </h3>
+                <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                <div class="kt-subheader__breadcrumbs">-->
+                    @*<a href="/Falcon/Projects" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i>&thinsp;@L("Projects")</a>
+                        <span class="kt-subheader__breadcrumbs-separator"></span>
+                        <a href="javascript:;" class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">
+                            @L("Details")
+                        </a>*@
+                    <!--<span>@L("Project")</span>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+
+    <div class="@(await GetContainerClass()) kt-grid__item ">
+        <div class="card" style="margin-bottom:20px">
+            <div class="card-body">
+
+                <div id="ProjectInformationsTab mb-8 border-bottom">
+                    <div class="row fs-6 mb-6">
+                        <div class="col-12 ">
+
+                       @* <div>
+
+                            @{
+                                if(Model.Deployments.Count() > 0){
+
+                                    var currentDeployment = Model.Deployments.OrderBy(d => d.CreationTime).FirstOrDefault(d => d.ProjectReleaseId == Model.Project.ReleaseId);
+                                    var latestDeployment = Model.Deployments.OrderBy(d => d.CreationTime).LastOrDefault();
+
+                                    if(latestDeployment.CreationTime > currentDeployment.CreationTime  && latestDeployment.ProjectReleaseId != currentDeployment.ProjectReleaseId){
+                                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                               <p>
+                                                 <strong>@L("Alert").</strong> @L("ProjectVersionWarning")                                        
+                                                <span id="btnUpgrade" class="btn btn-sm btn-primary pull-right">@L("Upgrade")</span>                                        
+                                                <span   class="btn btn-sm btn-secondary pull-right me-2" data-bs-toggle="modal" data-bs-target="#modal">@L("Information")</span> 
+                                               </p>
+                                            </div>
+
+                                            <input id="latestReleaseId" type="hidden" value="@latestDeployment.ProjectRelease.Id" />
+                                            <input id="ProjectName" type="hidden" value="@Model.Project.Name" />
+                                            <input id="ProjectDescription" type="hidden" value="@Model.Project.Description" />
+                                            <input id="ProjectRecordId" type="hidden" value="@Model.Project.RecordId" />
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">@latestDeployment.ProjectRelease.Name</h5>
+                                                  </div>
+                                                  <div class="modal-body">                                            
+                                                   <p>@latestDeployment.Comments</p>
+                                                   <p>@L("Date"): @latestDeployment.CreationTime.ToShortDateString()</p>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                    }
+                                }
+ 
+                            }
+
+                        </div>*@
+
+ 
+@*                            @{
+                                switch (Model.Project.Status)
+                                {
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.New:
+                                            <span class="label badge badge-warning badge-inline font-weight-bold  badge-lg me-5">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.InProgress:
+                                            <span class="label badge badge-info badge-inline font-weight-bold  badge-lg me-5">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.Completed:
+                                            <span class="label badge badge-success badge-inline font-weight-bold  badge-lg me-5">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                }
+                            }*@
+
+                            <span class="  ">@L("CreatedBy") :</span>
+                            @Model.Project.CreatorUserName
+
+
+                            @*<div class="btn-group col-2">*@
+                            <button id="RefreshButton" onclick="location.reload();" class="btn btn-secondary btn-sm pull-right"><i class="fa fa-sync-alt"></i> @L("Refresh")</button>
+                            @*</div>*@
+                        </div>
+                        <div class="col-12  ">
+                            <span>@L("Description") :</span>
+                            @Model.Project.Description
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <!--start record matter tab-->
+                <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand" role="tablist">
+
+                    @{bool active = false;
+                        int i = 1;
+                            @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                        {
+                            if (Model.RecordMatterId != null)
+                            {
+                                if (Model.RecordMatterId == recordmatter.Id)
+                                {
+                                    active = true;
+                                }
+                            }
+                            else
+                            {
+                                if (i == 1) active = true;
+
+                            }
+
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link @(active ? " active" : "")" data-bs-toggle="tab" href='@string.Format("#tab_{0}", i)' role="tab" aria-selected="true">
+                                        @recordmatter.RecordMatterName
+                                    </a>
+                                </li>
+                            active = false;
+                            i++;
+                        }
+                    }
+
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link " data-bs-toggle="tab" href="#documents_tab" role="tab" aria-selected="true">
+                            @L("Documents")
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#audit_tab" role="tab" aria-selected="false">
+                            @L("AuditLogs")
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" data-bs-toggle="tab" href="#release_tab" role="tab" aria-selected="false">
+                            @L("Release")
+                        </a>
+                    </li>
+                </ul>
+
+
+                <div class="tab-content  border-0">
+
+
+                    @{
+                        int index = 1;
+                        bool active_pane = false;
+                            @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                        {
+                            var flag = false;
+
+                            if (Model.RecordMatterId != null)
+                            {
+                                if (Model.RecordMatterId == recordmatter.Id)
+                                {
+                                    active_pane = true;
+                                }
+                            }
+                            else
+                            {
+                                if (index == 1) active_pane = true;
+
+                            }
+
+
+                                <div class="tab-pane@(active_pane ? " active" : "")" id="@string.Format("tab_{0}", index)" role="tabpanel">
+                                    <div id="ProjectStepsTab">
+
+
+                                        @{
+                                        index++;
+                                        active_pane = false;
+                                        }
+
+
+                                        <div class=" col-12 py-5 ">
+                                            <div class="h6 mb-2">
+                                                <span class="font-weight-bold">@L("Form") </span>
+                                            </div>
+
+                                            <div>
+
+                                                <a href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live'>
+                                                    <span class="  me-2">
+                                                       <!-- <span class="fa-stack fa-1x text-primary stq-v-center" style="width:28px; height:28px; top:-10px; font-size: 28px"><i class="far fa-window-maximize fa-stack-1x" style="font-size: 28px"></i><i class="fa fa-list fa-stack-1x" style="margin-top: 1px; font-size:16px !important"></i> </span> -->
+                                                       <img alt="" src="https://img.icons8.com/color/2x/form.png" style="width:36px; height:36px;">
+                                                        <span  > @recordmatter.RecordMatterName</span>
+                                                    </span>
+                                                </a>
+
+                                                <!-- 
+                                                <a href='/Falcon/forms/loadInProject?OriginalId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live&ProjectId=@Model.Project.Id'>
+                                                    <span class="  me-2">
+                                                       <img alt="" src="https://img.icons8.com/color/2x/form.png" style="width:36px; height:36px;">
+                                                        <span  > @recordmatter.RecordMatterName</span>
+                                                    </span>
+                                                </a>
+                                                -->
+
+                                                <div class="btn-group pull-right me-3" style="height:3em">
+                                                    <button class="btn btn-secondary btn-sm dropdown-toggle me-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block">
+                                                         @L("Actions") 
+                                                    </button>
+                                                    <ul class="dropdown-menu"  >
+                                                        @if (recordmatter.Status == Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Final)
+                                                    {
+                                                            <li><a class="dropdown-item" onclick="unlockform('@recordmatter.Id')" href="#">Unlock form</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (recordmatter.RequireApproval == true && recordmatter.Status != Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.FinalUnlocked)
+                                                        {
+                                                            //<a class="dropdown-item" onclick="_createOrEditModal.open({ id: null , recordmatterId: '@recordmatter.Id', formID : '@recordmatter.FormId' });" href="#">Share</a>
+                                                            <li><a class="dropdown-item" href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live&share=true'>@L("Share")</a></li>
+                                                        }
+
+                                                            @if (recordmatter.Status == Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Share)
+                                                        {
+                                                            if (flag == true)
+                                                            {
+                                                                <li><a class="dropdown-item" href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live'>@("Open")</a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li><a class="dropdown-item" href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live'>@L("Open")</a></li>
+                                                            }
+                                                            <li><a class="dropdown-item" href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live&finalised=1'>@L("Finalise")</a></li>
+                                                        }
+                                                        else
+                                                        {
+                                                                <li><a class="dropdown-item" href='/Falcon/forms/loadRelease?ProjectId=@Model.Project.Id&FormId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live'>@L("Open")</a></li>
+
+                                                        }
+
+                                                    }
+
+                                                    </ul>
+                                                </div>
+
+                                                <span class="me-2">
+
+                                                    @{
+                                                    switch (recordmatter.Status)
+                                                    {
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Draft:
+                                                                    <span class="label badge badge-warning badge-inline pull-right mt-2 me-5" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status)</span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Final:
+                                                                    <span class="label badge badge-success badge-inline   pull-right mt-2 me-5" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.New:
+                                                                    <span class="label badge badge-danger badge-inline  pull-right mt-2 me-5" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.FinalUnlocked:
+                                                                    <span class="label badge badge-primary badge-unified-dark  badge-inline  pull-right mt-2 me-5" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Share:
+
+                                                            if (Model.Project.Contributors.Any(e => e.RecordMatterId == recordmatter.Id))
+                                                            {
+
+                                                                foreach (Syntaq.Falcon.Records.Dtos.RecordMatterContributorDto recordMatterCon in Model.Project.Contributors.Where(e => e.RecordMatterId == recordmatter.Id))
+                                                                {
+                                                                    if (recordMatterCon.Status == 0 & recordMatterCon.Enabled == true)
+                                                                    {
+                                                                        flag = true;
+                                                                                <span class="label badge badge-info badge-inline mt-2  pull-right me-5" style="min-width: 8em">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterCon.Status) @recordMatterCon.StepRole </span>
+
+                                                                        break;
+
+                                                                    }
+                                                                }
+
+                                                                Syntaq.Falcon.Records.Dtos.RecordMatterContributorDto recordMatterCon1 = Model.Project.Contributors.Where(e => e.RecordMatterId == recordmatter.Id).FirstOrDefault();
+                                                                if (flag == false)
+                                                                {
+                                                                            <span class="label badge badge-info badge-inline mt-2  pull-right me-5" style="min-width: 8em">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterCon1.Status) @recordMatterCon1.StepRole </span>
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                        <span class="label badge badge-warning badge-inline mt-2 pull-right me-5" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                            }
+
+                                                            break;
+                                                    }
+                                                    }
+
+                                                </span>
+
+                                            </div>
+                                        </div>
+
+                                        @{
+
+                                        if (recordmatter.RecordMatterItems.Where(e => !string.IsNullOrEmpty(e.DocumentName)).Count() > 0 || Model.Uploadfiles.Where(e => new Guid(e.RecordMatterId) == recordmatter.Id).Count() > 0)
+                                        {
+                                                    <div class="col-12">
+                                                        <hr />
+                                                    </div>
+
+
+                                                    <div class="col-12 mt-4 h6  text-brand">
+                                                        <span>
+                                                            @L("Documents")
+                                                        </span>
+                                                    </div>
+
+
+
+                                                    @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterItemDto recordmatteritem in recordmatter.RecordMatterItems.Where(e => !string.IsNullOrEmpty(e.DocumentName)))
+                                            {
+
+                                                        @if (recordmatteritem.HasDocument)
+                                                {
+                                                    bool word = false;
+                                                    bool pdf = false;
+
+                                                            <div class="col-12 py-2 pb-4">
+
+                                                                @if (recordmatteritem.AllowedFormats.Contains("W") && !word)
+                                                        {
+                                                                    <a class="mr-1" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=docx">
+                                                                        <img alt="docx" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/doc.svg"> <span class="">@recordmatteritem.DocumentName</span>                                                                
+                                                                    </a>
+                                                            word = true;
+                                                        }
+
+                                                                @if (recordmatteritem.AllowedFormats.Contains("P") && !pdf)
+                                                        {
+                                                                    <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=pdf"> <img alt="pdf" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/pdf.svg"> <span class="">@recordmatteritem.DocumentName</span></a>
+                                                            pdf = true;
+                                                        }
+
+                                                                                                                         
+                                                                <div class="btn-group pull-right me-3" style="height:3em">
+                                                                    <button class="btn btn-secondary btn-sm dropdown-toggle me-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block">
+                                                                         @L("Actions") 
+                                                                    </button>
+                                                                    <ul class="dropdown-menu"  >
+                                                                        @if (word)
+                                                                {
+                                                                            <li><a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=docx">Download MS Word</a></li>
+                                                                }
+
+                                                                        @if (pdf)
+                                                                {
+                                                                            <li><a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=pdf">Download PDF</a></li>
+                                                                }
+
+                                                                        <li><a class="dropdown-item" href="javascript:;" onclick="showDocumentHistory('@recordmatteritem.Id');">View Versions</a></li>                               
+                                                                    </ul>
+                                                                </div>
+                                                                <!-- <span class="label badge badge-warning  badge-inline  pull-right mt-2 me-5" style="min-width: 10em">@recordmatteritem.SubmissionStatus</span> -->
+
+                                                            </div>
+                                                }
+                                            }
+
+                                                    @foreach (Syntaq.Falcon.Files.Dtos.FilesDto uploadfile in Model.Uploadfiles)
+                                            {
+                                                        <div class="col-12 py-4">
+                                                            @if (new Guid(uploadfile.RecordMatterId) == recordmatter.Id)
+                                                    {
+                                                                <a class="OnClickLink me-2" href="/Falcon/Files/DownloadFile?RecordId=@uploadfile.RecordId&RecordMatterId=@uploadfile.RecordMatterId&RecordMatterItemGroupId=@uploadfile.RecordMatterItemGroupId&Filename=@uploadfile.FileName" name="ExportRuleLink"><i class="fas fa-file-download" style="font-size: 1.8em;"></i></a>
+                                                                <span class="">@uploadfile.FileName</span>
+                                                    }
+                                                        </div>
+                                            }
+                                        }
+                                        }
+
+                                        @if (Model.Project.Contributors.Any(e => e.RecordMatterId == recordmatter.Id))
+                                    {
+
+                                            <div class="col-12">
+                                                <hr />
+                                            </div>
+
+                               
+                                            <div class="h6 me-2 form-group kt-form__group row mt-4 mb-4">
+                                                <span>
+                                                    Contributors Sharing Log
+                                                </span>
+                                            </div>
+
+                                            <div class="col-12 py-3">
+                                                <table class="table align-middle table-row-dashed table-hover dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <td>Organisation</td>
+                                                            <td>Name</td>
+                                                            <td>Email</td>
+                                                            <td>Role</td>
+                                                            <td>Status</td>
+                                                            <td>@L("Comments")</td>
+                                                            <td class="text-center  " style="width:11em"></td>
+                                                        </tr>
+                                                    </thead>
+                                                    @{
+                                                    foreach (Syntaq.Falcon.Records.Dtos.RecordMatterContributorDto recordMatterContributor in Model.Project.Contributors.Where(e => e.RecordMatterId == recordmatter.Id))
+                                                    {
+                                                                <tr>
+                                                                    <td class="h6">@recordMatterContributor.OrganizationName</td>
+                                                                    <td>@recordMatterContributor.Name</td>
+                                                                    <td>@recordMatterContributor.Email</td>
+                                                                    <td>@recordMatterContributor.StepRole</td>
+                                                                    <td>
+
+                                                                        @{
+                                                                    switch ((int)recordMatterContributor.Status)
+                                                                    {
+                                                                        case 0:
+                                                                                        <span class="label badge badge-warning badge-inline font-weight-bold  me-5">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterContributor.Status)</span>
+                                                                            break;
+                                                                        case 1:
+                                                                                        <span class="label badge badge-danger badge-inline font-weight-bold  me-5">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterContributor.Status)</span>
+                                                                            break;
+                                                                        case 2:
+                                                                                        <span class="label badge badge-warning badge-inline font-weight-bold  me-5">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterContributor.Status)</span>
+                                                                            break;
+                                                                        case 3:
+                                                                                        <span class="label badge badge-success badge-inline font-weight-bold   me-5">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterContributor.Status)</span>
+                                                                            break;
+                                                                        case 4:
+                                                                                        <span class="label badge badge-success badge-inline font-weight-bold  me-5">@L("Enum_RecordMatterContributorStatus_" + (int)recordMatterContributor.Status)</span>
+                                                                            break;
+                                                                    }
+                                                                        }
+
+                                                                        
+                                                                    </td>
+                                                                    <td>
+                                                                        @if (recordMatterContributor.Comments != null)
+                                                                {
+                                                                            <a class="OnClickLink" href="javascript:;" onclick="showComments('@( System.Web.HttpUtility.JavaScriptStringEncode(recordMatterContributor.Comments))');" name="comments"><i class="fas fa-comment-alt"></i>  @L("Comments")</a>
+
+                                                                }
+                                                                    </td>
+                                                                    <td>
+
+                                                                    <div class="btn-group pull-right " style="height:3em">
+                                                                        <button class="btn btn-secondary btn-sm dropdown-toggle me-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block">
+                                                                             @L("Actions") 
+                                                                        </button>
+                                                                        <ul class="dropdown-menu"  >
+                                                                            <li><a class="dropdown-item" href="javascript:;" onclick="copyAccessURL('@recordMatterContributor.Id', '@recordMatterContributor.UserId'); abp.notify.success('', 'Copied Access Id', {'positionClass': 'toast-bottom-right'}) "> @L("CopyAccessURL")</a></li>
+                                                                            <li><a class="dropdown-item" href="javascript:;" onclick="resendInvite('@recordMatterContributor.Id', '@recordMatterContributor.UserId')" name="ResendInvite"> @L("ResendInvite")</a></li>
+                                                                            <li><a class="dropdown-item" href="javascript:;" onclick="_createOrEditModal.open({ id: '@recordMatterContributor.Id', recordmatterId: '@recordmatter.Id', formID : '@recordmatter.FormId' });"> @L("Open")</a></li>
+                                                                            <li><a class="dropdown-item btn-group" href="javascript:;" role="group">
+                                                                                    @L("Access")
+                                                                                    <span class="custom-control custom-switch me-1">
+                                                                                        <input type="checkbox" id="Form_Toggle@(recordMatterContributor.Id)" name="Enabled" class="custom-control-input custom-control-input-success fldscheckbox @(recordMatterContributor.Id)_enabled" @(recordMatterContributor.Enabled ? "checked" : "") onclick=";  enableRecordMatterContributor('@recordMatterContributor.Id')" value="true">
+                                                                                        <label for="Form_Toggle@(recordMatterContributor.Id)" class="custom-control-label font-italic bold"></label>
+                                                                                    </span>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>                                
+                                                                    </td>
+                                                                </tr>
+                                                    }
+                                                    }
+                                                </table>
+                                            </div>
+                                    }
+                                    </div>
+                                </div>
+                        }
+                    }
+
+                    <!---End of Record matter tab panel-->
+                    <!---Start Document tab of Record matter tab panel-->
+
+                    <div class="tab-pane" id="documents_tab" roles="tabpanel">
+                        <div id="ProjectsDocumentsTab">
+                            <div class="row">
+
+                                @{
+                                    index = 1;
+
+                                        <div class="col-12 mb-8 pt-5">
+                                        
+                                                <button id="DownLoadAllButton" onclick="window.open('/Falcon/Projects/ExportDocument?ProjectId=@Model.Project.Id')" class="btn btn-sm btn-secondary"><i class="fas fa-download"></i>Download All</button>
+                                            
+                                        </div>
+
+                                    foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                                    {
+
+
+                                        index++;
+
+                                        if (!recordmatter.RecordMatterItems.Any(e => !string.IsNullOrEmpty(e.DocumentName)))
+                                        {
+                                                <div class="col-12 mb-3" style="display:flex; flex-direction: row; justify-content: space-between; align-items: center">
+                                                    <i class="fas fa-ban m-1" title="@L("DocumentsNotGenerated")" style="font-size: 1.5em;"></i>
+                                                    <div @*class="col-2"*@>
+                                                        <span class="label badge badge-warning badge-inline pull-right mt-1 col-2" style="min-width:16em">@L("DocumentsNotGenerated")</span>
+                                                    </div>
+                                                </div>
+                                        }
+
+                                            @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterItemDto recordmatteritem in recordmatter.RecordMatterItems.Where(e => !string.IsNullOrEmpty(e.DocumentName)))
+                                        {
+                                                <div class="col-12 mb-2 ">
+                                                    @{
+
+                                                    if (recordmatteritem.HasDocument)
+                                                    {
+                                                        if (recordmatteritem.AllowedFormats.Contains("W"))
+                                                        {
+                                                                    <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=docx" title="Download MS Word">
+                                                                        <img alt="docx" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/doc.svg"> 
+                                                                        <span> @recordmatteritem.DocumentName</span>
+                                                                    </a>
+
+                                                        }
+
+                                                        if (recordmatteritem.AllowedFormats.Contains("P"))
+                                                        {
+                                                                    <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=pdf" title="Download Adobe Pdf">
+                                                                        <img alt="pdf" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/pdf.svg"> 
+                                                                        <span> @recordmatteritem.DocumentName</span>
+                                                                    </a>
+                                                        }
+
+                                                        if (recordmatteritem.AllowedFormats.Contains("P"))
+                                                        {
+                          
+                                                                    <div class="btn-group pull-right " style="height:3em">
+                                                                        <button class="btn btn-secondary btn-sm dropdown-toggle me-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block">
+                                                                             @L("Actions") 
+                                                                        </button>
+                                                                        <ul class="dropdown-menu"  >
+                                                                            <li><a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=pdf">Download</a></li>
+                                                                            <li><a class="dropdown-item" href="javascript:;" onclick="showDocumentHistory('@recordmatteritem.Id');">Version History</a></li>                               
+                                                                        </ul>
+                                                                    </div>
+                                                        }
+                                                        else if (recordmatteritem.AllowedFormats.Contains("W"))
+                                                        {
+                                                                    <div class="btn-group pull-right " style="height:3em">
+                                                                        <button class="btn btn-secondary btn-sm dropdown-toggle me-3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: inline-block">
+                                                                             @L("Actions") 
+                                                                        </button>
+                                                                        <ul class="dropdown-menu"  >
+                                                                           <li><a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=docx">Download</a></li>
+                                                                           <li><a class="dropdown-item" href="javascript:;" onclick="showDocumentHistory('@recordmatteritem.Id');">Version History</a></li>                                                       
+                                                                        </ul>
+                                                                    </div>
+                                                        }
+
+                                                        //@switch (recordmatter.Status)
+                                                        //{
+                                                        //    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Draft:
+                                                        //        <span class="label badge badge-warning  badge-inline  pull-right mt-2 me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status)</span>
+                                                        //        break;
+                                                        //    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Final:
+                                                        //        <span class="label badge badge-success badge-inline  pull-right mt-2 me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        //        break;
+                                                        //    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.New:
+                                                        //        <span class="label badge badge-warning badge-inline  pull-right mt-2 me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        //        break;
+                                                        //    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Share:
+                                                        //        <span class="label badge badge-info badge-inline pull-right mt-2 me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        //        break;
+                                                        //}
+
+                                                    }
+
+
+                                                    }
+
+                                                </div>
+
+                                        }
+
+                                            @foreach (Syntaq.Falcon.Files.Dtos.FilesDto uploadfile in Model.Uploadfiles)
+                                        {
+                                                <div class="col-12 mb-2 ">
+                                                    @if (new Guid(uploadfile.RecordMatterId) == recordmatter.Id)
+                                                {
+                                                        <a class="OnClickLink me-2" href="/Falcon/Files/DownloadFile?RecordId=@uploadfile.RecordId&RecordMatterId=@uploadfile.RecordMatterId&RecordMatterItemGroupId=@uploadfile.RecordMatterItemGroupId&Filename=@uploadfile.FileName" name="ExportRuleLink"><i class="fas fa-file-download m-1" style="font-size: 1.8em;"></i></a>
+                                                        <span class="">@uploadfile.FileName</span>
+                                                }
+                                                </div>
+
+                                        }
+
+                                            <div class="col-12">
+                                                <hr />
+                                            </div>
+
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!---End Document tab of Record matter tab panel-->
+
+
+                    <div class="tab-pane" id="audit_tab" roles="tabpanel">
+                        <div id="AuditTab">
+                            <div class="row">
+
+                                @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                                {
+
+                                    <div class="col-12 mb-2 pt-5">
+                                        <span class="h6">
+                                            @( string.IsNullOrEmpty(recordmatter.RecordMatterName)? "Step " + index : recordmatter.RecordMatterName)
+                                        </span>
+                                    </div>
+
+                                    <ul class="timeline">
+                                        @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterAuditDto recordmatteraudit in recordmatter.RecordMatterAudits)
+                                        {
+                                            <li>
+                                                <a href="javascript:;" onclick="viewJson('@recordmatteraudit.Id');">
+
+                                                    <span class="me-2 datetime">@recordmatteraudit.CreationTime</span>
+                                                    <span class="fa fa-arrow-right me-2"></span>
+
+                                                    @switch (recordmatteraudit.Status)
+                                                    {
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Draft:
+                                                            <span class="label badge badge-warning  badge-inline   me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatteraudit.Status)</span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Final:
+                                                            <span class="label badge badge-success badge-inline   me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatteraudit.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.New:
+                                                            <span class="label badge badge-danger badge-inline   me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatteraudit.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Share:
+                                                            <span class="label badge badge-info badge-inline  me-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatteraudit.Status) </span>
+                                                            break;
+                                                        case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.FinalUnlocked:
+                                                            <span class="label badge badge-unified-dark  badge-inline mt-2" style="min-width: 10em">@L("Enum_ProjectStepStatus_" + (int)recordmatteraudit.Status) </span>
+                                                            break;
+                                                    }
+
+                                                    <p class="me-2">@recordmatteraudit.UserName</p>
+
+                                                </a>
+
+
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="release_tab" roles="tabpanel">
+                        <div id="ReleaseTab">
+                            <div class="row">
+
+                                @{
+                                    if(@Model.Release != null){
+                                            <div class="col-12 pt-5 pb-5">
+                                                <span class="h6">
+                                                      @Model.Release.Name
+                                                </span>
+                                            </div>
+                                          
+                                            <div class="col-2 ">
+                                               <label class="form-label">@L("Released") @L("By") </label> 
+                                            </div>   
+                                    
+                                            <div class="col-10 ">
+                                                @Model.Release.TenantName
+                                            </div>  
+
+                                            <div class="col-2 ">
+                                               <label class="form-label">@L("Release") @L("Date") </label> 
+                                            </div>   
+                                    
+                                            <div class="col-10  ">
+                                                @Model.Release.CreationTime.ToShortDateString()
+                                            </div>
+
+
+                                            <div class="col-2 ">
+                                               <label class="form-label">@L("Version") </label> 
+                                            </div>   
+                                    
+                                            <div class="col-10  ">
+                                                @Model.Release.VersionMajor<span>.</span>@Model.Release.VersionMinor<span>.</span>@Model.Release.VersionRevision
+                                            </div>
+
+                                            <div class="col-12 mb-2 ">
+                                                <label class="form-label">@L("Notes")</label>
+                                                <div style=" max-height:300px;  overflow-y:auto">
+                                                    @Html.Raw(Model.Release.Notes)
+                                                </div>
+                                            </div>
+                                    }
+                                    else{
+                                            <div class="col-12 pt-5 pb-5">
+                                                <span class="h6">
+                                                      No Release Found
+                                                </span>
+                                            </div>
+                                    }
+                                }
+
+ 
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

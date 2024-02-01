@@ -1,0 +1,67 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AccessControlList
+@using Syntaq.Falcon.Web.Areas.Falcon.Utility
+@model ManageACLModalViewModel
+<style>
+	ul.ui-autocomplete {
+		z-index: 10051;
+	}
+</style>
+<div class="modal-header pl-4 pr-4 pt-3 pb-3">
+ 
+	<div class="modal-title pl-0">
+		<h5 class=" pt-2 mb-0  pb-0 ">@Html.Raw(Model.EntityName)</h5>
+		<div class="pt-0 small">@Html.Raw(Model.EntityACL.Items.Count + " shares")</div>
+	</div>
+	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body pl-4 pr-4 pt-3 pb-2">
+	<div class="row" id="GrantNewACL">
+        <form name="GrantNewACLForm" role="form" novalidate class="form-validation form-inline w-100">
+            <input id="EntityId" name="EntityId" value="@Model.EntityId" type="hidden" />
+            <input id="Type" name="Type" value="@Model.EntityType" type="hidden" />
+            <input id="Role" name="Role" value="S" type="hidden" />
+            <div class="form-group">
+                <label for="TenantName" class="form-label">@L("TenantName")</label> 
+                <input class="form-control form-control-sm" id="TenantName" type="text" name="TenantName"> 
+            </div>
+
+ 
+
+            <div  >                
+                <button id="GrantACL" type="button" class="btn btn-sm btn-primary my-3 pull-right" >@L("Share")</button>
+            </div>
+ 
+        </form>
+    </div>
+    <hr class="row">
+    <div class="pl-2" id="GrantedACls">
+        <button id="UpdateACL" type="button" hidden>@L("Update")</button>
+        <button id="RevokeACL" type="button" hidden>@L("Revoke")</button>
+
+ 
+        @foreach (var Item in Model.EntityACL.Items)
+        {
+            <div class="form-group row mb-2">
+                <div class="col-md-7 pt-1">
+                    @IconUtility.Generate(@Item.TargetTenantName)     
+                    @Html.Raw(@Item.TargetTenantName)<br>                 
+                </div>
+                <div class="col-md-4 pt-3">
+                   
+                        @(Item.Accepted ? "Accepted" : "Not Accepted")
+                    
+                    
+                </div>
+                <div class="col-md-1">
+                    <input id="TenantId" hidden type="text" name="TenantId" aria-label="Tenant" value="@Item.TargetTenantId)">
+                    <span tabindex="0" onClick="(function(){$('#RevokeACL').trigger('click', '@Item.ACLId')})();" class="btn btn-sm btn-danger pull-right">@L("Delete")</span>                
+                </div>
+
+            </div>
+        }
+
+
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithCloseSm.cshtml")

@@ -1,0 +1,8 @@
+{
+  "IsEncrypted": false,
+  "ConnectionStrings": {
+    "Default": "Server=localhost; Database=FalconDb; Trusted_Connection=True;",
+    //"Default": "Server=syntaq-au-e.database.windows.net,1433;Database=SyntaqFalcon_AU_88;Persist Security Info=False;User ID=syntaq_admin;Password=WV*t4ijBPF#%R04Jw@kz@YBn0;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    //"Default": "Server=brm-builder-ae-sql-pre.database.windows.net,1433;Database=brm-builder-ae-sdb-pre;Persist Security Info=False;User ID=syntaq_admin;Password=H25ybbo8fLRS*F2U#3fV;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  }
+}

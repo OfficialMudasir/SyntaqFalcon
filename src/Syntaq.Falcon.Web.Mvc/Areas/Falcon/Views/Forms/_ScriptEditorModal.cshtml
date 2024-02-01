@@ -1,0 +1,47 @@
+﻿@*@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ScriptEditor")))
+<style type="text/css" media="screen">
+    #editor {
+        width: 99%;
+        height: 88%
+    }
+
+    .ace_editor {
+        position: relative;
+    }
+
+    .ace_gutter {
+        height: 32.25em;
+    }
+
+    .modal .modal-content .modal-body {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    .btn-group {
+        height: 40px;
+    }
+</style>
+
+
+
+<div class="modal-body pt-0">
+    <div id="container">
+        <div class="btn-toolbar" role="toolbar" aria-label="...">
+            <div class="btn-group mr-2" role="group" aria-label="...">
+                <button type="button" class="m-btn btn btn-secondary" id="UndoBtn"><i class="fas fa-undo-alt"></i></button>
+                <button type="button" class="m-btn btn btn-secondary" id="RedoBtn"><i class="fas fa-redo-alt"></i></button>
+                <div class="input-group">
+                    <div class="input-group-prepend"><span class="input-group-text" id="btnGroupAddon"><i class="fas fa-search"></i></span></div>
+                    <input id="SearchEditor" type="text" class="form-control" placeholder="Search..." aria-describedby="btnGroupAddon">
+                </div>
+                <button type="button" class="m-btn btn btn-secondary" id="PrevBtn"><i class="fas fa-angle-left"></i></button>
+                <button type="button" class="m-btn btn btn-secondary" id="NextBtn"><i class="fas fa-angle-right"></i></button>
+            </div>
+        </div>
+        <div id="editor" style="height: 30em ">
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

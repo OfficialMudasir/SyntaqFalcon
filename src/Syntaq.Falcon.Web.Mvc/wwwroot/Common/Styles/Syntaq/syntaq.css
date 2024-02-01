@@ -1,0 +1,53 @@
+﻿.form-check{
+    margin-bottom:1em !important;
+}
+
+.nowrap {
+    white-space: nowrap
+}
+td:nth-child(2) {
+    cursor: pointer;
+}
+.form-group {
+    margin-bottom: 2rem;
+}
+
+    .form-group.form-group-marginless, .form-group.form-group-last {
+        margin-bottom: 0px;
+    }
+
+    .form-group label {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    .form-group .invalid-feedback,
+    .form-group .valid-feedback {
+        font-weight: 400;
+    }
+
+    .form-group .form-text {
+        font-size: 0.9rem;
+    }
+
+    .form-group.form-group-md {
+        margin-bottom: 1rem;
+    }
+
+    .form-group.form-group-sm {
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group.form-group-xs {
+        margin-bottom: 0.25rem;
+    }
+
+    .form-group.form-group-last {
+        margin-bottom: 0rem;
+    }
+
+
+.input-group-text{
+    height :100%
+}
+

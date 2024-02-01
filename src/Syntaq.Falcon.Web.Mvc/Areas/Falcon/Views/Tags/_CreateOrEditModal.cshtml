@@ -1,0 +1,27 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Tags
+@model CreateOrEditTagModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditTag")) : L("CreateNewTag")))
+
+<div class="modal-body">
+        <div id="TagInformationsTab">
+            <form name="TagInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Tag.Id" />
+                }
+ 
+                <div class="form-group">
+                    <label class="form-label" for="Tag_Name">@L("Name")</label>
+                    <input class="form-control" id="Tag_Name" value="@Model.Tag.Name" type="text" name="name" maxlength="@Syntaq.Falcon.Tags.TagConsts.MaxNameLength" minlength="@Syntaq.Falcon.Tags.TagConsts.MinNameLength" />
+                </div>
+ 
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

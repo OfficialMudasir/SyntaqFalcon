@@ -1,0 +1,125 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Payments
+@model PaymentsPartialViewModel
+<script>
+	$('#btn-stripe-confirm').click(function (event, Id) {
+		$('#StripeConnectButton').trigger('click');
+	});
+</script>
+<form name="FormPaymentSetting" role="form" novalidate class="form-validation">
+	<input type="checkbox" id="IsStripeConfirgured" name="IsStripeConfirgured" class="fldscheckbox" @*@(Model.IsStripeConfirgured ? "checked" : "" )*@ value=true>
+ 
+	@if (Model.ForView == "Form")
+	{
+		<div class="row ">
+			<div class="col-lg-4">
+				@if (Model.HasPaymentConfigured)
+				{
+					<div class="img-container" id="Stripe-Connected">
+						<img alt="" src="~/Common/Images/stripe-logo.png" width="200" height="95" />
+						<div class="bottomright"><i class="fas fa-check-circle" style="color: forestgreen;"></i></div>
+					</div>
+				}
+				else
+				{
+					<div class="img-container" id="Stripe-Disconnected">
+						<a href='#' id="btn-stripe-confirm" style="cursor: pointer; text-decoration: none;">
+							<img alt="" src="~/Common/Images/StipeConnect.png" />
+						</a> &nbsp;
+						<img style="margin-top: .35em" alt="Credit Cards" src="~/Common/Images/creditcards.png">
+					</div>
+				}
+			</div>
+			 
+			<div class="col-lg-8">
+				<div class="btn-group col" role="group">
+					<span class="switch-padding">
+						<input type="checkbox" id="enablePayment" name="enablePayment" class="fldscheckbox" @(Model.IsPaymentEnabled ? "checked" : "") value=true>
+						<label for="enablePayment" class="switch"></label>
+					</span>
+					<span class="switch-padding">@L("EnablePayments")</span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-4"> @*<img style="margin-top: .35em" alt="Credit Cards" src="~/Common/Images/creditcards.png">*@</div>
+			<div class="col-lg-8 payment-form">
+				<div class="form-group row mb-4">
+					<label for="paymentvalue" class="col-2 col-form-label">@L("Amount")</label>
+					<div class="col-10">
+						<div class="input-group">
+							 <span class="input-group-text"><i class="fa fa-usd"></i></span> 
+							<input class="form-control" type="text" id="paymentValue" name="paymentValue" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" placeholder="100.00" value="@Model.PaymentAmount">
+						</div>
+					</div>
+				</div>
+				<div class="form-group row mb-4">
+					<label for="paymentCurrency" class="col-2 col-form-label">@L("Currency")</label>
+					<div class="col-10">
+						@{
+							List<SelectListItem> CurrencyItems = new List<SelectListItem>();
+							CurrencyItems.Add(new SelectListItem { Value = "AUD", Text = "A$ · Australian Dollar", Selected = @Model.PaymentCurrency == "AUD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "USD", Text = "$ · U.S. Dollar", Selected = @Model.PaymentCurrency == "USD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "BRL", Text = "R$ · Brazilian Real", Selected = @Model.PaymentCurrency == "BRL" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "CAD", Text = "C$ · Canadian Dollar", Selected = @Model.PaymentCurrency == "CAD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "CHF", Text = "CHF · Swiss Francs", Selected = @Model.PaymentCurrency == "CHF" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "CZK", Text = "Kč · Czech Koruny", Selected = @Model.PaymentCurrency == "CZK" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "DKK", Text = "kr · Danish Kroner", Selected = @Model.PaymentCurrency == "DKK" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "EUR", Text = "€ · Euro", Selected = @Model.PaymentCurrency == "EUR" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "GBP", Text = "£ · Pound Sterling", Selected = @Model.PaymentCurrency == "GBP" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "HKD", Text = "HK$ · Hong Kong Dollar", Selected = @Model.PaymentCurrency == "HKD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "HUF", Text = "Ft · Hungarian Forint", Selected = @Model.PaymentCurrency == "HUF" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "ILS", Text = "₪ · Israeli Sheqel", Selected = @Model.PaymentCurrency == "ILS" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "JPY", Text = "¥ · Japanese Yen", Selected = @Model.PaymentCurrency == "JPY" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "MXN", Text = "Mex$ · Mexican Peso", Selected = @Model.PaymentCurrency == "MXN" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "MYR", Text = "RM  · Malaysian Ringgit", Selected = @Model.PaymentCurrency == "MYR" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "NOK", Text = "kr · Norwegian Kroner", Selected = @Model.PaymentCurrency == "NOK" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "NZD", Text = "NZ$ · New Zealand Dollar", Selected = @Model.PaymentCurrency == "NZD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "PHP", Text = "₱ · Philippine Peso", Selected = @Model.PaymentCurrency == "PHP" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "PLN", Text = "zł · Polish Zloty", Selected = @Model.PaymentCurrency == "PLN" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "SEK", Text = "kr · Swedish Kronor", Selected = @Model.PaymentCurrency == "SEK" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "SGD", Text = "S$ · Singapore Dollar", Selected = @Model.PaymentCurrency == "SGD" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "THB", Text = "฿ · Thai Baht", Selected = @Model.PaymentCurrency == "THB" ? true : false });
+							CurrencyItems.Add(new SelectListItem { Value = "TWD", Text = "NT$ · Taiwan New Dollars", Selected = @Model.PaymentCurrency == "TWD" ? true : false });
+						}
+						@Html.DropDownList("paymentCurrency", CurrencyItems, new { @class = "form-control" })
+					</div>
+				</div>
+				<div class="form-group row mb-4">
+					<label for="paymentProcess" class="col-2 col-form-label">@L("Process")</label>
+					<div class="col-10">
+						@{
+							List<SelectListItem> ProcessItems = new List<SelectListItem>();
+							ProcessItems.Add(new SelectListItem { Value = "BFL", Text = L("BeforeFormLoad"), Selected = @Model.PaymentProcess == "BFL" ? true : false });
+							ProcessItems.Add(new SelectListItem { Value = "BDA", Text = L("BeforeAssembly"), Selected = @Model.PaymentProcess == "BDA" ? true : false });
+							//ProcessItems.Add(new SelectListItem { Value = "ADA", Text = L("AfterAssembly"), Selected = @Model.PaymentProcess == "ADA" ? true : false });
+						}
+						@Html.DropDownList("paymentProcess", ProcessItems, new { @class = "form-control" })
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col-lg-4">
+				@if (Model.HasPaymentConfigured)
+				{
+					<div class="img-container" id="Stripe-Connected">
+						<img alt="" src="~/Common/Images/stripe-logo.png" width="200" height="95" />
+						<div class="bottomright"><i class="fas fa-check-circle" style="color: forestgreen;"></i></div>
+					</div>
+				}
+				else
+				{
+					<div class="img-container" id="Stripe-Disconnected">
+						<a href='#' id="btn-stripe-confirm" style="cursor: pointer; text-decoration: none;">
+							<img alt="" src="~/Common/Images/StipeConnect.png" />
+						</a> &nbsp;
+						<img style="margin-top: .35em" alt="Credit Cards" src="~/Common/Images/creditcards.png">
+					</div>
+				}
+			</div>
+		</div>
+	}
+</form>

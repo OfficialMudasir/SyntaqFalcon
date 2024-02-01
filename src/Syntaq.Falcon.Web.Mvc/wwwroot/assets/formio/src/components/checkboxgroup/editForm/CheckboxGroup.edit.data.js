@@ -1,0 +1,75 @@
+export default [
+  {
+    type: 'textfield',
+    label: 'Default Value',
+    key: 'defaultValue',
+    weight: 100,
+    placeholder: 'Default Value',
+    tooltip: 'The will be the value for this field, before user interaction. Having a default value will override the placeholder text.',
+    input: true
+  },
+  {
+    weight: 20,
+    type: 'htmlelement',
+    input: false,
+    content: '<div style="clear: both;"></div>',
+  },
+  {
+    type: 'datagrid',
+    input: true,
+    label: 'Values',
+    key: 'values',
+    tooltip: 'The check box values that can be picked for this field. Values are text submitted with the form data. Labels are text that appears next to the radio buttons on the form.',
+    weight: 33,
+    defaultValue: [{ label: 'label1', value: 'value1', mtext: '' },
+      { label: 'label2', value: 'value2', mtext: '' },
+      { label: 'label3', value: 'value3', mtext: '' }],
+    components: [
+      {
+        label: 'Label',
+        key: 'label',
+        input: true,
+        type: 'textfield'
+      },
+      {
+        label: 'Value',
+        key: 'value',
+        input: true,
+        type: 'textfield',
+        allowCalculateOverride: true,
+        calculateValue: { _camelCase: [{ var: 'row.label' }] }
+      },
+      {
+        label: 'Mtext',
+        key: 'mtext',
+        input: true,
+        type: 'textfield',
+        allowCalculateOverride: true,
+        calculateValue: { _camelCase: [{ var: 'row.label' }] }
+      }
+    ]
+  },
+  {
+    type: 'select',
+    input: true,
+    key: 'refreshOn',
+    label: 'Refresh On',
+    weight: 10,
+    tooltip: 'Refresh data when another field changes.',
+    dataSrc: 'custom',
+    valueProperty: 'value',
+    data: {
+      custom: `
+        values.push({label: 'Any Change', value: 'data'});
+        utils.eachComponent(instance.root.editForm.components, function(component, path) {
+          if (component.key !== data.key) {
+            values.push({
+              label: component.label || component.key,
+              value: path
+            });
+          }
+        });
+      `
+    }
+  }
+];

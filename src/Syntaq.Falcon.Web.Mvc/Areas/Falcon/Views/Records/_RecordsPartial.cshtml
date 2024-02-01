@@ -1,0 +1,171 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records;
+@using Syntaq.Falcon.Authorization
+@model RecordsPartialViewModel
+<style>
+    .OnClickLink {
+        cursor: pointer;
+        color: #58a3dc !important;
+        font-size: small;
+    }
+
+    .OnClickLink:hover {
+        color: #287ebf !important;
+        text-decoration: underline !important;
+    }
+
+    table.dataTable tbody tr:hover {
+        background-color: #ecf0f1 !important;
+    }
+
+table.dataTable tbody tr td {
+     vertical-align: top!important; 
+}
+.Record_filter {
+    margin-top: 20px;
+}
+.Records_Archive {
+    padding-top: 10px;
+}
+</style>
+
+ @*10443 Record Archving issue Resolved*@
+@section Scripts
+{
+     <script src="/view-resources/Areas/Falcon/Views/Records/Index.js" asp-append-version="true"></script>
+}
+<div class="">
+    <div class="kt-portlet__head">
+        <div class="kt-portlet__head-caption">
+            <div class="kt-portlet__head-title">
+
+
+                <nav aria-label="breadcrumb" class="kt-portlet__head-text mt-3">
+
+                    <ol class="breadcrumb  font-weight-bold">
+                        <li class="breadcrumb-item">
+                            <i class="fa fa-home large text-mute" style="font-size:1.3em"></i>
+                        </li>
+                        @{
+                            var i = 0;
+                            foreach (var Breadcrumb in Model.BreadcrumbList)
+                            {
+                                @if (@Breadcrumb.Id.ToString().ToUpper() == @Model.CurrentFolder.ToUpper())
+                                {
+                                    <li class="breadcrumb-item active droppable">
+                                        <span class="kt-nav__link kt-nav__link--icon">
+                                            <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary" name="Current">
+                                                @Breadcrumb.Name
+                                            </span>
+                                            <input type="hidden" value="@Breadcrumb.Id" />
+                                        </span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="breadcrumb-item active droppable">
+                                        <a href="#" onClick="(function(){$('#RecordNavigationButton').trigger('click', '@Breadcrumb.Id.ToString()')})();" class=" ">
+                                            <span class="kt-nav__link-text kt-nav__link-text kt-btn--label-accent text-primary">@Breadcrumb.Name</span>
+                                            <input type="hidden" value="@Breadcrumb.Id" />
+                                        </a>
+                                    </li>
+                                }
+                                i++;
+                            }
+                        }
+                    </ol>
+                </nav>
+
+
+            </div>
+        </div>
+        <div class="kt-portlet__head-tools">
+            <div class="mt-3 ">
+
+                @*@if (IsGranted(AppPermissions.Pages_Records_Create))
+                    {
+                        <button onclick="$('#NewRecordButton').click();"  class="btn btn-primary" >
+                            <i class="fas fa-plus"></i> @L("CreateNewRecord")
+                        </button>
+                    }*@
+                @*@if (IsGranted(AppPermissions.Pages_Folders_Create))
+                    {
+                        <button onclick="$('#NewFolderButton').click();" class="btn btn-primary"  >
+                            <i class="fas fa-plus"></i> @L("CreateNewFolder")
+                        </button>
+                    }
+                    @if (IsGranted(AppPermissions.Pages_Administration))
+                    {
+                        <button onclick="$('#EmbedButton').click();"  class="btn btn-primary"  >
+                            <i class="fas fa-code"></i> @L("EmbedRecords")
+                        </button>
+                    }
+
+                    <button id="RefreshRecordsButton" class="btn btn-primary"><i class="fa fa-sync-alt"></i> @L("Refresh")</button>*@
+            </div>
+        </div>
+    </div>
+
+        <div class="kt-portlet__body">
+            <div class="kt-form kt-form--label-align-right">
+                <div class="row align-items-center">
+                    <div class="col-xl-12">
+                        <div class="form-group kt-form__group align-items-center">
+                            <div class="input-group">
+                                <input id="RecordsTableFilter" class="form-control" type="text" aria-label="@L("InputFilterText")" value="@Model.FilterText" placeholder="@L("SearchWithThreeDot")" aria-label="Record Table Filter">
+                                <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <button id="GetRecordsButton" aria-label="@L("Search")" class="btn btn-primary" type="submit">
+                                    <span class="fa fa-search" aria-label="@L("Search")"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                  @*  Show filter Added*@
+                 
+ 
+            </div>
+            <div id="AdvacedAuditFiltersArea"  style="display: none"  class="row m--margin-bottom-10">
+                             
+                           <div class="col-md-12 mt-4 Records_Archive">
+                        <div class="form-group">
+                            <input type="checkbox" class="form-check-input" name="recordIsArchivedFilter" id="RecordIsArchivedFilter">
+                            <label for="recordIsArchivedFilter">@L("Archived")</label>                            
+                        </div>
+                    </div>
+
+@*                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="RecordNameFilterId">@L("RecordName")</label>
+                        <input type="text" class="form-control" name="recordNameFilter" id="RecordNameFilterId">
+                    </div>
+                </div>*@
+
+
+
+            </div>
+
+             @*10443 Record Archving issue Resolved*@
+            <div class="row m--margin-bottom-10 Record_filter">
+                <div class="col-xl-12">
+                    <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                    <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                </div>
+            </div>
+            <div class="align-items-center mt-6">
+                <table id="RecordsTable" class="display table table-row-dashed  dt-responsive nowrap" style="margin-top:0!important">
+                    <thead>
+                        <tr>
+
+                            <th @*class="all"*@ style="width:15%">@L("Record")</th>
+                            <th @*class="all"*@ style="width:75%">@L("Documents")</th>
+                            <th @*class="all"*@ style="width:5%">@L("Actions")</th>
+                            @*<th style="width:12%">@L("LastUpdated")</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+</div>

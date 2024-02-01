@@ -1,0 +1,58 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterItems
+@model CreateOrEditRecordMatterItemModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordMatterItem")) : L("CreateNewRecordMatterItem")))
+
+<div class="modal-body">
+        <div id="RecordMatterItemInformationsTab">
+            <form name="RecordMatterItemInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.RecordMatterItem.Id" />
+                }
+
+				            
+								<div class="form-group m-form__group">
+										<label for="RecordMatterTenantId">@L("RecordMatter")</label>
+									<div class="input-group">
+											<input class="form-control" id="RecordMatterTenantId" name="recordMatterTenantId" value="@Model.RecordMatterTenantId" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenRecordMatterLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearRecordMatterTenantIdButton"><i class="fa fa-close"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.RecordMatterItem.RecordMatterId" type="text" name="recordMatterId" required hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="recordMatterId" required hidden/>
+								}
+
+
+
+				
+								@*<div class="form-group">
+									<label for="RecordMatterItem_Document">@L("Document")</label>
+									<input class="form-control" id="RecordMatterItem_Document" value="@Model.RecordMatterItem.Document" type="text" name="document"     />
+								</div>*@
+					
+								<div class="form-group">
+									<label for="RecordMatterItem_DocumentName">@L("DocumentName")</label>
+									<input class="form-control" id="RecordMatterItem_DocumentName" value="@Model.RecordMatterItem.DocumentName" type="text" name="documentName"  required  maxlength="@Syntaq.Falcon.Records.RecordMatterItemConsts.MaxDocumentNameLength"  minlength="@Syntaq.Falcon.Records.RecordMatterItemConsts.MinDocumentNameLength"  />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

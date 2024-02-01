@@ -1,0 +1,95 @@
+
+@*@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Reports
+@model CreateOrEditReportModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditReport")) : L("CreateNewReport")))
+
+<div class="modal-body">
+		<div id="ReportInformationsTab">
+			<form name="ReportInformationsForm" role="form" novalidate class="form-validation">
+
+				@if (Model.IsEditMode)
+				{
+					<input type="hidden" name="id" value="@Model.Report.Id" />
+				}
+
+							
+								<div class="form-group m-form__group">
+										<label for="FormName">@L("Form")</label>
+									<div class="input-group">
+											<input class="form-control" id="FormName" name="formName" value="@Model.FormName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenFormLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearFormNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.Report.FormId" type="text" name="formId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="formId"  hidden/>
+								}
+
+			
+								<div class="form-group m-form__group">
+										<label for="UserName">@L("User")</label>
+									<div class="input-group">
+											<input class="form-control" id="UserName" name="userName" value="@Model.UserName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenUserLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearUserNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.Report.UserId" type="text" name="userId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="userId"  hidden/>
+								}
+
+			
+								<div class="form-group m-form__group">
+										<label for="RecordRecordName">@L("Record")</label>
+									<div class="input-group">
+											<input class="form-control" id="RecordRecordName" name="recordRecordName" value="@Model.RecordRecordName" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenRecordLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger" type="button" id="ClearRecordRecordNameButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" value="@Model.Report.RecordId" type="text" name="recordId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" value="" type="text" name="recordId"  hidden/>
+								}
+
+
+
+				
+
+			</form>
+		</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

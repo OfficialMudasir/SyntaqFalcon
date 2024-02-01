@@ -1,0 +1,998 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AppJobs
+@model CreateOrEditAppJobModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditJob")) : L("CreateANewJob")))
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-2.css" rel="stylesheet" />
+
+
+@section Scripts{
+    <script abp-src="~/metronic/core/base/wizard.js" asp-append-version="true"></script>
+}
+<style>
+    .kt-form {
+        width: 100% !important;
+    }
+
+    .kt-heading {
+        margin: 1.25rem 0 1.75rem 0 !important;
+    }
+
+    .kt-wizard-v2__nav-item {
+        cursor: pointer;
+    }
+
+    .form-label{
+        margin-bottom:0
+    }
+
+    .form-group{
+        margin-bottom:1em
+    }
+</style>
+
+<div class="kt-portlet">
+    <div class="kt-portlet__body kt-portlet__body--fit">
+        <div class="kt-grid  kt-wizard-v2 kt-wizard-v2--white" id="kt_wizard_v2" data-ktwizard-state="first">
+            <input type="hidden" name="JobId" value="@Model.Id">
+            <input type="hidden" name="AppId" value="@Model.AppId">
+            <input type="hidden" name="EntityId" value="@Model.EntityId">
+            <div class="kt-grid__item kt-wizard-v2__aside pt-3">
+                <!--begin: Form Wizard Nav -->
+                <div class="kt-wizard-v2__nav">
+                    <div class="kt-wizard-v2__nav-items">
+                        <!--doc: Replace A tag with SPAN tag to disable the step link click -->
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="current">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          Details
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Enter A Name For Your Job
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          Document Templates
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Add Your Document Templates
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" href="javascript:;" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          Saving Records
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Add Your Saved Record Details
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          Before Assembly Workflow
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Configure A Before Assembly Workflow
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          After Assembly Workflow
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Configure An After Assembly Workflow
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kt-wizard-v2__nav-item" data-ktwizard-type="step" data-ktwizard-state="pending">
+                            <div class="kt-wizard-v2__nav-body">
+                                <div class="kt-wizard-v2__nav-icon">
+ 
+                                </div>
+                                <div class="kt-wizard-v2__nav-label">
+                                    <div class="kt-wizard-v2__nav-label-title">
+                                          Email
+                                    </div>
+                                    <div class="kt-wizard-v2__nav-label-desc">
+                                        Configure Your Emails
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end: Form Wizard Nav -->
+            </div>
+            <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper" style="overflow-y: auto; max-height: 760px;">
+                <!--begin: Form Wizard Form-->
+                <div class="kt-form pt-3" id="kt_form" novalidate="novalidate">
+                    <!--Was Wizard Form-->
+                    <!--begin: Form Wizard Step 1-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
+                        <div class="fs-4 mt-6 mb-4">Enter Your Job Name</div>
+                        <div class="kt-form__section kt-form__section--first">
+                            <div class="kt-wizard-v2__form">
+                                <div class="form-group">
+                                    <label class="form-label" for="JobName">@L("Name")*</label>
+                                    <input id="JobName" type="text" class="form-control" name="JobName" placeholder="" value="@Model.AppJob.Name">
+                                    <span class="form-text text-muted">Please enter a name for this job.</span>
+                                </div>
+                                <form id="kt_wizard_form_step_user_form" class="d-none">
+                                    <div class="form-group kt-form__group row">
+                                        <label class="col-xl-3 col-lg-3 form-label">User Name:</label>
+                                        <div class="col-xl-9 col-lg-9">
+                                            <input type="hidden" name="User[ID]" class="form-control form-control-sm  kt-input" placeholder="" value="@Model.AppJob.User?.ID">
+                                            <input aria-label="User Name" type="text" name="User[Name]" class="form-control form-control-sm  kt-input" placeholder="" value="@Model.AppJob.User?.Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group kt-form__group row">
+                                        <label class="col-xl-3 col-lg-3 form-label">Email:</label>
+                                        <div class="col-xl-9 col-lg-9">
+                                            <input aria-label="User Email" type="email" name="User[Email]" class="form-control form-control-sm  kt-input" placeholder="" value="@Model.AppJob.User?.Email">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 1-->
+                    <!--begin: Form Wizard Step 2-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                        <div class="fs-4 mt-6 mb-4">@L("DocumentTemplates")</div>
+                        <div class="kt-form__section kt-form__section--first">
+                            <form id="kt_wizard_form_step_1_form">
+                                @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobDocumentDto document in Model.AppJob.Document)
+                                {
+                                    <div class="kt-form__section kt-form__section--first formblock border rounded p-4 mb-4">
+                                        <div class="">
+                                            <input type="number" aria-label="Document" name="Document[][DocumentId]" class="form-control form-control-sm  kt-input" placeholder="" value="@(document.DocumentId != 0 ? document.DocumentId : 1)" min="1" default="1" hidden>
+                                            <label class="form-label">@L("DocumentName"):  </label>
+                                            <a  aria-label="Remove" class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><span class="fa fa-times text-danger"></span> @L("Remove")</a>
+                                            <div class="input-group ">                                                
+                                                <input type="text" name="Document[][DocumentName]" class="form-control form-control-sm  kt-input" placeholder="" value="@document.DocumentName">                                                
+                                            </div>
+                                            <div class=" ">
+                                                <label class="form-label mt-2">@L("DocumentTemplateURL"): </label>
+                                                <input type="url" name="Document[][DocumentTemplateURL]" class="form-control form-control-sm  kt-input" placeholder="" value="@document.DocumentTemplateURL">
+                                            
+                                            </div>
+                                            <label for="Document[][FilterRule]" class="form-label mt-2">@L("FilterIf"):</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                                </div>
+                                                <input type="url" name="Document[][FilterRule]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Transform_yn='true']" value="@document.FilterRule">
+                                            </div>
+                                            <span class="kt-form__help">@L("DocumentFilterHelp")</span>
+                                            <div class="mt-1">
+                                                <div class="font-weight-bold mt-4">@L("DownloadOptions")</div>
+ 
+                                                <div class="form-group">
+
+                                                    <label class="kt-checkbox mb-1  mt-2">
+                                                        <input aria-label="Allow Word" type="checkbox" name="Document[][AllowWord]" @(document.AllowWord.GetValueOrDefault() ? "checked" : "") value="true"> @L("AllowWord")
+                                                        <span></span>
+                                                    </label>
+
+                                                   @* <label for="AllowWordAssignees" class="form-label mt-2">@L("AllowWordAssignees"):</label>*@
+                                                    <input id="AllowWordAssignees" aria-label="Allow Word Assignees" class="tagsinput-typeahead allow-word-assignees" type="text" name="Document[][AllowWordAssignees]" data-value='@document.AllowWordAssigneeJSON' data-role="tagsinput" />
+
+                                                    <label class="kt-checkbox  mb-1  mt-2">
+                                                        <input type="checkbox" aria-label="Allow PDF" name="Document[][AllowPdf]" @(document.AllowPdf.GetValueOrDefault() ? "checked" : "") value="true"> @L("AllowPdf")
+                                                        <span></span>
+                                                    </label>
+                                                    @*<label for="AllowPdfAssignees" class="form-label mt-2">@L("AllowPdfAssignees"):</label>*@
+                                                    <input id="AllowPdfAssignees" aria-label="Allow Pdf Assignees" class="tagsinput-typeahead allow-pdf-assignees" type="text" name="Document[][AllowPdfAssignees]" data-value='@document.AllowPdfAssigneeJSON' data-role="tagsinput" />
+
+
+                                                    <label class="kt-checkbox mb-1  mt-2">
+                                                        <input type="checkbox" aria-label="Allow HTML" name="Document[][AllowHTML]" @(document.AllowHTML.GetValueOrDefault() ? "checked" : "") value="true"> @L("AllowHTML")
+                                                        <span></span>
+                                                    </label>
+                                                    @*<label for="AllowHtmlAssignees" class="form-label mt-2">@L("AllowHtmlAssignees"):</label>*@
+                                                    <input id="AllowHtmlAssignees" aria-label="Allow HTML Assignees" class="tagsinput-typeahead allow-html-assignees" type="text" name="Document[][AllowHtmlAssignees]" data-value='@document.AllowHtmlAssigneeJSON' data-role="tagsinput" />
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                    </div>
+                                }
+                            </form>
+                            <a id="btn-add-DocumentTemplate" href="javascript:;"  class="btn btn btn btn-secondary mt-3"><i class="fa fa-plus"></i> @L("AddDocumentTemplate")</a>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 2-->
+                    <!--begin: Form Wizard Step 3-->
+                    <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                        <div class="fs-4 mt-6 mb-4">@L("Records")</div>
+                        <div class="kt-form__section kt-form__section--first">
+                            <form id="kt_wizard_form_step_2_form">
+
+                                <div class="form-group">
+                                    <label class="kt-checkbox" for="DeleteRecordsAfterAssembly">
+                                        <input type="checkbox" id="DeleteRecordsAfterAssembly" @( Model.AppJob.DeleteRecordsAfterAssembly.GetValueOrDefault() ? "checked" : "") value="true"> @L("DeleteRecordsAfterAssembly")
+                                        <span></span>
+                                    </label>
+                                </div>
+ 
+
+                                @{
+                                    int recordidx = 0;
+                                    foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRecordMatterDto record in Model.AppJob.RecordMatter)
+                                    {
+                                        <div class="formblock formblock-record border rounded p-4 mb-4">
+
+                                            <div class="kt-form__section kt-form__section--first">
+                                                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                                                <div>
+                                                    <input type="hidden" name="RecordMatter[][OrganizationId]" value="@record.OrganizationId">
+                                                    <input type="hidden" name="RecordMatter[][RecordId]" value="@record.RecordId">
+                                                    <input type="hidden" name="RecordMatter[][RecordMatterId]" value="@record.RecordMatterId">
+                                                    <input type="hidden" name="RecordMatter[][RecordMatterItemId]" value="@record.RecordMatterItemId">
+                                                    <input type="hidden" name="RecordMatter[][RecordMatterItemGroupId]" value="@record.RecordMatterItemGroupId">
+                                                    <input type="hidden" name="RecordMatter[][FolderId]" value="@record.FolderId">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("AssignACLTo"):</label>
+                                                    <input aria-label="Assignees" id="Assignees" class="tagsinput-typeahead" type="text" name="RecordMatter[][Assignees]" data-value='@record.AssigneeJSON' data-role="tagsinput" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("RecordName"):</label>
+                                                    <div class="input-group mb-2">
+                                                        <input aria-label="Record Name" type="text" name="RecordMatter[][RecordName]" class="form-control form-control-sm  kt-input" placeholder="@L("RecordNamePlaceholder")" value="@record.RecordName">
+
+                                                    <a class=" OpenRecordLookupTableButton pull-right btn btn btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=RecordId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("RecordMatterName"):</label>
+                                                    <div class="input-group mb-2">
+                                                        <input aria-label="Record Matter Name" type="text" name="RecordMatter[][RecordMatterName]" class="form-control form-control-sm  kt-input" placeholder="@L("RecordMatterNamePlaceholder")" value="@record.RecordMatterName">
+                                            <a class=" OpenRecordMatterLookupTableButton pull-right  btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=RecordMatterId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordMatterName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                                                    </div>
+                                                
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("Folder"):</label>
+                                                    <div class="input-group mb-2">
+                                                        <input aria-label="Folder Name" type="text" name="RecordMatter[][FolderName]" readonly class="form-control form-control-sm  kt-input" placeholder="@L("FolderNamePlaceholder")" value="@record.FolderName">
+                                        <a class=" OpenFormsFolderLookupTableButton pull-right  btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=FolderId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=FolderName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                        </div>
+                                        recordidx++;
+                                    }
+                                }
+                            </form>
+                            <a id="btn-add-RecordMatter" href="javascript:;" class="btn btn btn btn-secondary  mt-3"><i class="fa fa-plus"></i> @L("AddRecordMatter")</a>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Step 3-->
+                    <!--begin: Form Wizard Step 4-->
+                    <form id="kt_wizard_form_step_workflow_form">
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                            <div class="fs-4 mt-6 mb-4">@L("BeforeAssembly") @L("RESTAPI")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div id="kt_wizard_form_step_3_BeforeAssembly">
+                                    @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRestDto workflow in Model.AppJob.WorkFlow.BeforeAssembly)
+                                    {
+                                        <div class="formblock border rounded p-4 mb-4">
+                                            <div class="kt-form__section kt-form__section--first">
+                                                <div class="form-group">
+                                                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                                                    <label class="form-label">@L("URL"):</label>
+                                                    <input aria-label="Before Assembly URL" type="text" name="WorkFlow[]BeforeAssembly[][URL]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.URL">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="kt-checkbox">
+                                                        <input aria-label="Before Assembly Async" type="checkbox" name="WorkFlow[]BeforeAssembly[][Async]" @( workflow.Async.GetValueOrDefault() ? "checked" : "") value="true"> @L("Async")
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="exampleSelect1">@L("RestType")</label>
+                                                    <select aria-label="Select" class="form-control form-control-sm kt-input" name="WorkFlow[]BeforeAssembly[][Rest]">
+                                                        @if (workflow.Rest == "POST")
+                                                        {
+                                                            <option selected>POST</option>
+                                                            <option>GET</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option>POST</option>
+                                                            <option selected>GET</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="kt-form__heading">
+                                                    <div class="fs-4">@L("Headers") <span onclick="$(this).closest('.formblock').find('#workflow-beforeassembly').toggle();" style="cursor:pointer" class="small text-primary">@L("ShowHeaders")</span></div>
+                                                </div>
+                                                <div id="workflow-beforeassembly" style="display:none">
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input aria-label="Before Assembly Header1 Key" type="text" name="WorkFlow[]BeforeAssembly[][Header1Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header1Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input aria-label="Before Assembly Header1 Value" type="text" name="WorkFlow[]BeforeAssembly[][Header1Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header1Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input aria-label="Before Assembly Description" type="text" name="WorkFlow[]BeforeAssembly[][Header1Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Description">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input aria-label="Before Assembly Header2 Key" type="text" name="WorkFlow[]BeforeAssembly[][Header2Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input aria-label="Before Assembly Header2 Value" type="text" name="WorkFlow[]BeforeAssembly[][Header2Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input aria-label="Before Assembly Header2 Description" type="text" name="WorkFlow[]BeforeAssembly[][Header2Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Description">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input aria-label="Before Assembly Header3Key" type="text" name="WorkFlow[]BeforeAssembly[][Header3Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input aria-label="Before Assembly Header3Value" type="text" name="WorkFlow[]BeforeAssembly[][Header3Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input aria-label="Before Assembly Header3Description" type="text" name="WorkFlow[]BeforeAssembly[][Header3Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Description">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="kt-form__heading">
+                                                    <div class="fs-4">@L("Body")</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("BodyType"):</label>
+                                                    <input aria-label="Before Assembly BodyType"  type="text" name="WorkFlow[]BeforeAssembly[][BodyType]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.BodyType">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("BodyContent"):</label>
+                                                    <textarea  aria-label="Before Assembly BodyContent"  type="text" name="WorkFlow[]BeforeAssembly[][BodyContent]" class="form-control form-control-sm  kt-input" placeholder="">@workflow.BodyContent</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                        </div>
+                                    }
+                                </div>
+                                <a id="btn-add-BeforeAssembly" href="javascript:;" class="btn btn btn btn-secondary  mt-3"><i class="fa fa-plus"></i> @L("Add") @L("BeforeAssembly") @L("RESTAPI")</a>
+                            </div>
+                        </div>
+                        <!--end: Form Wizard Step 4-->
+                        <!--begin: Form Wizard Step 5-->
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                            <div class="fs-4 mt-6 mb-4">@L("AfterAssembly") @L("RESTAPI")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div id="kt_wizard_form_step_3_AfterAssembly">
+                                    @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRestDto workflow in Model.AppJob.WorkFlow.AfterAssembly)
+                                    {
+                                        <div class="formblock  border rounded p-4 mb-4">
+                                            <div class="kt-form__section kt-form__section--first">
+                                                <div class="form-group">
+                                                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                                                    <label class="form-label">@L("URL"):</label>
+                                                    <input aria-label="After Assembly URL" type="text" name="WorkFlow[]AfterAssembly[][URL]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.URL">
+                                                </div>
+                                                <div class="form-group inline">
+                                                    <label class="kt-checkbox">
+                                                        <input aria-label="After Assembly Async" type="checkbox" name="WorkFlow[]AfterAssembly[][Async]" @(workflow.Async.GetValueOrDefault() ? "checked" : "") value="true"> @L("Async")
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label" for="exampleSelect1">@L("RestType")</label>
+                                                    <select id="exampleSelect1" class="form-control form-control-sm  kt-input" name="WorkFlow[]AfterAssembly[][Rest]">
+                                                        @if (workflow.Rest == "POST")
+                                                        {
+                                                            <option selected>POST</option>
+                                                            <option>GET</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option>POST</option>
+                                                            <option selected>GET</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="kt-form__heading">
+                                                    <div class="fs-4">@L("Headers") <span onclick="$(this).closest('.formblock').find('#workflow-afterassembly').toggle()" style="cursor:pointer" class="text-primary small">@L("ShowHeaders")</span></div>
+                                                </div>
+                                                <div id="workflow-afterassembly" style="display:none">
+                                                    <div class="form-group  row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input aria-label="After Assembly Header1Key" type="text" name="WorkFlow[]AfterAssembly[][Header1Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header1Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input aria-label="After Assembly Header1Value" type="text" name="WorkFlow[]AfterAssembly[][Header1Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header1Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input aria-label="After Assembly Header1Description" type="text" name="WorkFlow[]AfterAssembly[][Header1Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header1Description">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input  aria-label="After Assembly Header2Key" type="text" name="WorkFlow[]AfterAssembly[][Header2Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input  aria-label="After Assembly Header2Value" type="text" name="WorkFlow[]AfterAssembly[][Header2Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input  aria-label="After Assembly Header2Description" type="text" name="WorkFlow[]AfterAssembly[][Header2Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header2Description">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  row">
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Key"):</label>
+                                                            <input aria-label="After Assembly Header3Key" type="text" name="WorkFlow[]AfterAssembly[][Header3Key]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Key">
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <label class="form-label">@L("Value"):</label>
+                                                            <input aria-label="After Assembly Header3Value" type="text" name="WorkFlow[]AfterAssembly[][Header3Value]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Value">
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <label class="form-label">@L("Description"):</label>
+                                                            <input aria-label="After Assembly Header3Description" type="text" name="WorkFlow[]AfterAssembly[][Header3Description]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.Header3Description">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="kt-form__heading">
+                                                    <div class="fs-4">@L("Body")</div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("BodyType"):</label>
+                                                    <input aria-label="After Assembly BodyType" type="text" name="WorkFlow[]AfterAssembly[][BodyType]" class="form-control form-control-sm  kt-input" placeholder="" value="@workflow.BodyType">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("BodyContent"):</label>
+                                                    <textarea aria-label="After Assembly BodyContent" type="text" name="WorkFlow[]AfterAssembly[][BodyContent]" class="form-control form-control-sm  kt-input" placeholder="">@workflow.BodyContent</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                        </div>
+                                    }
+                                </div>
+                                <!--Start Trigger Webhook-->
+                                <div class="form-group">
+                                    <label class="kt-checkbox" for="SendWebhooksAfterAssembly">
+                                        <input type="checkbox" id="SendWebhooksAfterAssembly" name="SendWebhooksAfterAssembly" @( Model.AppJob.SendWebhooksAfterAssembly.GetValueOrDefault() ? "checked" : "") value="true"> @L("SendWebhookOrNot")
+                                        <span></span>
+                                    </label>
+                                </div>
+                                <!--End Trigger Webhook-->
+                                <a id="btn-add-AfterAssembly" class="btn btn btn btn-secondary  mt-3" href="javascript:;" ><i class="fa fa-plus"></i> @L("Add") @L("AfterAssembly") @L("RESTAPI")</a>
+
+                            </div>
+                        </div>
+                        <!--end: Form Wizard Step 5-->
+                        <!--begin: Form Wizard Step 6-->
+                        <div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
+                            <div class="fs-4 mt-6 mb-4">@L("Email")</div>
+                            <div class="kt-form__section kt-form__section--first">
+                                <div id="kt_wizard_form_step_3_Email">
+                                    @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobEmailDto email in Model.AppJob.WorkFlow.Email)
+                                    {
+                                        <div class="formblock formblock-email  border rounded p-4 mb-4">
+                                            <div class="active">
+                                                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("Recipients"):</label>
+                                                    <input aria-label="Email Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailRecipients]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.DocumentEmailRecipients">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("CCRecipients"):</label>
+                                                    <input aria-label="Email CC Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailCCRecipients]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.DocumentEmailCCRecipients">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("BCCRecipients"):</label>
+                                                    <input aria-label="Email BCC Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailBCCRecipients]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.DocumentEmailBCCRecipients">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("EmailFrom"):</label>
+                                                    <input aria-label="Email From" type="text" name="WorkFlow[]Email[][DocumentEmailFrom]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.DocumentEmailFrom">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">@L("Subject"):</label>
+                                                    <input aria-label="Email Subject" type="text" name="WorkFlow[]Email[][DocumentEmailSubject]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.DocumentEmailSubject">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group mb-2">
+                                                        <label class="form-label">@L("DocumentAttachments"):</label>
+                                                        <input aria-label="Email Attachments" class="didtagsinput" type="text" name="WorkFlow[]Email[][DocumentAttachmentIds]" data-value='@email.DocumentAttachmentIds' data-role="tagsinput">
+                                                    </div>
+                                                    <a class="large OpenDocumentAttachmentLookupTableButton btn btn-sm btn-secondary   mb-3 pull-right" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="kt-checkbox">
+                                                        <input type="checkbox" aria-label="Email File Uploads" name="WorkFlow[]Email[][AttachFileUploads]" @(Convert.ToBoolean(email.AttachFileUploads) ? "checked" : "") value="true"> @L("AttachFileUploads")
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="kt-checkbox">
+                                                        <input type="checkbox" aria-label="Attach Record Matter Items" name="WorkFlow[]Email[][AttachAllRecordMatterItems]" @(Convert.ToBoolean(email.AttachAllRecordMatterItems) ? "checked" : "") value="true"> @L("AttachAllRecordMatterItems")
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                                <div class="form-group mt-4">
+                                                    <h5>@L("EmailBody")</h5>
+                                                    <select class="form-control form-control-sm  kt-input" name="WorkFlow[]Email[][EmailType]">
+                                                        <!option @(email.EmailType == "Plain Email Body" ? "selected" : "")>@L("PlainEmailBody")</!option>
+                                                        <!option @(email.EmailType == "From HTML source" ? "selected" : "")>@L("FromHTMLSource")</!option>
+                                                        <!option @(email.EmailType == "From Assembled Document" ? "selected" : "")>@L("FromAssembledDocument")</!option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" id="PlainEmail">
+                                                    <label class="form-label">@L("Message"):</label>
+                                                    <textarea aria-label="Email Message" type="text" name="WorkFlow[]Email[][DocumentEmailMessage]" class="form-control form-control-sm  kt-input" placeholder="">@email.DocumentEmailMessage</textarea>
+                                                </div>
+                                                <div class="form-group" id="DocumentEmail">
+                                                    <div class="input-group mb-2">
+                                                        <label class="form-label">@L("SelectedDocuments"):</label>
+                                                        <input aria-label="Edit Tags Input" class="ebidtagsinput" type="text" name="WorkFlow[]Email[][EmailBodyDocumentIds]" data-value='@email.EmailBodyDocumentIds' data-role="tagsinput">
+                                                    </div>
+                                                    <a class="large OpenEmailBodyDocumentLookupTableButton btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a>
+                                                </div>
+                                                <div class="form-group" id="HTMLEmailSource">
+                                                    <label class="form-label">@L("EmailTemplateURL"):</label>
+                                                    <input aria-label="Email Template URL"  type="text" name="WorkFlow[]Email[][EmailTemplateURL]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.EmailTemplateURL">
+                                                </div>
+                                                <div class="form-group" id="HTMLEmailPart">
+                                                    <label class="form-label">@L("TemplatePartID"):</label>
+                                                    <input aria-label="Email Template Part Id"  type="text" name="WorkFlow[]Email[][TemplatePartID]" class="form-control form-control-sm  kt-input" placeholder="" value="@email.TemplatePartID">
+                                                </div>
+                                                <label for="WorkFlow[]Email[][FilterRule]" class="form-label">@L("FilterIf"):</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <input type="url" id="WorkFlow[]Email[][FilterRule]" name="WorkFlow[]Email[][FilterRule]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Transform_yn='true']" value="@email.FilterRule">
+                                                </div>
+                                                <span class="kt-form__help">@L("EmailFilterHelp")The email will send if the filter is empty or the filter evaluates to true</span>
+                                                <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+                                                <div class="kt-form__section"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <a id="btn-add-Email" href="javascript:;"  class="btn btn btn btn-secondary mt-3"><i class="fa fa-plus"></i> @L("AddEmail")</a>
+                            </div>
+                        </div>
+                    </form>
+                    <!--end: Form Wizard Step 6-->
+                    <!--begin: Form Actions -->
+                    <div class="kt-form__actions">
+                        <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-prev">
+                            <i class="fas fa-chevron-left"></i> @L("Previous")
+                        </button>
+
+                        <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-next">
+                            @L("Next") <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <!--end: Form Actions -->
+                </div>
+                <!--end: Form Wizard Form-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary kt-font-bold" data-ktwizard-type="action-save">
+            @L("Save")
+    </button>
+    <button type="button" class="btn btn-secondary    font-weight-bold close-button me-2" data-bs-dismiss="modal"> @L("Close")</button>
+</div>
+ 
+<div id="tempaltes" class="d-none">
+    <div id="kt_wizard_form_step_1_formblock" class="formblock border rounded p-4 mb-4">
+        <div class="kt-form__section kt-form__section--first ">
+            <div class=" ">
+                <input type="number" aria-label="Document" name="Document[][DocumentId]" class="form-control form-control-sm  kt-input" placeholder="" value="" min="1" hidden>
+                <div class="form-group">
+                
+                    <label class="form-label">@L("DocumentName"):  </label>
+                    <a  aria-label="Remove" class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><span class="fa fa-times  text-danger"></span> @L("Remove") </a>
+                    <div class="input-group ">                                                
+                        <input type="text" name="Document[][DocumentName]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                        
+                    </div>
+
+                </div>
+                <div class="mt-2">
+                    <label class="form-label">@L("DocumentTemplateURL"):</label>
+                    <input aria-label="Document URL" type="url" name="Document[][DocumentTemplateURL]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+               
+                </div>
+                <div class="mt-2">
+                    <label for="Document[][FilterRule]" class="form-label">@L("FilterIf"):</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                        </div>
+                        <input aria-label="Filter Rule" type="url" name="Document[][FilterRule]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Transform_yn='true']" value="">
+                    </div>
+                    <span class="kt-form__help">@L("DocumentFilterHelp")</span>
+                </div>
+                <div class="mt-1">
+                    <div class="font-weight-bold mt-3">@L("DownloadOptions")</div>
+
+                    <div class="form-group">
+
+                        <label class="kt-checkbox  mb-1  mt-2">
+                            <input aria-label="Allow Word" type="checkbox" name="Document[][AllowWord]" value="true"> @L("AllowWord")
+                            <span></span>
+                        </label>
+             
+                        <input id="AllowWordAssignees" aria-label="Allow Word Assignees" class=" allow-word-assignees" type="text" name="Document[][AllowWordAssignees]" data-value='' />
+
+                        <label class="kt-checkbox  mb-1  mt-2">
+                            <input aria-label="Allow PDF" type="checkbox" name="Document[][AllowPdf]" checked value="true"> @L("AllowPdf")
+                            <span></span>
+                        </label>
+                
+                        <input id="AllowPdfAssignees" aria-label="Allow PDF Assignees" class=" allow-pdf-assignees" type="text" name="Document[][AllowPdfAssignees]" data-value='' />
+
+                        <label class="kt-checkbox  mb-1  mt-2">
+                            <input aria-label="Allow HTML" type="checkbox" name="Document[][AllowHTML]" value="true"> @L("AllowHTML")
+                            <span></span>
+                        </label>
+            
+                        <input id="AllowHtmlAssignees" aria-label="Allow HTML Assignees" class=" allow-html-assignees" type="text" name="Document[][AllowHtmlAssignees]" data-value='' />
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+
+    <div id="kt_wizard_form_step_2_formblock" class="formblock formblock-record  border rounded p-4 mb-4">
+        <div class="kt-form__section kt-form__section--first">
+            <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+            <div>
+                <input type="hidden" name="RecordMatter[][UserID]" value="0">
+                <input aria-label="Orgnization" type="number" name="RecordMatter[][OrganizationId]" value="null" hidden>
+                <input type="hidden" name="RecordMatter[][RecordId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterItemId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterItemGroupId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][FolderId]" value="00000000-0000-0000-0000-000000000000">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("AssignACLTo"):</label>
+                <input aria-label="Assignees" id="Assignees" @*class="tagsinput-typeahead" *@ type="text" name="RecordMatter[][Assignees]">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("Record"):</label>
+                <div class="input-group mb-2">
+                    <input aria-label="Record Name" type="text" name="RecordMatter[][RecordName]" class="form-control form-control-sm  kt-input" placeholder="@L("RecordNamePlaceholder")if empty new record will be created" value="">
+                    <a class=" OpenRecordLookupTableButton pull-right btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=RecordId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("RecordMatter"):</label>
+                <div class="input-group mb-2">
+                    <input aria-label="Record Matter Name" type="text" name="RecordMatter[][RecordMatterName]" class="form-control form-control-sm  kt-input" placeholder="@L("RecordMatterNamePlaceholder")if empty new record matter will be created" value="">
+                    <a class=" OpenRecordMatterLookupTableButton pull-right  btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=RecordMatterId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordMatterName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                </div>  
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("Folder"):</label>
+                <div class="input-group mb-2">
+                    <input aria-label="Folder Name" type="text" name="RecordMatter[][FolderName]" readonly class="form-control form-control-sm  kt-input" placeholder="@L("FolderNamePlaceholder")if empty root folder will be used" value="">
+                     <a class=" OpenFormsFolderLookupTableButton pull-right  btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a> <a aria-label="Clear" onclick="$(this).closest('.formblock-record').find('[name*=FolderId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=FolderName]').val(''); " class="pull-right btn btn btn btn-danger" href="javascript:;"><i class="fa fa-times"></i> </a>
+                </div>
+                
+            </div>
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+
+    <div id="kt_wizard_form_step_3_BeforeAssembly_formblock" class="formblock  border rounded p-4 mb-4">
+        <div class="kt-form__section kt-form__section--first">
+            <div class="form-group">
+                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                <label class="form-label">@L("URL"):</label>
+                <input aria-label="Work Flow" type="text" name="WorkFlow[]BeforeAssembly[][URL]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group inline">
+                <label class="kt-checkbox">
+                    <input aria-label="Async" type="checkbox" name="WorkFlow[]BeforeAssembly[][Async]" value="true"> @L("Async")
+                    <span></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="exampleSelect1">@L("RestType")</label>
+                <select aria-label="Select" class="form-control form-control-sm  kt-input" name="WorkFlow[]BeforeAssembly[][Rest]">
+                    <option>POST</option>
+                    <option>GET</option>
+                </select>
+            </div>
+            <div class="kt-form__heading">
+                <div class="fs-4">@L("Headers") <span onclick="$(this).closest('.formblock').find('#workflow-beforeassembly').toggle();" style="cursor:pointer" class="small text-primary">@L("ShowHeaders")</span></div>
+            </div>
+            <div id="workflow-beforeassembly" style="display:none">
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="Before Assembly Header1Key" type="text" name="WorkFlow[]BeforeAssembly[][Header1Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="Before Assembly Header1Value" type="text" name="WorkFlow[]BeforeAssembly[][Header1Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="Before Assembly Header1Description" type="text" name="WorkFlow[]BeforeAssembly[][Header1Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="Before Assembly Header2Key" type="text" name="WorkFlow[]BeforeAssembly[][Header2Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="Before Assembly Header2Value" type="text" name="WorkFlow[]BeforeAssembly[][Header2Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="Before Assembly Header2Description" type="text" name="WorkFlow[]BeforeAssembly[][Header2Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="Before Assembly Header3Key" type="text" name="WorkFlow[]BeforeAssembly[][Header3Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="Before Assembly Header3Value" type="text" name="WorkFlow[]BeforeAssembly[][Header3Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="Before Assembly Header3Description" type="text" name="WorkFlow[]BeforeAssembly[][Header3Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="kt-form__heading">
+                <div class="fs-4">@L("Body")</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("BodyType"):</label>
+                <input aria-label="Before Assembly BodyType" type="text" name="WorkFlow[]BeforeAssembly[][BodyType]" class="form-control form-control-sm  kt-input" placeholder="" value="application/json">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("BodyContent"):</label>
+                <textarea aria-label="Before Assembly BodyContent" type="text" name="WorkFlow[]BeforeAssembly[][BodyContent]" class="form-control form-control-sm  kt-input" placeholder="" value="%AssemblyMessage%"></textarea>
+            </div>
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+
+    <div id="kt_wizard_form_step_3_AfterAssembly_formblock" class="formblock  border rounded p-4 mb-4">
+        <div class="kt-form__section kt-form__section--first">
+            <div class="form-group">
+                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+                <label class="form-label">@L("URL"):</label>
+                <input aria-label="After Assembly URL" type="text" name="WorkFlow[]AfterAssembly[][URL]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group inline">
+                <label class="kt-checkbox">
+                    <input aria-label="After Assembly Async" type="checkbox" name="WorkFlow[]AfterAssembly[][Async]" value="true"> @L("Async")
+                    <span></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="exampleSelect1">@L("RestType")</label>
+                <select aria-label="Select" class="form-control form-control-sm  kt-input" name="WorkFlow[]AfterAssembly[][Rest]">
+                    <option>POST</option>
+                    <option>GET</option>
+                </select>
+            </div>
+            <div class="kt-form__heading">
+                <div class="fs-4">@L("Headers") <span onclick="$(this).closest('.formblock').find('#workflow-afterassembly').toggle()" style="cursor:pointer" class="text-primary small">@L("ShowHeaders")</span></div>
+            </div>
+            <div id="workflow-afterassembly" style="display:none">
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="After Assembly Header1Key" type="text" name="WorkFlow[]AfterAssembly[][Header1Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="After Assembly Header1Value" type="text" name="WorkFlow[]AfterAssembly[][Header1Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="After Assembly Header1Description" type="text" name="WorkFlow[]AfterAssembly[][Header1Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="After Assembly Header2Key" type="text" name="WorkFlow[]AfterAssembly[][Header2Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="After Assembly Header2Value" type="text" name="WorkFlow[]AfterAssembly[][Header2Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="After Assembly Header2Description" type="text" name="WorkFlow[]AfterAssembly[][Header2Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Key"):</label>
+                        <input aria-label="After Assembly Header3Key" type="text" name="WorkFlow[]AfterAssembly[][Header3Key]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">@L("Value"):</label>
+                        <input aria-label="After Assembly Header3Value" type="text" name="WorkFlow[]AfterAssembly[][Header3Value]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-label">@L("Description"):</label>
+                        <input aria-label="After Assembly Header3Description" type="text" name="WorkFlow[]AfterAssembly[][Header3Description]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+            <div class="kt-form__heading">
+                <div class="fs-4">@L("Body")</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("BodyType"):</label>
+                <input aria-label="After Assembly BodyType" type="text" name="WorkFlow[]AfterAssembly[][BodyType]" class="form-control form-control-sm  kt-input" placeholder="" value="application/json">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("BodyContent"):</label>
+                <textarea aria-label="After Assembly BodyContent" type="text" name="WorkFlow[]AfterAssembly[][BodyContent]" class="form-control form-control-sm  kt-input" placeholder="" value="%AssemblyMessage%"></textarea>
+            </div>
+        </div>
+        <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+    </div>
+
+    <div id="kt_wizard_form_step_3_Email_formblock" class="formblock formblock-email  border rounded p-4 mb-4">
+        <div class="active">
+            <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="javascript:;"><i class="fa fa-times text-danger"></i> @L("Remove")</a>
+            <div class="form-group">
+                <label class="form-label">@L("Recipients"):</label>
+                <input aria-label="Email Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailRecipients]" class="form-control form-control-sm  form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("CCRecipients"):</label>
+                <input  aria-label="Email CC Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailCCRecipients]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("BCCRecipients"):</label>
+                <input  aria-label="Email BCC Recipients" type="text" name="WorkFlow[]Email[][DocumentEmailBCCRecipients]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("EmailFrom"):</label>
+                <input  aria-label="Email From" type="text" name="WorkFlow[]Email[][DocumentEmailFrom]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group">
+                <label class="form-label">@L("Subject"):</label>
+                <input  aria-label="Email Subjects" type="text" name="WorkFlow[]Email[][DocumentEmailSubject]" class="form-control form-control-sm  kt-input" placeholder="" value="">
+            </div>
+            <div class="form-group">
+                <div class="input-group mb-2">
+                    <label class="form-label">@L("DocumentAttachments"):</label>
+ 
+                    <input  aria-label="Email Attachments" class="didtagsinput" type="text" name="WorkFlow[]Email[][DocumentAttachmentIds]" data-value=''>
+                </div>
+                <a class="large OpenDocumentAttachmentLookupTableButton btn btn-sm btn-secondary  mb-3 pull-right" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a>
+            </div>
+            <div class="form-group">
+                <label class="kt-checkbox">
+                    <input  aria-label="Email File Uploads" type="checkbox" name="WorkFlow[]Email[][AttachFileUploads]" value="true"> @L("AttachFileUploads")
+                    <span></span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="kt-checkbox">
+                    <input aria-label="Email Record Matter Items" type="checkbox" name="WorkFlow[]Email[][AttachAllRecordMatterItems]" value="true"> @L("AttachAllRecordMatterItems")
+                    <span></span>
+                </label>
+            </div>
+            <div class="form-group mt-4">
+                <h4>@L("EmailBody")</h4>
+                <select class="form-control form-control-sm  kt-input" name="WorkFlow[]Email[][EmailType]">
+                    <option>@L("PlainEmailBody")</option>
+                    <option>@L("FromHTMLSource")</option>
+                    <option>@L("FromAssembledDocument")</option>
+                </select>
+            </div>
+            <div class="form-group" id="PlainEmail">
+                <label class="form-label">@L("Message"):</label>
+                <textarea  aria-label="Email Message" type="text" name="WorkFlow[]Email[][DocumentEmailMessage]" class="form-control form-control-sm  kt-input" placeholder=""></textarea>
+            </div>
+            <div class="form-group" id="DocumentEmail">
+                <div class="input-group mb-2">
+                    <label class="form-label">@L("SelectedDocuments"):</label>
+                    <input  aria-label="Email Documents" class="ebidtagsinput" type="text" name="WorkFlow[]Email[][EmailBodyDocumentIds]" data-value=''>
+                </div>
+                <a class="large OpenEmailBodyDocumentLookupTableButton btn btn btn-secondary" href="javascript:;"><i class="fa fa-search"></i> @L("Pick")</a>
+            </div>
+            <div class="form-group" id="HTMLEmailSource">
+                <label class="form-label">@L("EmailTemplateURL"):</label>
+                <input  aria-label="Email Template URL" type="text" name="WorkFlow[]Email[][EmailTemplateURL]" class="form-control form-control-sm  kt-input" placeholder="">
+            </div>
+            <div class="form-group" id="HTMLEmailPart">
+                <label class="form-label">@L("TemplatePartID"):</label>
+                <input  aria-label="Email Part Id" type="text" name="WorkFlow[]Email[][TemplatePartID]" class="form-control form-control-sm  kt-input" placeholder="">
+            </div>
+            <label for="WorkFlow[]Email[][FilterRule]" class="form-label">@L("FilterIf"):</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-filter" aria-hidden="true"></i></span>
+                </div>
+                <input  aria-label="Email Filter Rule" type="url" name="WorkFlow[]Email[][FilterRule]" class="form-control form-control-sm  kt-input" placeholder="i.e. //Data[Transform_yn='true']">
+            </div>
+            <span class="kt-form__help">@L("EmailFilterHelp")</span>
+            <div class="kt-separator kt-separator--dashed kt-separator--lg"></div>
+            <div class="kt-form__section">
+            </div>
+        </div>
+    </div>
+</div>

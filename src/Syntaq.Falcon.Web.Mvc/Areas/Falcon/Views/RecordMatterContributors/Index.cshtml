@@ -1,0 +1,218 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterContributors
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model RecordMatterContributorsViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.RecordMatterContributors;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/RecordMatterContributors/Index.js" asp-append-version="true"></script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+                <div class="kt-subheader kt-grid__item">
+                  <div class="@(await GetContainerClass())">
+                    <div class="kt-subheader__main">
+                        <h3 class="kt-subheader__title">
+                            <span>@L("RecordMatterContributors")</span>
+                        </h3>
+                        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                        <span class="kt-subheader__desc">
+                            @L("RecordMatterContributorsHeaderInfo")
+                        </span>
+                    </div>
+                    <div class="kt-subheader__toolbar">
+                        <div class="kt-subheader__wrapper">
+                            <button id="ExportToExcelButton" class="btn btn-success">  @L("ExportToExcel")</button>
+            @if (IsGranted(AppPermissions.Pages_RecordMatterContributors_Create))
+                            {
+                                <button id="CreateNewRecordMatterContributorButton" class="btn btn-primary blue"> @L("CreateNewRecordMatterContributor")</button>                
+                            }
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">   
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+            <div class="kt-form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+                        <div class="form-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="RecordMatterContributorsTableFilter" aria-label="@L("InputFilterText")" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <span class="input-group-btn">
+                                    <button id="GetRecordMatterContributorsButton" aria-label="@L("Search")" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+						<div class="kt-separator kt-separator--border-dashed"></div>
+					</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="OrganizationNameFilterId">@L("OrganizationName")</label>
+									<input type="text" class="form-control" name="organizationNameFilter" id="OrganizationNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="NameFilterId">@L("Name")</label>
+									<input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="AccessTokenFilterId">@L("AccessToken")</label>
+									<input type="text" class="form-control" name="accessTokenFilter" id="AccessTokenFilterId">
+								</div>
+                            </div>
+                            <div class="col-md-3">
+                                    <div class="form-group">
+										<label for="MinTimeFilterId">@L("TimeRange")</label>
+										<div class="input-group">
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MinValue")"  id="MinTimeFilterId">
+											<span style="line-height: 40px;padding: 0 15px 0 15px;"> &mdash; </span>
+											<input class="form-control m-input date-picker" type="text" placeholder="@L("MaxValue")"  id="MaxTimeFilterId">
+										</div>
+									</div>
+                            </div>
+							<div class="col-md-3">
+								<label for="StepStatusFilterId">@L("StepStatus")</label>
+								<select class="form-control" name="StepStatusFilter" id="StepStatusFilterId">
+								<option value="-1">@L("All")</option>
+																			<option value="0">@L("Enum_ProjectStepStatus_0")</option>
+
+										<option value="1">@L("Enum_ProjectStepStatus_1")</option>
+
+										<option value="2">@L("Enum_ProjectStepStatus_2")</option>
+
+										<option value="3">@L("Enum_ProjectStepStatus_3")</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<label for="StepRoleFilterId">@L("StepRole")</label>
+								<select class="form-control" name="StepRoleFilter" id="StepRoleFilterId">
+								<option value="-1">@L("All")</option>
+																			<option value="0">@L("Enum_ProjectStepRole_0")</option>
+
+										<option value="1">@L("Enum_ProjectStepRole_1")</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<label for="StepActionFilterId">@L("StepAction")</label>
+								<select class="form-control" name="StepActionFilter" id="StepActionFilterId">
+								<option value="-1">@L("All")</option>
+																			<option value="0">@L("Enum_ProjectStepAction_0")</option>
+
+										<option value="1">@L("Enum_ProjectStepAction_1")</option>
+
+
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<label for="CompleteFilterId">@L("Complete")</label>
+								<select class="form-control" name="CompleteFilter" id="CompleteFilterId">
+									<option value="-1">@L("All")</option>
+									<option value="0">@L("False")</option>
+									<option value="1">@L("True")</option>
+								</select>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="EmailFilterId">@L("Email")</label>
+									<input type="text" class="form-control" name="emailFilter" id="EmailFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormSchemaFilterId">@L("FormSchema")</label>
+									<input type="text" class="form-control" name="formSchemaFilter" id="FormSchemaFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormScriptFilterId">@L("FormScript")</label>
+									<input type="text" class="form-control" name="formScriptFilter" id="FormScriptFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormRulesFilterId">@L("FormRules")</label>
+									<input type="text" class="form-control" name="formRulesFilter" id="FormRulesFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormPagesFilterId">@L("FormPages")</label>
+									<input type="text" class="form-control" name="formPagesFilter" id="FormPagesFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RecordMatterRecordMatterNameFilterId">(@L("RecordMatter")) @L("RecordMatterName")</label>
+									<input type="text" class="form-control" name="recordMatterRecordMatterNameFilter" id="RecordMatterRecordMatterNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="UserNameFilterId">(@L("User")) @L("Name")</label>
+									<input type="text" class="form-control" name="userNameFilter" id="UserNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormNameFilterId">(@L("Form")) @L("Name")</label>
+									<input type="text" class="form-control" name="formNameFilter" id="FormNameFilterId">
+								</div>
+                            </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+            <div class="row align-items-center">
+                <table id="RecordMatterContributorsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@L("Actions")</th>
+								<th>@L("OrganizationName")</th>
+								<th>@L("Name")</th>
+								<th>@L("AccessToken")</th>
+								<th>@L("Time")</th>
+								<th>@L("StepStatus")</th>
+								<th>@L("StepRole")</th>
+								<th>@L("StepAction")</th>
+								<th>@L("Complete")</th>
+								<th>@L("Email")</th>
+								<th>@L("FormSchema")</th>
+								<th>@L("FormScript")</th>
+								<th>@L("FormRules")</th>
+								<th>@L("FormPages")</th>
+								<th>@L("RecordMatterRecordMatterName")</th>
+								<th>@L("UserName")</th>
+								<th>@L("FormName")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

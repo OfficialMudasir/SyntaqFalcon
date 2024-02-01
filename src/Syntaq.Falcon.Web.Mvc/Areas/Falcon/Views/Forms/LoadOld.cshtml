@@ -1,0 +1,517 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Forms.Dtos;
+
+@model GetFormForView
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Forms;
+    //Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.cshtml";
+}
+
+<style>
+    .fa-remove {
+        color: #212529 !important;
+    }
+
+    .btn-group-xs > .btn, .btn-xs {
+        padding: .25rem .4rem;
+        font-size: .875rem;
+        line-height: .5;
+        border-radius: .2rem;
+    }
+
+    .component-btn-group {
+        position: absolute;
+        right: 0;
+        margin-top: -2px;
+        z-index: 90;
+    }
+
+        .component-btn-group .component-settings-button {
+            float: right;
+            z-index: 91;
+            margin: 4px 4px 0 0;
+            z-index: 91;
+            -webkit-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+            -moz-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+            box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+        }
+
+    .formio-component-datagrid .formio-datagrid-remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 200ms linear, visibility 0ms 200ms;
+    }
+
+    .formio-component-datagrid .datagrid-table > tbody > tr > td:last-child {
+        position: relative;
+    }
+
+    .formio-component-datagrid .datagrid-table > tbody > tr:hover > td:last-child .formio-datagrid-remove {
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0ms, opacity 200ms linear;
+    }
+
+    .datagrid-group-label.collapsed > td {
+        display: none;
+    }
+
+    .datagrid-group-header.clickable {
+        cursor: pointer;
+    }
+
+        .datagrid-group-header.clickable .datagrid-group-label:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: '▾';
+            margin: 0 5px;
+        }
+
+        .datagrid-group-header.clickable.collapsed .datagrid-group-label:before {
+            content: '▸';
+        }
+
+    .form-control {
+        border-width: 2px;
+    }
+
+    .control-label {
+        font-weight: bold;
+    }
+
+    .table-bordered {
+        border: 2px solid #f4f5f8;
+    }
+
+    .wizard-page-label {
+        padding: 1em;
+        font-size: 1em;
+    }
+
+    .formio-component-systemRedirect, .formio-component-assignAcl {
+        /*opacity: 0;*/
+        /*display: none;*/
+    }
+
+    .sectionfooter {
+        background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .formio-component-dataGrid {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 0.25rem;
+    }
+
+    .formio-data-grid {
+        margin-bottom: 0px;
+    }
+
+    .formio-component-sfafile .fileSelector {
+        padding: 15px;
+        border: 2px dashed #ddd;
+        text-align: center;
+    }
+
+        .formio-component-sfafile .fileSelector.fileDragOver {
+            border-color: #127abe;
+        }
+
+        .formio-component-sfafile .fileSelector .fa {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+    /* #syntaq-content .navbar {
+        padding-left: 0rem !important;
+    }
+    .syntaq-component .row {
+        margin-left: -10px !important;
+    }
+    .syntaq-component .row {
+        margin-left: -10px !important;
+    }*/
+</style>
+
+@section Styles{
+    <link href="~/assets/formio/dist/formio.full.css" rel="stylesheet" />
+    <link href="~/assets/formio/app/fontawesome/css/font-awesome.min.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+		var formJSON = '';
+		var JSONFormObj = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.Form)));
+		var JSONRMObj = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.RecordMatter)));
+		var JSONRMIObj = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.RecordMatterItem)));
+		var NewFormForRecord = '';
+		@{
+			if (Model.Record !=null)
+			{
+				@:NewFormForRecord = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.Record)));
+			}
+		 }
+
+		// TODO ADDED InitForData function
+		var InitFormData;
+		
+		// Holds the form submission data. makes it easy to interact with form submission data in custom scripts
+		var Form;
+
+    </script>
+
+    <script src="~/assets/formio/dist/formio.full.js"></script>
+    <script src="/view-resources/Areas/Falcon/Views/Forms/Loader.js" asp-append-version="true"></script>
+
+    @*TODO EMBEDDED FORM SCRIPT THIS IS MOVED ABOVE THE LOADER SCRIPT*@
+    <script type="text/javascript">
+		@{
+			// Split the rules script into 2 parts
+			// Convention rules and Formio function calls
+			var rulesScript = string.Empty;
+			var rulesSchema = string.Empty;
+			if (! string.IsNullOrEmpty(Model.Form.RulesScript))
+			{
+
+				var rulesscripts = Model.Form.RulesScript.Split(new string[] { "SectionBreak" }, StringSplitOptions.RemoveEmptyEntries);
+
+
+				if (rulesscripts.Length > 0)
+				{
+					rulesScript = rulesscripts[0];
+				}
+
+				if (rulesscripts.Length > 1)
+				{
+					rulesSchema = rulesscripts[1];
+				}
+			}
+		}
+
+		function UpdateSchemaLogic(parent, target, type, condition, value) {
+			$(parent.components).each(function (item, component) {
+				if (component.key == target) {
+					if (type != "Hidden") {
+						component.logic = typeof (component.logic) == 'undefined' ? [] : component.logic;
+						var i = (component.logic.length > 0 ? component.logic.length : 0);
+						component.logic[i] = {
+							name: 'logic_' + Math.round(new Date().getTime() + (Math.random() * 100)),
+							trigger: {
+								type: 'javascript',
+								javascript: condition
+							},
+							actions: [
+								{
+									name: 'action_' + Math.round(new Date().getTime() + (Math.random() * 100)),
+									type: "property"
+								}
+							]
+						};
+					}
+					switch (type) {
+						case "Hidden":
+							component.customConditional = condition;
+							break;
+						case "Required":
+							component.logic[i].actions[0].property = {
+								label: "Required",
+								type: "boolean",
+								value: "validate.required"
+							};
+							component.logic[i].actions[0].state = value;
+							break;
+						case "Disabled":
+							component.logic[i].actions[0].property = {
+								label: "Disabled",
+								type: "boolean",
+								value: "disabled"
+							};
+							component.logic[i].actions[0].state = value;
+							break;
+						case "Label":
+							component.logic[i].actions[0].property = {
+								label: "Label",
+								type: "string",
+								value: "label"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "Title":
+							component.logic[i].actions[0].property = {
+								label: "Title",
+								type: "string",
+								value: "title"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "Tooltip":
+							component.logic[i].actions[0].property = {
+								label: "Tooltip",
+								type: "string",
+								value: "tooltip"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "Description":
+							component.logic[i].actions[0].property = {
+								label: "Description",
+								type: "string",
+								value: "description"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "Placeholder":
+							component.logic[i].actions[0].property = {
+								label: "Placeholder",
+								type: "string",
+								value: "placeholder"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "CSS Class":
+							component.logic[i].actions[0].property = {
+								label: "CSS Class",
+								type: "string",
+								value: "className"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "Container Custom Class":
+							component.logic[i].actions[0].property = {
+								label: "Container Custom Class",
+								type: "string",
+								value: "customClass"
+							};
+							component.logic[i].actions[0].text = value;
+							break;
+						case "SetValue":
+							component.logic[i].actions[0] = {
+								name: 'action_' + Math.round(new Date().getTime() + (Math.random() * 100)),
+								type: "value",
+								value: "value = '" + value + "'"
+							};
+							break;
+					};
+					parent.components[item] = component;
+				}
+				if (component.type == "section") {
+
+					//path = path == null ? formJSON.components[item]
+					$(component.components).each(function (label, object) {
+
+						//path = path == null ? 'components[' + item + ']' : path + '.components[' + item + ']';
+						parent.components[item].components[0] = UpdateSchemaLogic(object, target, type, condition, value)
+					});
+				} else if (component.type == "sfapanel" || component.type == "panel") {
+
+					//path +=
+					$(component).each(function (label, object) {
+
+						//path = path == null ? 'components[' + item + ']' : path + '.components[' + item + ']';
+						parent.components[item] = UpdateSchemaLogic(object, target, type, condition, value)
+					});
+				}
+			});
+			return parent;
+		};
+
+		function UpdateSchema(form) {
+			formJSON = form;
+			@Html.Raw(rulesSchema);
+			return formJSON;
+		}
+
+		function onFormChange(event, form) {
+			var row = form;
+			if (event) {
+				if (event.changed) {
+					row = event.changed.instance.parent;
+				}
+				var submission = { data: event.data };
+				var data = submission.data;
+			}
+			@Html.Raw(Model.Form.Script);
+			if (typeof _InitRulesScript === "function") {
+				_InitRulesScript();
+			}
+		}
+
+		//CUSTOM FUNCTIONS
+		$.fn.Repeat = function (key) {
+
+			var component = null;
+			component = getComponent(this[0], key);
+
+			return component;
+		}
+
+		// Rules Functions
+		$.fn.getval = function (key) {
+
+			var result = null;
+			var parent = this.first();
+			var first = parent[0];
+
+			var rptname = '';
+			for (var itm in first) {
+				rptname = itm;
+			}
+
+			var data = parent[0][rptname].data;
+			result = data[key];
+
+			return result;
+
+		}
+
+		//CUSTOM FUNCTIONS
+		$.fn.setVal = function (key, value) {
+
+			var data = this[0].data;
+
+			var component = null;
+			component = getComponent(this[0], key);
+
+			if (component !== null && component !== undefined) {
+				component.setValue(value);
+			}
+
+			if (data !== undefined && data !== null) {
+				data[key] = value;
+			}
+
+		}
+
+		function getComponent(parent, key) {
+
+			var component;
+
+			if (parent.components === undefined || parent.components === null) {
+				var rptname = '';
+				for (var itm in parent) {
+					rptname = itm;
+				}
+				parent = parent[rptname];
+			}
+
+			parent.components.forEach(function (comp) {
+				if (comp.component.key == key) {
+					component = comp;
+
+				}
+			})
+			return component;
+		}
+
+		function getDataValue(instance, field) {
+
+			result = '';
+
+			if (instance.data !== null && instance.data !== undefined) {
+				var data = instance.data;
+				if (data[field] !== null && data[field] !== undefined) {
+
+					result = data[field];
+					if (typeof result === 'string' || result instanceof String || typeof result === 'boolean' || result instanceof Boolean) {
+						result = result.toString();
+						result = result.toLowerCase();
+					}
+					else {
+						// Field may be a JSON object if a RadioGroup/ Checkboxgroup / YN
+						// Drill down until you get the selected value for the control
+						if (result[field] !== null && result[field] !== undefined) {
+							result = result[field];
+							if (typeof result === 'string' || result instanceof String) {
+								result = result.toString();
+								result = result.toLowerCase();
+							}
+						}
+						else if (result['value'] !== null && result['value'] !== undefined) {
+							result = result['value'];
+							if (typeof result === 'string' || result instanceof String) {
+								result = result.toString();
+								result = result.toLowerCase();
+							}
+						}
+						else {
+							result = '';
+						}
+					}
+
+				}
+				else {
+
+					if (instance.parent !== null && instance.parent !== undefined) {
+						result = getDataValue(instance.parent, field);
+					}
+					else {
+						result = '';
+					}
+
+				}
+			}
+
+			// Always return lowercase to make condition checking easy
+			return result;
+
+		}
+
+		function escapeHtml(string) {
+			return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+				return entityMap[s];
+			});
+		}
+
+		$.fn.exists = function () { return this.length > 0; }
+
+    </script>
+
+    <script>
+        function dataReceiver(result, PopName) {
+            var currentFormKeys = {};
+            FormioUtils.eachComponent(Form.components, function (comp) {
+                currentFormKeys[comp.key] = true;
+            }, true);
+            for (var key in currentFormKeys) {
+                if (result.hasOwnProperty(key)) {
+                    delete result[key];
+                }
+            }
+            document.getElementsByName(PopName)[0].value = JSON.stringify(result);
+            Form.updateValue({
+                modified: true
+            });
+            Form.redraw();
+        }
+    </script>
+}
+}
+<div class="m-content">
+    <div class="m-portlet m-portlet--tabs">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Form.Name
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="m-portlet__body p-0">
+            <div class="tab-content">
+                <div class="tab-pane active show" id="m_portlet_tab_1_1">
+                    <div class="align-items-center p-3">
+                        @*TODO THIS NEEDS TO GO IN EMBED SCRIPT*@
+                        <div id="formio"></div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

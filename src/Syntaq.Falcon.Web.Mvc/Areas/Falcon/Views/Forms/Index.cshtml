@@ -1,0 +1,103 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AccessControlList
+@using Syntaq.Falcon.Web.Areas.Falcon.Utility
+@model FormsViewModel
+@{
+    //ViewBag.CurrentPageName = FalconPageNames.Common.Forms;
+}
+@section Scripts
+    {
+    <script src="/view-resources/Areas/Falcon/Views/Forms/Index.js" asp-append-version="true"></script>
+    <script src="~/assets/jquery-ui/jquery-ui.min.js"></script>
+
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script src="~/assets/Prism/prism.js"></script>
+}
+@section Styles
+    {
+    <link href="~/Common/tagsinput.css" rel="stylesheet" />
+}
+<style>
+    .setLiveToast_Container {
+        position: fixed;
+        bottom: 5px;
+        right: 25px;
+        z-index: 4;
+    }
+
+    #notifyButton {
+        font-size: 14px;
+    }
+
+    #notifyButton:hover,
+    #notifyButton:focus {
+        cursor: pointer;
+        text-decoration: underline; 
+    }
+</style>
+<script>
+    function showStartModal() {
+
+
+        var _startProjectModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/Projects/StartProjectModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Projects/_StartProjectModal.js',
+            modalClass: 'StartProjectModal'
+        });
+
+        _startProjectModal.open();
+    }
+
+</script>
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Forms")" description="@L("FormsHeaderInfo")">
+
+        @if (IsGranted(AppPermissions.Pages_Forms_Create))
+        {
+            <button id="CreateNewFormButton" class="btn btn-primary">
+                
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewForm")
+                </span>
+            </button>
+        }
+        @if (IsGranted(AppPermissions.Pages_Folders_Create))
+        {
+            <button id="CreateNewFolderButton" class="btn btn-primary">
+           
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewFolder")
+                </span>
+            </button>
+        }
+        <button id="FormNavigationButton" aria-label="Form Navigation" class="btn btn-primary" style="position: absolute; opacity: 0;"></button>
+    </abp-page-subheader>
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="card">
+            <div class=" ">
+                <div id="FormFolderPortlet">
+                    @*PartialView Loaded here*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="toast setLiveToast_Container bg-white" id="setLiveToast">
+        <div class="toast-header" style="justify-content: space-between;">
+            <span hidden id="setLiveFormName"></span>
+            <strong id="notifyButton" data-bs-dismiss="modal">@L("NotifyYourTeam")</strong>
+            <button class="btn btn-close" id="closeNotificationButton" type="button"  aria-label="Close">
+            </button>
+        </div>
+        <div class="toast-body" style="font-size: 13px !important;">
+            <span class="overflow-auto" id="SetAliveHeaderMessage"></span>
+        </div>
+    </div>

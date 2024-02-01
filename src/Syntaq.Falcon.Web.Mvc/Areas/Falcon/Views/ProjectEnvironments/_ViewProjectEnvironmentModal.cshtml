@@ -1,0 +1,30 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectEnvironments
+@model ProjectEnvironmentViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="ProjectEnvironmentInformationsTab">
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Name") :</h6>
+                @Model.ProjectEnvironment.Name
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Description") :</h6>
+                @Model.ProjectEnvironment.Description
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("EnvironmentType") :</h6>
+                @L("Enum_ProjectEnvironmentType_" + (int)Model.ProjectEnvironment.EnvironmentType)
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

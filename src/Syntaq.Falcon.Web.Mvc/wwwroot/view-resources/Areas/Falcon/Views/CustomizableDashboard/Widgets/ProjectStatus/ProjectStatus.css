@@ -1,0 +1,16 @@
+﻿.ProjectStatusContainer .card.card-custom > .card-body {
+    padding: 1rem 1.25rem !important;
+}
+
+.ProjectStatusContainer .gutter-b {
+    margin-bottom: 0px !important;
+}
+h1.kt-widget24__title {
+    font-size: 2.5rem !important;
+}
+#statusFilter:hover {
+    color: #5d78ff;
+}
+#statusFilter {
+    cursor: grab;
+}

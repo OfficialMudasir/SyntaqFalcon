@@ -1,0 +1,199 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms;
+@model FormLoadViewModel
+
+@{
+    Layout = "_Layout.anon";
+}
+
+<link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/vendors.bundle.css" href="/view-resources/Areas/Falcon/Views/_Bundles/vendors.bundle.min.css?v=UrdlH2hufsn0n9NgOX4OcQCG5APo-kT3RtKSzGMjTKw" />
+<link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/app-layout-libs.css" href="/view-resources/Areas/Falcon/Views/_Bundles/app-layout-libs.min.css?v=V8xiUtb2E5smZhDGBMsqv_wRFMphpdzszEOtcuOn1bk" />
+<link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/common-styles.css" href="/view-resources/Areas/Falcon/Views/_Bundles/common-styles.min.css?v=bhGcMbe8Kh3JgCvONt7vGDDdIjovwsgKtqNLd1nCjb4" />
+<link rel="stylesheet" abp-href="/Common/Scripts/Datatables/datatables.css" href="/Common/Scripts/Datatables/datatables.min.css?v=4Kp7fHFFe9t79QR7RgIBuqaAvBm9sZHI9lQv5f_iqgc" />
+<link rel="stylesheet" abp-href="/Common/Styles/metronic-customize.css" href="/Common/Styles/metronic-customize.min.css?v=d7CupdZutoJpJ-g5SOTqGtncagHENsVfMr8UwHG_Ag4" />
+<link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/Layout/_Layout.css" href="/view-resources/Areas/Falcon/Views/Layout/_Layout.min.css?v=O89EwA7xAaVD_cvWz_ru6ctMupwX3fj7N-7QaaK62j8" />
+<link rel="stylesheet" href="/metronic/themes/theme12/css/style.bundle.css?v=NpfA_TaNQetpbOb8wRQ7iv2ytztk3d2gRnJKET_w4rk" />
+<link rel="stylesheet" abp-href="/Common/Styles/Themes/theme12/metronic-customize.css" href="/Common/Styles/Themes/theme12/metronic-customize.min.css?v=cOtoqbkPHK-Ze0PAN9-hiL3Xc4Eaou8pXW0kz_3lmzQ" />
+<link rel="stylesheet" abp-href="/Common/Styles/Themes/theme12/datatables.css" href="/Common/Styles/Themes/theme12/datatables.min.css?v=SmdG3dS_m4mMU5zoIDLrLzjAbRLB4Waj5YXW0rAbkXs" />
+<link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/HostDashboard/Index.css" href="/view-resources/Areas/Falcon/Views/HostDashboard/Index.min.css?v=S9n2VVCmzxgq3GVIfNcBNez5unDOUMQWeuzdG0eMJ_A" />
+
+<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
+
+<script src="~/view-resources/Areas/Falcon/Views/_Bundles/datatables-all.min.js"></script>
+<script src="~/assets/sweetalert/sweetalert.min.js"></script>
+<link href="~/assets/sweetalert/sweetalert.css" rel="stylesheet" />
+<link href="~/assets/formio/dist/formio.full.css" rel="stylesheet" />
+
+<script type="text/javascript">
+    var abp = abp || {}; abp.appPath = '/';
+</script>
+
+<link rel="stylesheet" href="/assets/formio/app/fontawesome/css/fontawesome.min.css?v=sOcjrl5oE7mSq9nXWOek4j4RJtBQp63l1mFMjUi7VBA" />
+@*<link rel="stylesheet" href="/TenantCustomization/GetCustomCss?tenantId=@Model.TenantId" />*@
+
+
+<style>
+
+    html, body {
+        font-family: 'POPPINS' !important;
+        font-size: 13px;
+        background-image: none !important;
+    }
+
+    .fa-remove {
+        color: #212529 !important;
+    }
+
+    .btn-group-xs > .btn, .btn-xs {
+        padding: .25rem .4rem;
+        font-size: .875rem;
+        line-height: .5;
+        border-radius: .2rem;
+    }
+
+    .component-btn-group {
+        position: absolute;
+        right: 0;
+        margin-top: -2px;
+        z-index: 90;
+    }
+
+    .component-btn-group .component-settings-button {
+        float: right;
+        z-index: 91;
+        margin: 4px 4px 0 0;
+        z-index: 91;
+        -webkit-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+        -moz-box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+        box-shadow: 0px 0px 10px 1px rgba(48, 113, 169, 0.6);
+    }
+
+    .datagrid-group-label.collapsed > td {
+        display: none;
+    }
+
+    .datagrid-group-header.clickable {
+        cursor: pointer;
+    }
+
+        .datagrid-group-header.clickable .datagrid-group-label:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: '▾';
+            margin: 0 5px;
+        }
+
+        .datagrid-group-header.clickable.collapsed .datagrid-group-label:before {
+            content: '▸';
+        }
+
+    .form-control {
+        border-width: 2px;
+    }
+ 
+    .contributor-btn-options {
+        left: -52px !important;
+    }
+
+    .table-bordered {
+        border: 2px solid #f4f5f8;
+    }
+
+    .wizard-page-label {
+        padding: 1em;
+        font-size: 1em;
+    }
+
+    .formio-component-systemRedirect, .formio-component-assignAcl {
+        /*opacity: 0;*/
+        /*display: none;*/
+    }
+
+    .sectionfooter {
+        background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .formio-component-dataGrid {
+        border: 1px solid #dee2e6 !important;
+        border-radius: 0.25rem;
+    }
+
+    .formio-data-grid {
+        margin-bottom: 0px;
+    }
+
+    .formio-component-sfafile .fileSelector {
+        padding: 15px;
+        border: 2px dashed #ddd;
+        text-align: center;
+    }
+
+        .formio-component-sfafile .fileSelector.fileDragOver {
+            border-color: #127abe;
+        }
+
+        .formio-component-sfafile .fileSelector .fa {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+    .user-acceptance-modal-header {
+        border: none;
+    }
+
+    .user-acceptance-modal-content {
+        width: 400px;
+        height: 182px;
+    }
+
+    #userAcceptanceDocument, #userAcceptanceDocument2 {
+        cursor: pointer;
+        color: #5867dd;
+    }
+
+    #userAcceptanceButton:disabled {
+        background-color: grey;
+        color: white;
+        border-color: grey;
+        cursor: text;
+    }
+
+    .btn-sm {
+        line-height: 1.0;
+    }
+
+    #syntaq-contributor-content{
+        z-index:99 !important;
+    }
+
+</style>
+
+<link id="TenantCustomCss" rel="stylesheet" href="@Url.Action("GetCustomCss", "TenantCustomization", new {area = string.Empty, tenantId = Model.TenantId})" asp-append-version="true" />
+
+<script src="~/assets/formio/app/jquery/jquery.min.js"></script>
+<script src="~/assets/syntaq/syntaq.js" id="syntaq-script"></script>
+
+<script>
+    $(document).ready(function () {
+        Syntaq.ProjectName = "@Model.ProjectName";
+		Syntaq.TenantName = "@Model.TenantName";
+		Syntaq.AuthToken = "@Model.AuthToken";
+		Syntaq.Form.FormId = "@Model.FormId";
+        Syntaq.TenantId = "@Model.TenantId"
+		Syntaq.Form.createForm();
+    });
+</script>
+
+<div class="">
+    <div class="card mt-4">
+
+        <div class="p-4">
+            <img alt="logo" onerror="this.onerror=null; this.src='/Common/Images/app-logo-on-light.svg'" src="/TenantCustomization/GetLogo?TenantId=@Model.TenantId" height="48" class="kt-header__brand-logo-default" />
+        </div>
+
+        <div id="syntaq-contributor-content" class="p-4 sticky-top bg-white" style="z-index:3;">
+        </div>
+
+        <div id="syntaq-content" class="p-4"></div>
+    </div>
+    <script src="~/assets/formio/app/jquery/jquery.min.js"></script>
+</div>

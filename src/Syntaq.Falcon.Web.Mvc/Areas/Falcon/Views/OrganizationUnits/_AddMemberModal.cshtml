@@ -1,0 +1,28 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model LookupModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Title ?? L("SelectUsers")))
+
+<div class="modal-body">
+    <form>
+        <div class="input-group">
+            <input class="form-control add-member-filter-text" aria-label="@L("InputFilterText")"  placeholder="@L("SearchWithThreeDot")" type="text">
+            <button class="btn btn-primary add-member-filter-button" type="submit" aria-label="@L("Search")"><i class="fa fa-search" aria-label="@L("Search")"></i></button>
+        </div>
+    </form>
+    <table id="addMemberModalTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+        <thead>
+        <tr>
+            <th>@L("Select")</th>
+            <th>@L("Name")</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button type="button" id="btnAddUsersToOrganization" class="btn btn-primary save-button" disabled="disabled">
+        <span>@L("Save")</span>
+    </button>
+    <button type="button" class="btn btn-secondary font-weight-bold close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+</div>

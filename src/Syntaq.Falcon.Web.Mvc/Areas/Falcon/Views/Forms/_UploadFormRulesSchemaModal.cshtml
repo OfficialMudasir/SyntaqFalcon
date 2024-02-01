@@ -1,0 +1,29 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+
+@model UploadFormRulesSchemaViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("UploadJSONSchema")))
+
+<div class="modal-body">
+    <div id="UploadFormRulesSchemaTab" style="margin: 2vh;">
+        <div class="form-group mb-3">
+            <strong>JSON Schema is a vocabulary that allows you to annotate and validate JSON documents.</strong>            
+            <br />
+            <div><a href="https://json-schema.org/learn/getting-started-step-by-step.html" target="_blank">Getting Started with Json Schemas</a></div>
+        </div>
+        <form id="UploadFormRulesSchemaForm" method="POST" action="@(ApplicationPath + "Falcon/Forms/UploadFormRulesSchema")">
+            <div class="form-group">
+              
+                <input type="hidden" name="file" accept=".json">
+                <input aria-label="Json Schema" class="btn btn-secondary" type="file" name="JsonSchema">
+            </div>
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="Id" value="@Model.Version" />
+        </form>
+ 
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

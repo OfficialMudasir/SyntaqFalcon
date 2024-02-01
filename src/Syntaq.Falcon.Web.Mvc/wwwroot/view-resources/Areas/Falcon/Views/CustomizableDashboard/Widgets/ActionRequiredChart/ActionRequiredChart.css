@@ -1,0 +1,50 @@
+﻿
+.my-custom-class-0 {
+    fill: #5867dd;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+.my-custom-class-1 {
+    fill: #0033ff;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+.my-custom-class-2 {
+    fill: #00a6fb;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+.my-custom-class-3 {
+    fill: #00fff7;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+.my-custom-class-4 {
+    fill: #00adff;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+.my-custom-class-5 {
+    fill: #00ffac;
+    stroke: white;
+    stroke-width: 5px;
+}
+
+
+.ct-chart-donut .ct-label {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-label {
+    width: 2em;
+}
+
+.pie-chart-label {
+    text-align: start;
+}

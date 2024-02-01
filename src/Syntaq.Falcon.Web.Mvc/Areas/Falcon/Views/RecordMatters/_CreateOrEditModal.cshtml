@@ -1,0 +1,24 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatters
+@model CreateOrEditRecordMatterModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditRecordMatter")) : L("CreateNewRecordMatter")))
+
+<div class="modal-body">
+    <div id="RecordMatterInformationsTab">
+        <form name="RecordMatterInformationsForm" role="form" novalidate class="form-validation">
+            <input type="hidden" name="RecordId" value="@Model.RecordMatter.RecordId" />
+            <input type="hidden" name="id" value="@Model.RecordMatter.Id" />
+            <div class="form-group">
+                <label for="RecordMatter_RecordMatterName">@L("RecordMatterName")</label>
+                <input class="form-control" id="RecordMatter_RecordMatterName" value="@Model.RecordMatter.RecordMatterName" type="text" name="recordMatterName" />
+            </div>
+            <div class="form-group">
+                <label for="RecordMatter_RecordMatterName">@L("Comments")</label>
+                <textarea class="form-control" id="RecordMatter_RecordMatterName" type="text" name="Comments">@Model.RecordMatter.Comments</textarea>
+            </div>
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

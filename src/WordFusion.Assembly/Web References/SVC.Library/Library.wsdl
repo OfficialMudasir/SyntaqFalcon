@@ -1,0 +1,2244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="CommonFilesGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CommonFilesGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CommonFilesGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LibraryGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LibraryGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LibraryGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SiteReviewersGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="siteid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SiteReviewersGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SiteReviewersGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SiteReviewersUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SiteReviewersUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UsersGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LibraryID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UsersGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UsersGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UsersReferrersGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UsersReferrersGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UsersReferrersGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileApprovedUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="approved" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileApprovedUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileVersionsGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileVersionsGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileVersionsGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileMove">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="folderid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileMoveResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileOwnerGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileOwnerGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileOwnerGetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileOwnerUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="useridowner" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileOwnerUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileReviewerFeesGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerFeesGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileReviewerFeesGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewersGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewersGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileReviewersGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewersUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewersUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileUsersGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileUsersGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileGetCurrVersionNumber">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetCurrVersionNumberResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileGetCurrVersionNumberResult" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileParentIDGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileParentIDGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileParentIDGetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileIDCurrentGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="approved" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileIDCurrentGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileIDCurrentGetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetPrice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetPriceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileGetPriceResult" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetFolderID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetFolderIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileGetFolderIDResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ActivityGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DateFrom" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DateTo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ActivityGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ActivityGetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Form" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DocTemplate" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileUpdateResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDelete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDeleteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileDeleteResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDeletedRestore">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDeletedRestoreResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileDeletedRestoreResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderInsert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderInsertResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FolderUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FolderDelete">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderDeleteResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileInsert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Form" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DocTemplate" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileInsertResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileInsertResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDocumentUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="formid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DocTemplate" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDocumentUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileDocumentUpdateResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FilesGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesNamesGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="folderid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesNamesGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FilesNamesGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesSummaryGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesSummaryGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FilesSummaryGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesDeletedGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FilesDeletedGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FilesDeletedGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="currver" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="approved" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileGetResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerForUserGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerForUserGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileReviewerForUserGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerFeeGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileids" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserIDReviewer" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserIDReviewee" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FileReviewerFeeGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="FileReviewerFeeGetResult" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerFeeUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileReviewerFeeUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileUsersPriceGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersPriceGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileUsersPriceGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersPriceUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersPriceUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileUsersSystemFeeSplitGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="fileid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersSystemFeeSplitGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileUsersSystemFeeSplitGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersSystemFeeSplitUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileUsersSystemFeeSplitUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FileDocumentGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="currver" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FileDocumentGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FileDocumentGetResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderMetaDataGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderMetaDataGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderMetaDataGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGroupsGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="folderid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGroupsGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderGroupsGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGroupsUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGroupsUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="FolderUserPermissionsGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="folderid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderUserPermissionsGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderUserPermissionsGetResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderUserPermissionsUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="userid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="user" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderUserPermissionsUpdateResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="VersionGet">
+        <s:complexType />
+      </s:element>
+      <s:element name="VersionGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VersionGetResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CommonFilesGetSoapIn">
+    <wsdl:part name="parameters" element="tns:CommonFilesGet" />
+  </wsdl:message>
+  <wsdl:message name="CommonFilesGetSoapOut">
+    <wsdl:part name="parameters" element="tns:CommonFilesGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="LibraryGetSoapIn">
+    <wsdl:part name="parameters" element="tns:LibraryGet" />
+  </wsdl:message>
+  <wsdl:message name="LibraryGetSoapOut">
+    <wsdl:part name="parameters" element="tns:LibraryGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="SiteReviewersGetSoapIn">
+    <wsdl:part name="parameters" element="tns:SiteReviewersGet" />
+  </wsdl:message>
+  <wsdl:message name="SiteReviewersGetSoapOut">
+    <wsdl:part name="parameters" element="tns:SiteReviewersGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="SiteReviewersUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:SiteReviewersUpdate" />
+  </wsdl:message>
+  <wsdl:message name="SiteReviewersUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:SiteReviewersUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="UsersGetSoapIn">
+    <wsdl:part name="parameters" element="tns:UsersGet" />
+  </wsdl:message>
+  <wsdl:message name="UsersGetSoapOut">
+    <wsdl:part name="parameters" element="tns:UsersGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="UsersReferrersGetSoapIn">
+    <wsdl:part name="parameters" element="tns:UsersReferrersGet" />
+  </wsdl:message>
+  <wsdl:message name="UsersReferrersGetSoapOut">
+    <wsdl:part name="parameters" element="tns:UsersReferrersGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileApprovedUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileApprovedUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileApprovedUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileApprovedUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileVersionsGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileVersionsGet" />
+  </wsdl:message>
+  <wsdl:message name="FileVersionsGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileVersionsGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileMoveSoapIn">
+    <wsdl:part name="parameters" element="tns:FileMove" />
+  </wsdl:message>
+  <wsdl:message name="FileMoveSoapOut">
+    <wsdl:part name="parameters" element="tns:FileMoveResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileOwnerGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileOwnerGet" />
+  </wsdl:message>
+  <wsdl:message name="FileOwnerGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileOwnerGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileOwnerUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileOwnerUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileOwnerUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileOwnerUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeesGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeesGet" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeesGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeesGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewersGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewersGet" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewersGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewersGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewersUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewersUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewersUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewersUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersGet" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileGetCurrVersionNumberSoapIn">
+    <wsdl:part name="parameters" element="tns:FileGetCurrVersionNumber" />
+  </wsdl:message>
+  <wsdl:message name="FileGetCurrVersionNumberSoapOut">
+    <wsdl:part name="parameters" element="tns:FileGetCurrVersionNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileParentIDGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileParentIDGet" />
+  </wsdl:message>
+  <wsdl:message name="FileParentIDGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileParentIDGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileIDCurrentGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileIDCurrentGet" />
+  </wsdl:message>
+  <wsdl:message name="FileIDCurrentGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileIDCurrentGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileGetPriceSoapIn">
+    <wsdl:part name="parameters" element="tns:FileGetPrice" />
+  </wsdl:message>
+  <wsdl:message name="FileGetPriceSoapOut">
+    <wsdl:part name="parameters" element="tns:FileGetPriceResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileGetFolderIDSoapIn">
+    <wsdl:part name="parameters" element="tns:FileGetFolderID" />
+  </wsdl:message>
+  <wsdl:message name="FileGetFolderIDSoapOut">
+    <wsdl:part name="parameters" element="tns:FileGetFolderIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="ActivityGetSoapIn">
+    <wsdl:part name="parameters" element="tns:ActivityGet" />
+  </wsdl:message>
+  <wsdl:message name="ActivityGetSoapOut">
+    <wsdl:part name="parameters" element="tns:ActivityGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileDeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:FileDelete" />
+  </wsdl:message>
+  <wsdl:message name="FileDeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:FileDeleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileDeletedRestoreSoapIn">
+    <wsdl:part name="parameters" element="tns:FileDeletedRestore" />
+  </wsdl:message>
+  <wsdl:message name="FileDeletedRestoreSoapOut">
+    <wsdl:part name="parameters" element="tns:FileDeletedRestoreResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderInsertSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderInsert" />
+  </wsdl:message>
+  <wsdl:message name="FolderInsertSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderInsertResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FolderUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderDeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderDelete" />
+  </wsdl:message>
+  <wsdl:message name="FolderDeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderDeleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileInsertSoapIn">
+    <wsdl:part name="parameters" element="tns:FileInsert" />
+  </wsdl:message>
+  <wsdl:message name="FileInsertSoapOut">
+    <wsdl:part name="parameters" element="tns:FileInsertResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileDocumentUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileDocumentUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileDocumentUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileDocumentUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilesGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FilesGet" />
+  </wsdl:message>
+  <wsdl:message name="FilesGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FilesGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilesNamesGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FilesNamesGet" />
+  </wsdl:message>
+  <wsdl:message name="FilesNamesGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FilesNamesGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilesSummaryGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FilesSummaryGet" />
+  </wsdl:message>
+  <wsdl:message name="FilesSummaryGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FilesSummaryGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FilesDeletedGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FilesDeletedGet" />
+  </wsdl:message>
+  <wsdl:message name="FilesDeletedGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FilesDeletedGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileGet" />
+  </wsdl:message>
+  <wsdl:message name="FileGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerForUserGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewerForUserGet" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerForUserGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewerForUserGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeeGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeeGet" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeeGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeeGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeeUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeeUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileReviewerFeeUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileReviewerFeeUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersPriceGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersPriceGet" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersPriceGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersPriceGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersPriceUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersPriceUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersPriceUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersPriceUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersSystemFeeSplitGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersSystemFeeSplitGet" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersSystemFeeSplitGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersSystemFeeSplitGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersSystemFeeSplitUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FileUsersSystemFeeSplitUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FileUsersSystemFeeSplitUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FileUsersSystemFeeSplitUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FileDocumentGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FileDocumentGet" />
+  </wsdl:message>
+  <wsdl:message name="FileDocumentGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FileDocumentGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderMetaDataGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderMetaDataGet" />
+  </wsdl:message>
+  <wsdl:message name="FolderMetaDataGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderMetaDataGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderGroupsGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderGroupsGet" />
+  </wsdl:message>
+  <wsdl:message name="FolderGroupsGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderGroupsGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderGroupsUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderGroupsUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FolderGroupsUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderGroupsUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderUserPermissionsGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderUserPermissionsGet" />
+  </wsdl:message>
+  <wsdl:message name="FolderUserPermissionsGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderUserPermissionsGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderUserPermissionsUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderUserPermissionsUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FolderUserPermissionsUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderUserPermissionsUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetSoapIn">
+    <wsdl:part name="parameters" element="tns:VersionGet" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetSoapOut">
+    <wsdl:part name="parameters" element="tns:VersionGetResponse" />
+  </wsdl:message>
+  <wsdl:portType name="LibrarySoap">
+    <wsdl:operation name="CommonFilesGet">
+      <wsdl:input message="tns:CommonFilesGetSoapIn" />
+      <wsdl:output message="tns:CommonFilesGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LibraryGet">
+      <wsdl:input message="tns:LibraryGetSoapIn" />
+      <wsdl:output message="tns:LibraryGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersGet">
+      <wsdl:input message="tns:SiteReviewersGetSoapIn" />
+      <wsdl:output message="tns:SiteReviewersGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersUpdate">
+      <wsdl:input message="tns:SiteReviewersUpdateSoapIn" />
+      <wsdl:output message="tns:SiteReviewersUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UsersGet">
+      <wsdl:input message="tns:UsersGetSoapIn" />
+      <wsdl:output message="tns:UsersGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UsersReferrersGet">
+      <wsdl:input message="tns:UsersReferrersGetSoapIn" />
+      <wsdl:output message="tns:UsersReferrersGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileApprovedUpdate">
+      <wsdl:input message="tns:FileApprovedUpdateSoapIn" />
+      <wsdl:output message="tns:FileApprovedUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileVersionsGet">
+      <wsdl:input message="tns:FileVersionsGetSoapIn" />
+      <wsdl:output message="tns:FileVersionsGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileMove">
+      <wsdl:input message="tns:FileMoveSoapIn" />
+      <wsdl:output message="tns:FileMoveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerGet">
+      <wsdl:input message="tns:FileOwnerGetSoapIn" />
+      <wsdl:output message="tns:FileOwnerGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerUpdate">
+      <wsdl:input message="tns:FileOwnerUpdateSoapIn" />
+      <wsdl:output message="tns:FileOwnerUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeesGet">
+      <wsdl:input message="tns:FileReviewerFeesGetSoapIn" />
+      <wsdl:output message="tns:FileReviewerFeesGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersGet">
+      <wsdl:input message="tns:FileReviewersGetSoapIn" />
+      <wsdl:output message="tns:FileReviewersGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersUpdate">
+      <wsdl:input message="tns:FileReviewersUpdateSoapIn" />
+      <wsdl:output message="tns:FileReviewersUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersGet">
+      <wsdl:input message="tns:FileUsersGetSoapIn" />
+      <wsdl:output message="tns:FileUsersGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersUpdate">
+      <wsdl:input message="tns:FileUsersUpdateSoapIn" />
+      <wsdl:output message="tns:FileUsersUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileGetCurrVersionNumber">
+      <wsdl:input message="tns:FileGetCurrVersionNumberSoapIn" />
+      <wsdl:output message="tns:FileGetCurrVersionNumberSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileParentIDGet">
+      <wsdl:input message="tns:FileParentIDGetSoapIn" />
+      <wsdl:output message="tns:FileParentIDGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileIDCurrentGet">
+      <wsdl:input message="tns:FileIDCurrentGetSoapIn" />
+      <wsdl:output message="tns:FileIDCurrentGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileGetPrice">
+      <wsdl:input message="tns:FileGetPriceSoapIn" />
+      <wsdl:output message="tns:FileGetPriceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileGetFolderID">
+      <wsdl:input message="tns:FileGetFolderIDSoapIn" />
+      <wsdl:output message="tns:FileGetFolderIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ActivityGet">
+      <wsdl:input message="tns:ActivityGetSoapIn" />
+      <wsdl:output message="tns:ActivityGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUpdate">
+      <wsdl:input message="tns:FileUpdateSoapIn" />
+      <wsdl:output message="tns:FileUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileDelete">
+      <wsdl:input message="tns:FileDeleteSoapIn" />
+      <wsdl:output message="tns:FileDeleteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileDeletedRestore">
+      <wsdl:input message="tns:FileDeletedRestoreSoapIn" />
+      <wsdl:output message="tns:FileDeletedRestoreSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderInsert">
+      <wsdl:input message="tns:FolderInsertSoapIn" />
+      <wsdl:output message="tns:FolderInsertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <wsdl:input message="tns:FolderUpdateSoapIn" />
+      <wsdl:output message="tns:FolderUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderDelete">
+      <wsdl:input message="tns:FolderDeleteSoapIn" />
+      <wsdl:output message="tns:FolderDeleteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileInsert">
+      <wsdl:input message="tns:FileInsertSoapIn" />
+      <wsdl:output message="tns:FileInsertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentUpdate">
+      <wsdl:input message="tns:FileDocumentUpdateSoapIn" />
+      <wsdl:output message="tns:FileDocumentUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilesGet">
+      <wsdl:input message="tns:FilesGetSoapIn" />
+      <wsdl:output message="tns:FilesGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilesNamesGet">
+      <wsdl:input message="tns:FilesNamesGetSoapIn" />
+      <wsdl:output message="tns:FilesNamesGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilesSummaryGet">
+      <wsdl:input message="tns:FilesSummaryGetSoapIn" />
+      <wsdl:output message="tns:FilesSummaryGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FilesDeletedGet">
+      <wsdl:input message="tns:FilesDeletedGetSoapIn" />
+      <wsdl:output message="tns:FilesDeletedGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <wsdl:input message="tns:FileGetSoapIn" />
+      <wsdl:output message="tns:FileGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerForUserGet">
+      <wsdl:input message="tns:FileReviewerForUserGetSoapIn" />
+      <wsdl:output message="tns:FileReviewerForUserGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeGet">
+      <wsdl:input message="tns:FileReviewerFeeGetSoapIn" />
+      <wsdl:output message="tns:FileReviewerFeeGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeUpdate">
+      <wsdl:input message="tns:FileReviewerFeeUpdateSoapIn" />
+      <wsdl:output message="tns:FileReviewerFeeUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceGet">
+      <wsdl:input message="tns:FileUsersPriceGetSoapIn" />
+      <wsdl:output message="tns:FileUsersPriceGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceUpdate">
+      <wsdl:input message="tns:FileUsersPriceUpdateSoapIn" />
+      <wsdl:output message="tns:FileUsersPriceUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitGet">
+      <wsdl:input message="tns:FileUsersSystemFeeSplitGetSoapIn" />
+      <wsdl:output message="tns:FileUsersSystemFeeSplitGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitUpdate">
+      <wsdl:input message="tns:FileUsersSystemFeeSplitUpdateSoapIn" />
+      <wsdl:output message="tns:FileUsersSystemFeeSplitUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentGet">
+      <wsdl:input message="tns:FileDocumentGetSoapIn" />
+      <wsdl:output message="tns:FileDocumentGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderMetaDataGet">
+      <wsdl:input message="tns:FolderMetaDataGetSoapIn" />
+      <wsdl:output message="tns:FolderMetaDataGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsGet">
+      <wsdl:input message="tns:FolderGroupsGetSoapIn" />
+      <wsdl:output message="tns:FolderGroupsGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsUpdate">
+      <wsdl:input message="tns:FolderGroupsUpdateSoapIn" />
+      <wsdl:output message="tns:FolderGroupsUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsGet">
+      <wsdl:input message="tns:FolderUserPermissionsGetSoapIn" />
+      <wsdl:output message="tns:FolderUserPermissionsGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsUpdate">
+      <wsdl:input message="tns:FolderUserPermissionsUpdateSoapIn" />
+      <wsdl:output message="tns:FolderUserPermissionsUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <wsdl:input message="tns:VersionGetSoapIn" />
+      <wsdl:output message="tns:VersionGetSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LibrarySoap" type="tns:LibrarySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CommonFilesGet">
+      <soap:operation soapAction="http://tempuri.org/CommonFilesGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LibraryGet">
+      <soap:operation soapAction="http://tempuri.org/LibraryGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersGet">
+      <soap:operation soapAction="http://tempuri.org/SiteReviewersGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersUpdate">
+      <soap:operation soapAction="http://tempuri.org/SiteReviewersUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UsersGet">
+      <soap:operation soapAction="http://tempuri.org/UsersGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UsersReferrersGet">
+      <soap:operation soapAction="http://tempuri.org/UsersReferrersGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileApprovedUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileApprovedUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileVersionsGet">
+      <soap:operation soapAction="http://tempuri.org/FileVersionsGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileMove">
+      <soap:operation soapAction="http://tempuri.org/FileMove" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerGet">
+      <soap:operation soapAction="http://tempuri.org/FileOwnerGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileOwnerUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeesGet">
+      <soap:operation soapAction="http://tempuri.org/FileReviewerFeesGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersGet">
+      <soap:operation soapAction="http://tempuri.org/FileReviewersGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileReviewersUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersGet">
+      <soap:operation soapAction="http://tempuri.org/FileUsersGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileUsersUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetCurrVersionNumber">
+      <soap:operation soapAction="http://tempuri.org/FileGetCurrVersionNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileParentIDGet">
+      <soap:operation soapAction="http://tempuri.org/FileParentIDGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileIDCurrentGet">
+      <soap:operation soapAction="http://tempuri.org/FileIDCurrentGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetPrice">
+      <soap:operation soapAction="http://tempuri.org/FileGetPrice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetFolderID">
+      <soap:operation soapAction="http://tempuri.org/FileGetFolderID" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActivityGet">
+      <soap:operation soapAction="http://tempuri.org/ActivityGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDelete">
+      <soap:operation soapAction="http://tempuri.org/FileDelete" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDeletedRestore">
+      <soap:operation soapAction="http://tempuri.org/FileDeletedRestore" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderInsert">
+      <soap:operation soapAction="http://tempuri.org/FolderInsert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <soap:operation soapAction="http://tempuri.org/FolderUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderDelete">
+      <soap:operation soapAction="http://tempuri.org/FolderDelete" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileInsert">
+      <soap:operation soapAction="http://tempuri.org/FileInsert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileDocumentUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesGet">
+      <soap:operation soapAction="http://tempuri.org/FilesGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesNamesGet">
+      <soap:operation soapAction="http://tempuri.org/FilesNamesGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesSummaryGet">
+      <soap:operation soapAction="http://tempuri.org/FilesSummaryGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesDeletedGet">
+      <soap:operation soapAction="http://tempuri.org/FilesDeletedGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <soap:operation soapAction="http://tempuri.org/FileGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerForUserGet">
+      <soap:operation soapAction="http://tempuri.org/FileReviewerForUserGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeGet">
+      <soap:operation soapAction="http://tempuri.org/FileReviewerFeeGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileReviewerFeeUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceGet">
+      <soap:operation soapAction="http://tempuri.org/FileUsersPriceGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileUsersPriceUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitGet">
+      <soap:operation soapAction="http://tempuri.org/FileUsersSystemFeeSplitGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitUpdate">
+      <soap:operation soapAction="http://tempuri.org/FileUsersSystemFeeSplitUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentGet">
+      <soap:operation soapAction="http://tempuri.org/FileDocumentGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderMetaDataGet">
+      <soap:operation soapAction="http://tempuri.org/FolderMetaDataGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsGet">
+      <soap:operation soapAction="http://tempuri.org/FolderGroupsGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsUpdate">
+      <soap:operation soapAction="http://tempuri.org/FolderGroupsUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsGet">
+      <soap:operation soapAction="http://tempuri.org/FolderUserPermissionsGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsUpdate">
+      <soap:operation soapAction="http://tempuri.org/FolderUserPermissionsUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <soap:operation soapAction="http://tempuri.org/VersionGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="LibrarySoap12" type="tns:LibrarySoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CommonFilesGet">
+      <soap12:operation soapAction="http://tempuri.org/CommonFilesGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LibraryGet">
+      <soap12:operation soapAction="http://tempuri.org/LibraryGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersGet">
+      <soap12:operation soapAction="http://tempuri.org/SiteReviewersGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SiteReviewersUpdate">
+      <soap12:operation soapAction="http://tempuri.org/SiteReviewersUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UsersGet">
+      <soap12:operation soapAction="http://tempuri.org/UsersGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UsersReferrersGet">
+      <soap12:operation soapAction="http://tempuri.org/UsersReferrersGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileApprovedUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileApprovedUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileVersionsGet">
+      <soap12:operation soapAction="http://tempuri.org/FileVersionsGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileMove">
+      <soap12:operation soapAction="http://tempuri.org/FileMove" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerGet">
+      <soap12:operation soapAction="http://tempuri.org/FileOwnerGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileOwnerUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileOwnerUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeesGet">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewerFeesGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersGet">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewersGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewersUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewersUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersGet">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetCurrVersionNumber">
+      <soap12:operation soapAction="http://tempuri.org/FileGetCurrVersionNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileParentIDGet">
+      <soap12:operation soapAction="http://tempuri.org/FileParentIDGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileIDCurrentGet">
+      <soap12:operation soapAction="http://tempuri.org/FileIDCurrentGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetPrice">
+      <soap12:operation soapAction="http://tempuri.org/FileGetPrice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGetFolderID">
+      <soap12:operation soapAction="http://tempuri.org/FileGetFolderID" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ActivityGet">
+      <soap12:operation soapAction="http://tempuri.org/ActivityGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDelete">
+      <soap12:operation soapAction="http://tempuri.org/FileDelete" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDeletedRestore">
+      <soap12:operation soapAction="http://tempuri.org/FileDeletedRestore" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderInsert">
+      <soap12:operation soapAction="http://tempuri.org/FolderInsert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FolderUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderDelete">
+      <soap12:operation soapAction="http://tempuri.org/FolderDelete" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileInsert">
+      <soap12:operation soapAction="http://tempuri.org/FileInsert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileDocumentUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesGet">
+      <soap12:operation soapAction="http://tempuri.org/FilesGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesNamesGet">
+      <soap12:operation soapAction="http://tempuri.org/FilesNamesGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesSummaryGet">
+      <soap12:operation soapAction="http://tempuri.org/FilesSummaryGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FilesDeletedGet">
+      <soap12:operation soapAction="http://tempuri.org/FilesDeletedGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileGet">
+      <soap12:operation soapAction="http://tempuri.org/FileGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerForUserGet">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewerForUserGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeGet">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewerFeeGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileReviewerFeeUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileReviewerFeeUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceGet">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersPriceGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersPriceUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersPriceUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitGet">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersSystemFeeSplitGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileUsersSystemFeeSplitUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FileUsersSystemFeeSplitUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FileDocumentGet">
+      <soap12:operation soapAction="http://tempuri.org/FileDocumentGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderMetaDataGet">
+      <soap12:operation soapAction="http://tempuri.org/FolderMetaDataGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsGet">
+      <soap12:operation soapAction="http://tempuri.org/FolderGroupsGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGroupsUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FolderGroupsUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsGet">
+      <soap12:operation soapAction="http://tempuri.org/FolderUserPermissionsGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUserPermissionsUpdate">
+      <soap12:operation soapAction="http://tempuri.org/FolderUserPermissionsUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <soap12:operation soapAction="http://tempuri.org/VersionGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Library">
+    <wsdl:port name="LibrarySoap" binding="tns:LibrarySoap">
+      <soap:address location="http://documentservices.zumesoft.com/Library.asmx" />
+    </wsdl:port>
+    <wsdl:port name="LibrarySoap12" binding="tns:LibrarySoap12">
+      <soap12:address location="http://documentservices.zumesoft.com/Library.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

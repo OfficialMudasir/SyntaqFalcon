@@ -1,0 +1,17 @@
+﻿@using Syntaq.Falcon
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ChangeLogo")))
+
+<div class="modal-body">
+
+    <form id="ChangeLogoPictureModalForm" method="POST" action="@(ApplicationPath + "Profile/UploadLogoPicture")">
+        <div class="form-group">
+            <input type="file" name="LogoPicture" />
+            <span class="help-block m-b-none">@L("Logo_Change_Info", AppConsts.MaxProfilPictureBytesUserFriendlyValue)</span>
+        </div>
+    </form>
+    <img alt="" id="LogoPictureResize" src="" />
+
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

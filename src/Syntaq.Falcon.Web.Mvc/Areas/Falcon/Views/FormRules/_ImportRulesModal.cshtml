@@ -1,0 +1,28 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.FormRules
+
+@model ImportRulesViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        <span>@L("ImportRules")</span>
+    </h5>
+    <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true"></button>
+</div>
+<div class="modal-body">
+    <div id="ImportRulesTab">
+        @*<div class="form-group">
+                <strong>Note: Uploading a form schema will override the existing schema of the currently selected form version.</strong>
+            </div>*@
+
+        <form id="ImportRulesForm" method="POST" action="@(ApplicationPath + "Falcon/FormRules/UploadRules")">
+            <div class="form-group">
+                <input type="file" name="file" />
+                @*<span class="help-block m-b-none">@L("ProfilePicture_Change_Info", AppConsts.MaxProfilPictureBytesUserFriendlyValue)</span>*@
+            </div>
+            <input type="hidden" name="Id" value="@Model.Id" />
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithCloseSm.cshtml")

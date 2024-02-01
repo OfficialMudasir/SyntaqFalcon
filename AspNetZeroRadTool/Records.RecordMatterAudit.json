@@ -1,0 +1,112 @@
+{
+  "IsRegenerate": true,
+  "MenuPosition": "main",
+  "RelativeNamespace": "Records",
+  "EntityName": "RecordMatterAudit",
+  "EntityNamePlural": "RecordMatterAudits",
+  "TableName": "SfaRecordMatterAudits",
+  "PrimaryKeyType": "Guid",
+  "BaseClass": "AuditedEntity",
+  "EntityHistory": false,
+  "AutoMigration": false,
+  "UpdateDatabase": false,
+  "CreateUserInterface": true,
+  "CreateViewOnly": true,
+  "CreateExcelExport": true,
+  "IsNonModalCRUDPage": true,
+  "IsMasterDetailPage": false,
+  "PagePermission": {
+    "Host": true,
+    "Tenant": true
+  },
+  "Properties": [
+    {
+      "Name": "Status",
+      "Type": "RecordMatterStatus",
+      "MaxLength": -1,
+      "MinLength": -1,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    },
+    {
+      "Name": "Data",
+      "Type": "string",
+      "MaxLength": 32000,
+      "MinLength": 0,
+      "Range": {
+        "IsRangeSet": false,
+        "MinimumValue": 0.0,
+        "MaximumValue": 0.0
+      },
+      "Required": false,
+      "Nullable": false,
+      "Regex": "",
+      "UserInterface": {
+        "AdvancedFilter": true,
+        "List": true,
+        "CreateOrUpdate": true
+      }
+    }
+  ],
+  "NavigationProperties": [
+    {
+      "Namespace": "Syntaq.Falcon.Authorization.Users",
+      "ForeignEntityName": "User",
+      "IdType": "long",
+      "IsNullable": true,
+      "PropertyName": "UserId",
+      "DisplayPropertyName": "Name",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    },
+    {
+      "Namespace": "Syntaq.Falcon.Records",
+      "ForeignEntityName": "RecordMatter",
+      "IdType": "Guid",
+      "IsNullable": true,
+      "PropertyName": "RecordMatterId",
+      "DisplayPropertyName": "RecordMatterName",
+      "DuplicationNumber": 0,
+      "RelationType": "single",
+      "ViewType": "LookupTable"
+    }
+  ],
+  "NavigationPropertyOneToManyTables": [],
+  "EnumDefinitions": [
+    {
+      "Name": "RecordMatterStatus",
+      "Namespace": "Syntaq.Falcon.Records",
+      "EnumProperties": [
+        {
+          "Name": "New",
+          "Value": 0
+        },
+        {
+          "Name": "Draft",
+          "Value": 1
+        },
+        {
+          "Name": "Publish",
+          "Value": 2
+        },
+        {
+          "Name": "Final",
+          "Value": 3
+        }
+      ]
+    }
+  ],
+  "DbContext": null
+}

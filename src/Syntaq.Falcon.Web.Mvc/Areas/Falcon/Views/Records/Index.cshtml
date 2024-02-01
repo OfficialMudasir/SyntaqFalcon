@@ -1,0 +1,65 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model RecordsViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Tenant.Records;
+}
+@section Styles
+	{
+    <link rel="stylesheet" abp-href="/assets/json-viewer/jquery.json-viewer.css" asp-append-version="true" />
+    <link href="~/Common/tagsinput.css" rel="stylesheet" />
+}
+@section Scripts
+	{
+    <script src="/view-resources/Areas/Falcon/Views/Records/Index.js" asp-append-version="true"></script>
+    <script src="~/assets/json-viewer/jquery.json-viewer.js" asp-append-version="true"></script>
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+
+    <script src="~/assets/jquery-ui/jquery-ui.min.js"></script>
+
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+
+    <script src="~/assets/Prism/prism.js"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Records")" description="@L("RecordsHeaderInfo")">
+        <button aria-label="Record Navigation" id="RecordNavigationButton" class="btn btn-primary blue d-none"></button>
+        <button aria-label="Load Record Matters" id="LoadRecordMattersButton" class="btn btn-primary blue d-none"></button>
+        @if (IsGranted(AppPermissions.Pages_Vouchers_Create))
+        {
+
+        }
+        @if (IsGranted(AppPermissions.Pages_Folders_Create))
+        {
+            <button id="CreateNewFolderButton" class="btn btn-primary nowrap">
+
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewFolder")
+                </span>
+            </button>
+        }
+        @if (IsGranted(AppPermissions.Pages_Administration))
+        {
+            <button id="CreateEmbedCodeButton" class="btn btn-primary nowrap">
+
+                <span class="d-none d-md-inline-block">
+                    @L("EmbedRecords")
+                </span>
+            </button>
+        }
+        <button id="RefreshRecordsButton" class="btn btn-primary"><i class="fa fa-sync-alt"></i> @L("Refresh")</button>
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+        <div class="card">
+            <div class="card-body">
+                <div id="RecordFolderPortlet">
+                    @*PartialView Loaded here*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿.recentTemplateContainer .kt-portlet__body {
+    padding-top: 0px;
+}
+
+.table {
+    text-align: left !important;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+    

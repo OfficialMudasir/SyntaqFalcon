@@ -1,0 +1,27 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Templates
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Newtonsoft.Json
+@model TemplateLookupTableViewModel
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/Templates/_TemplateLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickTemplate")))
+
+ 
+        <div class="modal-body">
+            <table id="TemplateTable" class="display table table-row-dashed table-hover dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>@L("TemplateName")</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+ 
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

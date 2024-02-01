@@ -1,0 +1,55 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectReleases
+@model ProjectReleaseViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="ProjectReleaseInformationsTab">
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Name") :</h6>
+                @Model.ProjectRelease.Name
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Notes") :</h6>
+                @Model.ProjectRelease.Notes
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ProjectId") :</h6>
+                @Model.ProjectRelease.ProjectId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Required") :</h6>
+                @Model.ProjectRelease.Required
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("VersionMajor") :</h6>
+                @Model.ProjectRelease.VersionMajor
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("VersionMinor") :</h6>
+                @Model.ProjectRelease.VersionMinor
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("VersionRevision") :</h6>
+                @Model.ProjectRelease.VersionRevision
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ReleaseType") :</h6>
+                @L("Enum_ProjectReleaseType_" + (int)Model.ProjectRelease.ReleaseType)
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("ProjectEnvironment")) @L("Name") :</h6>
+                @Model.ProjectEnvironmentName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

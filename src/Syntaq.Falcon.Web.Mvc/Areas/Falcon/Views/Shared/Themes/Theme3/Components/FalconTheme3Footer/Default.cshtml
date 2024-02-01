@@ -1,0 +1,31 @@
+﻿@using Syntaq.Falcon
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Layout
+@using Syntaq.Falcon.Users.Dtos
+@model FooterViewModel
+@{
+    Layout = null;
+}
+<style>
+    [id*="footerUserAcceptanceDocument"] {
+        cursor: pointer;
+    }
+</style>
+<div class="kt-footer kt-grid__item kt-grid kt-grid--desktop kt-grid--ver-desktop" id="kt_footer">
+    <div class="@(await GetContainerClass())">
+        <div class="kt-footer__copyright">
+            @Model.GetProductNameWithEdition() | v@(AppVersionHelper.Version) [@AppVersionHelper.ReleaseDate.ToString("yyyyMMdd")]
+        </div>
+        <div class="kt-footer__menu">
+            @if (Model.ActiveUserAcceptanceTypesList.Count > 0)
+            {
+                var index = 0;
+                foreach (UserAcceptanceTypeDto footerUserAcceptanceType in @Model.ActiveUserAcceptanceTypesList)
+                {
+                    <input class="form-control footerUserAcceptanceDocument@(index)" value="@footerUserAcceptanceType.Id" type="text" hidden />
+                    <p id="footerUserAcceptanceDocument@(index)" class="kt-footer__copyright">@footerUserAcceptanceType.Name</p>
+                    index++;
+                }
+            }
+        </div>
+    </div>
+    </div>

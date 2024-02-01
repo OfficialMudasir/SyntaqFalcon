@@ -1,0 +1,11 @@
+.MostRecentSubmissionsContainer .card.card-custom > .card-body {
+  padding: 1rem 1.25rem !important;
+}
+.MostRecentSubmissionsContainer .gutter-b {
+  margin-bottom: 0px !important;
+}
+.OnClickLink {
+  cursor: pointer;
+  color: #58a3dc !important;
+  font-size: small;
+}

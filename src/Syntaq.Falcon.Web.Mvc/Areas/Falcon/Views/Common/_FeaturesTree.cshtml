@@ -1,0 +1,5 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common
+@model IFeatureEditViewModel
+<div class="feature-tree">
+    @await Html.PartialAsync("~/Areas/Falcon/Views/Common/_FeaturesTreeItem.cshtml", new FeatureTreeItemModel(Model, null))
+</div>

@@ -1,0 +1,11 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Layout
+@using Syntaq.Falcon.Web.Areas.Falcon.Views.Shared.Components.FalconLogo
+@model HeaderViewModel
+@{
+    Layout = null;
+    var skin = @Model.LoginInformations.Theme.BaseSettings.Layout.DarkMode ? "dark" : "light";
+}
+
+<a href="@Url.Action("Index", "Home", new {area = string.Empty})" target="_blank" class="brand-logo">
+    @await Component.InvokeAsync(typeof(FalconLogoViewComponent), new {LogoSkin = skin})
+</a>

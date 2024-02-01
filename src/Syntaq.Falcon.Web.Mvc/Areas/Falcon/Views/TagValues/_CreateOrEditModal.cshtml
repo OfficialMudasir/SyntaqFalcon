@@ -1,0 +1,46 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagValues
+@model CreateOrEditTagValueModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Edit Tag Value"))
+
+<div id="mydiv" class="modal-body">
+    <div id="TagValueInformationsTab">
+        <div class="  px-5" id="edit-values-area" style="display:none">
+            <form name="TagValueInformationsForm" role="form" novalidate class="form-validation">
+                <input type="hidden" id="TagValue_Id" name="id" value="" />
+                <input aria-label="Tag" class="form-control" id="TagValue_TagId" value="" type="text" name="tagId" hidden/>
+  
+                <div class="form-group mb-4">
+                    <label for="TagValue_Value">@L("Value")</label>
+                    <div class="input-group">
+                        <input class="form-control form-control-sm  " id="TagValue_Value" value="" type="text" name="value" maxlength="@Syntaq.Falcon.Tags.TagValueConsts.MaxValueLength" minlength="@Syntaq.Falcon.Tags.TagValueConsts.MinValueLength" />
+                      
+                            <button type="button" class="btn btn-sm btn-primary save-button"> <span>@L("Save")</span></button>
+                    
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="align-items-center px-5">
+                                                
+            <table id="TagValuesTable" class="display table table-separate table-head-custom no-footer dtr-inline dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th style="width:35em">@L("Value")</th>
+
+                        <th style="width:2em" >
+                            <button id="addTagValues" class="btn btn-primary btn-sm blue">                                
+                                @L("NewTagValue")
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

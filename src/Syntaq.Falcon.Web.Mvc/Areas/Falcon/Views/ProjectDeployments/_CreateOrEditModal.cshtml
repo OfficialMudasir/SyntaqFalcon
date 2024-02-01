@@ -1,0 +1,116 @@
+﻿@using Syntaq.Falcon.Projects;
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectDeployments
+@model CreateOrEditProjectDeploymentModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditProjectDeployment")) : L("CreateNewProjectDeployment")))
+
+
+<div class="modal-body">
+    <div id="ProjectDeploymentInformationsTab">
+        <form name="ProjectDeploymentInformationsForm" role="form" novalidate class="form-validation">
+
+            @if (Model.IsEditMode)
+            {
+                <input type="hidden" name="id" value="@Model.ProjectDeployment.Id" />
+            }
+
+            @*            <div class="my-3">
+            <label class="form-label" for="ProjectReleaseName">@L("ProjectRelease")</label>
+            <div class="input-group">
+            <input class="form-control" id="ProjectReleaseName" name="projectReleaseName" value="@Model.ProjectReleaseName" type="text" disabled>
+            <button class="btn btn-primary blue" id="OpenProjectReleaseLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+            <button class="btn btn-danger btn-icon" type="button" id="ClearProjectReleaseNameButton"><i class="fa fa-times"></i></button>
+            </div>
+            </div>*@
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectReleaseName">@L("ProjectRelease")  @Model.ProjectDeployment.ActionType</label>
+                <input class="form-control" id="ProjectReleaseName" name="projectReleaseName" value="@Model.ProjectReleaseName" type="text" disabled>
+            </div>
+
+            <div class="my-3">
+
+                <div style=" max-height:200px;  overflow-y:auto">
+                    @Html.Raw(Model.ProjectReleaseNotes)
+                </div>
+
+            </div>
+
+            <hr />
+
+            @if (Model.IsEditMode)
+            {
+                <input class="form-control" id="ProjectDeployment_ProjectReleaseId" value="@Model.ProjectDeployment.ProjectReleaseId" type="text" name="projectReleaseId" hidden />
+            }
+            else
+            {
+                <input class="form-control" id="ProjectDeployment_ProjectReleaseId" value="" type="text" name="projectReleaseId" hidden />
+            }
+
+            @{
+                var selectListActionType = Html.GetEnumSelectList(typeof(ProjectDeploymentEnums.ProjectDeploymentActionType));
+                foreach (var selectOption in selectListActionType)
+                {
+                    selectOption.Text = L("Enum_ProjectDeploymentActionType_" + selectOption.Value);
+                    if (Model.IsEditMode)
+                    {
+                        selectListActionType = (Model.ProjectDeployment.ActionType.ToString() == "Active")
+                        ? selectListActionType.Where(x => x.Text != "New").ToList()
+                        : (Model.ProjectDeployment.ActionType.ToString() == "New")
+                        ? selectListActionType.Where(x => x.Text != "InActive").ToList()
+                        : selectListActionType;
+                    }
+                }
+
+                List<SelectListItem> selectList = new List<SelectListItem>();
+ 
+                if (Model.ProjectDeployment.ActionType.ToString() == "New")
+                {
+
+                    SelectListItem itemNew = new SelectListItem();
+                    itemNew.Text = L("Enum_ProjectDeploymentActionType_0"); itemNew.Value = "0";
+                    selectList.Add(itemNew);
+
+                }
+
+                SelectListItem itemActive = new SelectListItem();
+                itemActive.Text = L("Enum_ProjectDeploymentActionType_1"); itemActive.Value = "1";
+                selectList.Add(itemActive);
+
+                if (Model.ProjectDeployment.ActionType.ToString() == "Active" || Model.ProjectDeployment.ActionType.ToString() == "InActive")
+                {
+                    SelectListItem itemInActive = new SelectListItem();
+                    itemInActive.Text = L("Enum_ProjectDeploymentActionType_2"); itemInActive.Value = "2";
+                    selectList.Add(itemInActive);
+                }
+
+                if (Model.ProjectDeployment.ActionType.ToString() == "New" || Model.ProjectDeployment.ActionType.ToString() == "Defer")
+                {
+                    SelectListItem itemDeferred = new SelectListItem();
+                    itemDeferred.Text = L("Enum_ProjectDeploymentActionType_3"); itemDeferred.Value = "3";
+                    selectList.Add(itemDeferred);
+                }
+ 
+            }
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectDeployment_ActionType">@L("Type")</label>
+                <select class="form-select m-input m-input--square" name="actionType" id="ProjectDeployment_ActionType" asp-for="@Model.ProjectDeployment.ActionType" asp-items="@selectList">
+                </select>
+            </div>
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectDeployment_Comments">@L("Your") @L("Comments")</label>
+                <textarea class="form-control" id="ProjectDeployment_Comments" rows="6" name="comments" maxlength="@Syntaq.Falcon.Projects.ProjectDeploymentConsts.MaxCommentsLength" minlength="@Syntaq.Falcon.Projects.ProjectDeploymentConsts.MinCommentsLength">@Model.ProjectDeployment.Comments</textarea>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,198 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Submissions
+@model SubmissionViewViewModel
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("SubmissionDetails")))
+<style>
+	.accordion.accordion-toggle-arrow .card .card-header .card-title {
+		color: #5d78ff;
+		position: relative
+	}
+
+	.accordion.accordion-toggle-arrow .card .card-header .card-title:after {
+		position: absolute;
+		font-size: 1rem;
+		font-family: LineAwesome;
+		text-decoration: inherit;
+		text-rendering: optimizeLegibility;
+		text-transform: none;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-font-smoothing: antialiased;
+		font-smoothing: antialiased;
+		content: "";
+		color: #5d78ff
+	}
+
+	.accordion .card .card-header .card-title:after {
+		right: 1rem;
+	}
+
+	.accordion.accordion-toggle-arrow .card .card-header .card-title.collapsed {
+		color: #74788d
+	}
+
+	.accordion.accordion-toggle-arrow .card .card-header .card-title.collapsed:after {
+		color: #74788d;
+		content: ""
+	}
+
+    .tab-content {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    .nav-tabs {
+        margin-bottom: 0;
+    }
+
+</style>
+<div class="modal-body">
+	<div id="SubmissionInformationsTab">
+		<form class="form-horizontal audit-log-detail-view" role="form">
+            <div class="form-body row">
+                <input id="RequiresPayment" value="@Model.RequiresPayment" type="hidden" />
+
+                <h5 class="mt-4"> @L("Status")</h5>
+
+                <div class="col-2 mb-3">
+                    <span class="form-label" style="width:100px">@L("UserName"): </span>
+                </div>
+
+                <div class="col-4 mb-3">
+                    <span >@Model.UserName</span>
+                </div>
+
+                <div class="col-2 mb-3">
+                    <span class="form-label" style="width:100px">@L("UserEmail"): </span>
+                </div>
+
+                <div class="col-4 mb-3">
+                    <span >@Model.UserEmail</span>
+                </div>
+
+
+                <div class="col-2 mb-3">
+                    @*<input type="text" id="SubmissionStatus" name="SubmissionStatus" value="@Model.SubmissionStatus" type="hidden">*@
+                    <span class="form-label" style="width:100px">@L("Status"): </span>
+                </div>
+
+                <div class="col-4 mb-3">
+                    <span class=" mr-1">@Model.SubmissionStatus</span>
+                    <span id="Submission_Success" class="form-control-static">
+                        <i class="fa fa-check-circle text-success me-2"></i>
+                    </span>
+                    <span id="Submission_Exception" class="form-control-static">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                    </span>
+                </div>
+
+                <div class="col-2 mb-3">
+                    <span class="form-label" style="width:100px">@L("CreationTime"): </span>
+                </div>
+
+                <div class="col-4 mb-3">
+                    <span >@Model.CreationTime</span>
+                </div>
+
+
+                 <div class="col-2 mb-3">
+                    <span class="form-label" style="width:100px">@L("LastModified"): </span>
+                </div>
+
+                <div class="col-4 mb-3">
+                    <span >@Model.LastModified</span>
+                </div>
+
+                @{
+                    if (Model.PaymentStatus != "Not Required")
+                    {
+                        <h5 class="mt-4"> @L("PaymentInformation")</h5>
+
+                         decimal ZeroDollarValue = 0.00m; 
+
+                        <div class="row">
+
+                            <div class="col-2 mb-3">
+                                <span class="form-label" style="width:100px">@L("PaymentStatus"): </span>
+                            </div>
+
+                            <div class="col-4 mb-3">
+                                <span class="pull-right" id="PaymentStatusDisplay" name="PaymentStatusDisplay">@Model.PaymentStatus</span>
+                            </div>
+
+                            <div class="col-2 mb-3">
+                                @L("ChargeId"): 
+                            </div>
+
+                            <div class="col-4 mb-3">
+                                <span class="pull-right">@Model.ChargeId</span> 
+                            </div>
+ 
+                            <div class="col-2 mb-3">
+                                @L("AmountPaid"):
+                            </div>
+
+                            <div class="col-4 mb-3">
+                                <span class="pull-right" name="">@(Model.AmountPaid ?? @ZeroDollarValue)</span>
+                            </div>
+              
+                        </div>
+                    }
+
+                }
+ 
+
+
+
+
+               @if (Model.RecordMatterItems.Any())
+                {
+      
+                    <table class="table align-middle table-row-dashed dataTable no-footer py-6 " style="">
+                        <thead>
+                            <tr>
+                                <td>
+@L("GeneratedDocuments")
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var RecordMatterItem in Model.RecordMatterItems)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (RecordMatterItem.AllowPdf)
+                                        {
+                                            <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@RecordMatterItem.Id&version=1&format=pdf">
+                                                <img alt="pdf" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/pdf.svg">
+                                            </a>
+                                        }
+                                        @if (RecordMatterItem.AllowWord)
+                                        {
+                                            <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@RecordMatterItem.Id&version=1&format=docx">
+                                                <img alt="docx" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/doc.svg">
+                                            </a>
+                                        }
+                                        @if (RecordMatterItem.AllowHTML)
+                                        {
+                                            <a href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@RecordMatterItem.Id&version=1&format=html">
+                                                <img alt="html" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/download.png">
+                                            </a>
+                                        }
+                                        @RecordMatterItem.DocumentName
+                                    </td>
+                                    <td class="pt-2 pb-2 w-35" style="position: absolute; right: 5%; height: 35px;">@RecordMatterItem.CreationTime.ToString("h:mm tt, dddd, dd MMMM yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                }
+
+            </div>
+		</form>
+	</div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

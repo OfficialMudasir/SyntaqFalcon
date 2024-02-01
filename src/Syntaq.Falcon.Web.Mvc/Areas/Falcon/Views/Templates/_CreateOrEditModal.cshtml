@@ -1,0 +1,176 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Templates
+@model CreateOrEditTemplateModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditTemplate")) : L("CreateNewTemplate")))
+
+<style>
+    #OnClickLink:hover {
+        color: #287ebf;
+        text-decoration: underline;
+    }
+
+
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background-color: #a5a5a5;
+        border-radius: 20px;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            top: 1px;
+            transition: all 0.3s;
+        }
+
+    .fldscheckbox {
+        display: none;
+    }
+
+        .fldscheckbox:checked + .switch::after {
+            left: 20px;
+        }
+
+        .fldscheckbox:checked + .switch {
+            background-color: #15C39A;
+        }
+
+    .switch-padding {
+        padding: 0.85rem 0.15rem;
+    }
+</style>
+
+<div class="modal-body">
+    <div id="TemplateInformationsTab">
+        <form name="TemplateInformationsForm" role="form" novalidate class="form-validation">
+            <input type="hidden" id="IsDirty">
+            <input type="hidden" name="id" value="@Model.Template.Id" />
+            <input class="form-control " id="Template_OriginalId" value="@Model.Template.OriginalId" type="hidden" name="originalId" />
+            @if (Model.IsEditMode)
+            {
+                <input class="form-control " id="Template_CurrentVersion" value="@Model.Template.CurrentVersion" type="hidden" name="currentVersion" />
+                <input class="form-control " id="Template_Version" value="@Model.Template.Version" type="hidden" name="version" />
+            }
+            <input type="hidden" name="HasFile" value="False" />
+            <input type="hidden" id="SetToLive">
+            <div class="form-group row mb-4">
+                <div class="col-6">
+                    <label class="form-label" for="Template_Name">@L("Name")</label>
+                    <input class="form-control" id="Template_Name" value="@Model.Template.Name" type="text" name="name" maxlength="@Syntaq.Falcon.Documents.TemplateConsts.MaxNameLength" minlength="@Syntaq.Falcon.Documents.TemplateConsts.MinNameLength" />
+                </div>
+                <div class="col-6">
+                    <label class="form-label" for="Template_DocumentName">@L("TemplateDocumentName")</label>
+                    <input class="form-control" id="Template_DocumentName" value="@Model.Template.DocumentName" type="text" name="documentname" maxlength="@Syntaq.Falcon.Documents.TemplateConsts.MaxNameLength" minlength="@Syntaq.Falcon.Documents.TemplateConsts.MinNameLength" />
+                </div>
+            </div>
+            <div class="form-group mb-4">
+                <label class="form-label" for="Template_Comments">@L("Description")</label>
+                <input class="form-control" id="Template_Comments" value="@Model.Template.Comments" type="text" name="comments" maxlength="@Syntaq.Falcon.Documents.TemplateConsts.MaxCommentsLength" minlength="@Syntaq.Falcon.Documents.TemplateConsts.MinCommentsLength" />
+            </div>
+            <input class="form-control" id="FolderId" value="@Model.Template.FolderId" type="hidden" name="FolderId" />
+
+            <div class="row"  >
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="btn-group" role="group">
+                        <span class="switch-padding">
+                            <input aria-label="Lock To Tenant" type="checkbox" id="Template_LockToTenant" name="LockToTenant" class="fldscheckbox" @(Model.Template.LockToTenant ? "checked" : "") value="true">
+                            <label for="Template_LockToTenant" class="switch"></label>
+                        </span>
+                        <span class="switch-padding form-label" id="Template_LockToTenant_Label"> @L("LockDocToTenant")</span>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="TemplateDocumentTemplateTab" >
+        <form name="UploadDocumenttemplateModalForm-0" method="POST" action="@(ApplicationPath + "Falcon/Templates/UploadDocumentTemplate")">
+            <div class="form-group">
+                <div class="form-label">@L("New") @L("Version")</div>
+                <input type="hidden" name="originalId" value="@Model.Template.OriginalId" />
+                <input aria-label="Upload Document Template" class="btn btn-secondary" type="file" name="DocumentTemplate" />
+            </div>
+        </form>
+    </div>
+    <hr class="my-6" />
+    <button aria-label="Set Live" id="SetLiveTemplateButton" class="btn btn-primary blue" style="position: absolute;" hidden></button>
+    <button aria-label="Delete" id="DeleteTemplateButton" class="btn btn-primary blue" style="position: absolute; " hidden></button>
+    <h5 class="text  font-weight-bold"><img alt="docx" class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/doc.svg"> Live Version <span class="badge badge-lg badge-circle badge-outline badge-success"> @Model.Template.CurrentVersion</span></h5>
+    <div class="m-scrollable m-scroller" data-scrollable="true" data-height="380" data-mobile-height="300" style="height: 300px; overflow: auto;">
+        <!--Begin::Timeline-->
+  
+            <table class="table align-middle table-row-dashed">
+                @{int i = 0; int latestVersion = 0;}
+                @foreach (Syntaq.Falcon.Documents.Dtos.GetTemplateForView version in Model.VersionHistory)
+                {
+                    int tver = Int32.Parse(Convert.ToString(version.Template.Version));
+                    if (tver >= latestVersion) { latestVersion = tver; }
+                    <tr>
+
+                        <td>
+ 
+                            <span class="badge badge-@(version.Template.Version == version.Template.CurrentVersion? "success" : "warning")">ver. @version.Template.Version</span>
+                        </td>
+
+                        <td>
+                            <form class=" mt-2 " style="display:inline" name="UploadDocumenttemplateModalForm-@version.Template.Version" method="POST" action="@(ApplicationPath + "Falcon/Templates/UploadDocumentTemplate")">
+                                <input type="hidden" name="originalId" value="@version.Template.OriginalId" />
+                                <input class="btn btn-secondary  " aria-label="Upload Document" type="file" name="DocumentTemplate-@version.Template.Version" data-buttonText="Upload Document" />
+                            </form>
+                        </td>
+
+                        <td>
+                            <div>@version.Template.CreationTime.ToString("hh:mm tt, ddd, dd MMM yyyy")</div>
+                        </td>
+
+                        <td>
+ 
+                            <div class="btn-group">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+                                <ul class="dropdown-menu" style="">
+                                    <li>
+                                        <a href="javascript:;" onClick="(function () { $('#SetLiveTemplateButton').trigger('click', ['@version.Template.OriginalId.ToString()', @version.Template.Version, @version.Template.CurrentVersion]) })();" class="dropdown-item" id="OnClickLink">  Set As Live</a>
+                                    </li>
+                                    <li>
+                                        <a href="~/Falcon/Templates/gettemplate?OriginalId=@version.Template.OriginalId.ToString()&version=@version.Template.Version"  class="dropdown-item">  Download</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" class="dropdown-item CopyTemplateLink" id="OnClickLink"  data-clipboard-action="copy" data-clipboard-target="#link-content@(i)">  @L("CopyTemplateURL")</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;" onClick="(function () { $('#DeleteTemplateButton').trigger('click', '@version.Template.Id') })();"  class="dropdown-item" id="OnClickLink">  Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div name="template-version" class="">
+                                <input aria-label="Get Template" style="position: absolute; opacity: 0;" type="text" value="@(Context.Request.Scheme + "://" + Context.Request.Host)/Falcon/Templates/gettemplate?OriginalId=@version.Template.OriginalId.ToString()&version=@version.Template.Version" id="link-content@(i)">
+                            </div>
+
+                        </td>
+ 
+                    </tr>
+                    <tr>
+                        
+                        <td colspan="4">
+                            @version.Template.Comments
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </table>
+     
+        <!--End::Timeline-->
+        <div id="latestVersionNumber" latestVersionNumber="@latestVersion"></div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

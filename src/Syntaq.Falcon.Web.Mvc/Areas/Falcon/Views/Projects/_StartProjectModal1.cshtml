@@ -1,0 +1,467 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Projects
+@model ProjectViewModel
+
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Projects;
+}
+
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/Projects/CreateOrEdit.js" asp-append-version="true"></script>
+
+    <script src="~/lib/json-viewer/jquery.json-viewer.js" asp-append-version="true"></script>
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+
+    <script>
+
+        var _createOrEditModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/RecordMatterContributors/CreateOrEditModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/RecordMatterContributors/_CreateOrEditModal.js',
+            modalClass: 'CreateOrEditRecordMatterContributorModal'
+        });
+
+
+        var _recordMatterContributorsService = abp.services.app.recordMatterContributors;
+
+
+        var _viewRecordsJSONModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/Records/ViewRecordsJSONModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Records/_ViewRecordsJSONModal.js',
+            modalClass: 'ViewRecordsJSONModal'
+        });
+
+
+        function viewJson(rmaId) {
+            _viewRecordsJSONModal.open({ id: rmaId });
+        }
+
+    </script>
+}
+
+<script>
+
+    function deleteRecordMatterContributor(recordMatterContributorId) {
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+                if (isConfirmed) {
+                    _recordMatterContributorsService.delete({
+                        id: recordMatterContributorId
+                    }).done(function () {
+                        // window.location.reload(false);
+                        //getRecordMatterContributors(true);
+                        abp.notify.success(app.localize('SuccessfullyDeleted'));
+                    });
+                }
+            }
+        );
+    }
+
+    function enableRecordMatterContributor(recordMatterContributorId) {
+        var checked = $("#Form_Toggle" + recordMatterContributorId);
+
+        var enabled = false;
+        if (checked.length > 0) {
+            enabled = checked[0].checked;
+        }
+
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+
+                if (isConfirmed) {
+                    if (enabled) {
+                        _recordMatterContributorsService.enable({
+                            id: recordMatterContributorId
+                        }).done(function () {
+                            abp.notify.success(app.localize('Success'));
+                        });
+                    }
+                    else {
+                        _recordMatterContributorsService.disable({
+                            id: recordMatterContributorId
+                        }).done(function () {
+                            abp.notify.success(app.localize('Success'));
+                        });
+                    }
+                } else {
+                    checked[0].checked = !enabled;
+                }
+            }
+        );
+    }
+
+    function resendInvite(recordMatterContributorId) {
+        abp.message.confirm(
+            '',
+            app.localize('AreYouSure'),
+            function (isConfirmed) {
+                if (isConfirmed) {
+                    var input = { id: recordMatterContributorId };
+                    _recordMatterContributorsService.sendInvite(
+                        input
+                    ).done(function () {
+                        abp.notify.success(app.localize('InviteSent'));
+                        getRecordMatterContributors(true);
+                    });
+                }
+            }
+        );
+    }
+
+    function showComments(comments) {
+
+        if (comments == '') {
+            comments = 'No comments';
+        }
+
+        abp.message.info(comments);
+    }
+
+</script>
+
+<style>
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        background-color: #a5a5a5;
+        border-radius: 20px;
+    }
+
+        .switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            top: 1px;
+            transition: all 0.3s;
+        }
+
+    .fldscheckbox {
+        display: none;
+    }
+
+        .fldscheckbox:checked + .switch::after {
+            left: 20px;
+        }
+
+        .fldscheckbox:checked + .switch {
+            background-color: #15C39A;
+        }
+
+    .switch-padding {
+        padding: 0
+    }
+</style>
+
+<style>
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #22c0e8;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+
+            ul.timeline > li:last-child:before {
+                border: 3px solid #ffb822;
+            }
+
+            ul.timeline > li:first-child:before {
+                border: 3px solid #1dc9b7;
+            }
+</style>
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+
+    <div class="kt-subheader kt-grid__item">
+        <div class="@(await GetContainerClass())">
+            <div class="kt-subheader__main">
+                <h3 class="kt-subheader__title">
+                    <span> @Model.RecordRecordName</span>
+                </h3>
+                <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                <div class="kt-subheader__breadcrumbs">
+                    @*<a href="/Falcon/Projects" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i>&thinsp;@L("Projects")</a>
+                        <span class="kt-subheader__breadcrumbs-separator"></span>
+                        <a href="javascript:;" class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">
+                            @L("Details")
+                        </a>*@
+                    <span>@L("Project")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="@(await GetContainerClass()) kt-grid__item ">
+        <div class="kt-portlet kt-portlet--mobile ">
+            <div class="kt-portlet__body ">
+                <div id="ProjectInformationsTab">
+                    <div class="row">
+                        @*<div class="col-6 mb-3">
+                                <h6>@L("Name") :</h6>
+                                @Model.Project.Name
+                            </div>*@
+                        <div class="col-12 mb-3">
+                            <span class="h6">@L("Status") :</span>
+
+                            @{
+                                switch (Model.Project.Status)
+                                {
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.New:
+                                        <span class="label badge badge-warning badge-inline">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.InProgress:
+                                        <span class="label badge badge-info badge-inline">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                    case Syntaq.Falcon.Projects.ProjectConsts.ProjectStatus.Completed:
+                                        <span class="label badge badge-success badge-inline">@L("Enum_ProjectStatus_" + (int)Model.Project.Status) </span>
+                                        break;
+                                }
+                            }
+
+                            <span class="h6 ">@L("CreatedBy") :</span>
+                            @Model.Project.CreatorUserName
+
+                            <button id="RefreshButton" onclick="location.reload();" class="btn btn-primary pull-right"><i class="fa fa-sync-alt"></i> Refresh</button>
+
+                        </div>
+                        <div class="col-12 mb-3">
+                            <h6>@L("Description") :</h6>
+                            @Model.Project.Description
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="@(await GetContainerClass()) kt-grid__item ">
+        <div class="kt-portlet kt-portlet--mobile ">
+            <div class="kt-portlet__body ">
+
+
+                @*create nav tab bar*@
+
+                <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand" role="tablist">
+
+                    @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href='@string.Format("#{0}_tab", @recordmatter.RecordMatterName.Trim().Replace( " ", "" ))' role="tab" aria-selected="false">
+                                @recordmatter.RecordMatterName
+                                @*@String(recordmatter.RecordMatterName.Where(Char.IsUpper).ToArray())@recordmatter.RecordMatterName;*@
+                            </a>
+                        </li>
+                    }
+
+                    @*<li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#steps_tab" role="tab" aria-selected="true">
+                                @L("Steps")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " data-bs-toggle="tab" href="#documents_tab" role="tab" aria-selected="true">
+                                @L("Documents")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#contributors_tab" role="tab" aria-selected="false">
+                                @L("Contributors")
+                            </a>
+                        </li>*@
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#audit_tab" role="tab" aria-selected="false">
+                            @L("AuditLogs")
+                        </a>
+                    </li>
+                </ul>
+
+
+
+
+                <div class="tab-content mt-3 border-0">
+                    @{
+                        int index = 1;
+                        @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterDto recordmatter in Model.Project.Record.RecordMatters)
+                        {
+
+                            <div class="tab-pane@(index == 1 ? " active" : "")" id="@string.Format("{0}_tab", @recordmatter.RecordMatterName.Trim().Replace( " ", "" ))" role="tabpanel">
+                                <div id="ProjectStepsTab">
+                                    <div class="row">
+                                        <div class="col-12 mt-0 ">
+                                            @{
+                                                <span class="h5 ml-2">
+                                                    @( string.IsNullOrEmpty(recordmatter.RecordMatterName)? "Step " + index : recordmatter.RecordMatterName)
+                                                </span>
+
+                                                index++;
+                                            }
+                                            @{
+                                                switch (recordmatter.Status)
+                                                {
+                                                    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Draft:
+                                                        <span class="label badge badge-warning badge-inline pull-right mt-2" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status)</span>
+                                                        break;
+                                                    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Final:
+                                                        <span class="label badge badge-success badge-inline pull-right mt-2" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        break;
+                                                    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.New:
+                                                        <span class="label badge badge-warning badge-inline pull-right mt-2" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        break;
+                                                    case Syntaq.Falcon.Records.RecordMatterConsts.RecordMatterStatus.Share:
+                                                        <span class="label badge badge-info badge-inline pull-right mt-2" style="min-width: 8em">@L("Enum_ProjectStepStatus_" + (int)recordmatter.Status) </span>
+                                                        break;
+                                                }
+                                            }
+                                        </div>
+
+                                        <div class="mb-3 ml-3">
+                                            @recordmatter.Comments
+                                        </div>
+
+                                    </div>
+                                    <hr class="col-12 mt-0" />
+
+
+                                    <div class="h5 ml-2">
+                                        <span>
+                                            @L("Type")
+                                        </span>
+                                        <span class="pull-right">
+                                            @L("Action")
+                                        </span>
+                                    </div>
+
+                                    <div class="h5 ml-2">
+                                        <span>
+                                            <i class="fa fa-file-alt"></i>
+                                        </span>
+                                        <span class="h5 ml-2">
+                                            Form - @( string.IsNullOrEmpty(recordmatter.RecordMatterName)? "Step " + index : recordmatter.RecordMatterName)
+                                        </span>
+                                        <div class="btn-group pull-right">
+                                            <button class="btn btn-secondary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                @L("Action") <i class="fas fa-angle-down"> </i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href='/Falcon/forms/loadInProject?OriginalId=@recordmatter.FormId&RecordMatterId=@recordmatter.Id&RecordMatterItemId=@recordmatter.RecordMatterItemId&version=live&ProjectId=@ViewContext.RouteData.Values["id"]'>Edit</a>
+                                                <a class="dropdown-item" href="#">Share</a>
+                                                <a class="dropdown-item" href="#">Finalise</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @foreach (Syntaq.Falcon.Records.Dtos.RecordMatterItemDto recordmatteritem in recordmatter.RecordMatterItems.Where(e => !string.IsNullOrEmpty(e.DocumentName)))
+                                    {
+
+                                        @if (recordmatteritem.HasDocument)
+                                        {
+
+                                            if (recordmatteritem.AllowedFormats.Contains("W"))
+                                            {
+                                                <div class="row">
+                                                    <div class="h5 ml-2">
+                                                        <span>
+                                                            <i class="fas fa-file-word m-1" title="Download MS Word doc"></i>@recordmatteritem.DocumentName
+                                                        </span>
+
+                                                        <div class="btn-group pull-right">
+                                                            <button class="btn btn-secondary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                @L("Action") <i class="fas fa-angle-down"> </i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=docx">Download</a>
+                                                                <a class="dropdown-item" href="#">ViewVersions</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            if (recordmatteritem.AllowedFormats.Contains("P"))
+                                            {
+                                                <div class="row">
+                                                    <div class="h5 ml-2">
+                                                        <span>
+                                                            <i class="fas fa-file-pdf m-1" title="Download Adobe PDF"></i>@recordmatteritem.DocumentName
+                                                        </span>
+
+                                                        <div class="btn-group pull-right">
+                                                            <button class="btn btn-secondary" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                @L("Action") <i class="fas fa-angle-down"> </i>
+                                                            </button>
+                                                            <div class="dropdown-menu">
+                                                                <a class="dropdown-item" href="/Falcon/RecordMatterItems/GetDocumentForDownload?Id=@recordmatteritem.Id&version=1&format=pdf">Download</a>
+                                                                <a class="dropdown-item" href="#">ViewVersions</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                        }
+
+
+                                    }
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+                        }
+
+
+                    }
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>

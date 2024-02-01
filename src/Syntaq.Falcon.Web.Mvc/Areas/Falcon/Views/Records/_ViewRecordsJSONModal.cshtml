@@ -1,0 +1,61 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+@model RecordsJSONViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Data"))
+
+<script type="text/javascript">
+	try {
+		var JSONObj = @Html.Raw(JsonConvert.DeserializeObject<JObject>(Model.Data, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None }));
+	} catch (err) {
+		alert(err.message);
+	}
+	var clipboard = new ClipboardJS('.CopyJSONLink');
+	clipboard.on('success', function () {
+		if (window.getSelection) {
+			window.getSelection().removeAllRanges();
+		}
+		else if (document.selection) {
+			document.selection.empty();
+		}
+	});
+	//For Debugging Copy
+	//clipboard.on('success', function (e) {
+	//    console.log(e);
+	//});
+	//clipboard.on('error', function (e) {
+	//    console.log(e);
+	//});
+</script>
+
+<div class="modal-body">
+	<div id="RecordsJSONTab">
+		<h6>@L("DisplayOptions") :</h6>
+		<div class="form__group forkt-group row">
+			<div class="col-1">
+				<span class="form-check form-switch form-check-custom form-check-solid mb-5">
+						<input aria-label="Is Collapsed" class="form-check-input" type="checkbox" id="IsCollapsed">
+						<span></span>
+				</span>
+			</div>
+			<label aria-describedby="IsCollapsed" class="col-2 col-forkt-label pl-0 pt-1">Collapse nodes</label>
+			<div class="col-1">
+				<span class="form-check form-switch form-check-custom form-check-solid mb-5">
+						<input aria-label="With Quotes" class="form-check-input" type="checkbox" id="With-quotes">
+						<span></span>
+				</span>
+			</div>
+			<label class="col-2 col-forkt-label pl-0 pt-1" style="vertical-align: middle;">Keys with quotes</label>
+			<span class="col-3 col-forkt-label pt-1">
+				<a style="cursor:pointer; color: #58a3dc;" id="OnClickLink" class="CopyJSONLink" data-clipboard-action="copy" data-clipboard-target="#json-renderer"><i class="fa fa-copy"></i> Copy Record JSON</a>
+			</span>
+			<div id="textarea-content"></div>
+		</div>
+		<div class="separator separator--dashed"></div>
+		<div id="json-renderer" style="height: 30em; overflow: auto;"></div>
+	</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

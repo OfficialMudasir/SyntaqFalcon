@@ -1,0 +1,54 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.MergeTextItems
+@model CreateOrEditMergeTextItemModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditMergeTextItem")) : L("CreateNewMergeTextItem")))
+
+<div class="modal-body">
+		<div id="MergeTextItemInformationsTab">
+			<form name="MergeTextItemInformationsForm" role="form" novalidate class="form-validation">
+
+				@if (Model.IsEditMode)
+				{
+					<input type="hidden" name="id" value="@Model.MergeTextItem.Id" />
+				}
+
+							
+								<div class="form-group m-form__group">
+										<label for="MergeTextItemValueKey">@L("MergeTextItemValue")</label>
+									<div class="input-group">
+											<input class="form-control" id="MergeTextItemValueKey" name="mergeTextItemValueKey" value="@Model.MergeTextItemValueKey" type="text" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-primary blue" id="OpenMergeTextItemValueLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+										</div> 
+										<div class="input-group-prepend">
+											<button class="btn btn-danger btn-icon" type="button" id="ClearMergeTextItemValueKeyButton"><i class="fa fa-times"></i></button>
+										</div>
+									</div>
+								</div>
+
+								@if (Model.IsEditMode)
+								{
+									<input class="form-control" id="MergeTextItem_MergeTextItemValueId" value="@Model.MergeTextItem.MergeTextId" type="text" name="mergeTextItemValueId"  hidden/>
+								}
+								 else
+								{ 
+									<input class="form-control" id="MergeTextItem_MergeTextItemValueId" value="" type="text" name="mergeTextItemValueId"  hidden/>
+								}
+
+
+
+				
+								<div class="form-group">
+									<label for="MergeTextItem_Name">@L("Name")</label>
+									<input class="form-control" id="MergeTextItem_Name" value="@Model.MergeTextItem.Name" type="text" name="name"  required  maxlength="@Syntaq.Falcon.MergeTexts.MergeTextItemConsts.MaxNameLength"  minlength="@Syntaq.Falcon.MergeTexts.MergeTextItemConsts.MinNameLength"  />
+								</div>
+					
+
+			</form>
+		</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

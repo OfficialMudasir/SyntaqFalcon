@@ -1,0 +1,25 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTemplates
+
+@model ImportProjectTemplateViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ImportProjectTemplate")))
+
+<div class="modal-body">
+    <div id="ImportSchemaTab" style="margin: 2vh;">
+        <div class="form-group">
+            <strong>Note: Uploading a Project Template will override the existing Project, Forms and Document Templates.</strong>
+        </div>
+
+        <form id="ImportProjectTemplate" method="POST" action="@(ApplicationPath + "Falcon/ProjectTemplates/Import")">
+            <div class="form-group">
+                <input type="file" name="file" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" id="btnsubmit" class="btn btn-primary">@L("Submit")</button>
+    <button type="button" class="btn btn-default close-button" data-bs-dismiss="modal">@L("Cancel")</button>   
+</div>

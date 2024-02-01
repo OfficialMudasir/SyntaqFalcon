@@ -1,0 +1,109 @@
+@using Syntaq.Falcon.Localization
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Forms.Dtos;
+@using Syntaq.Falcon.UiCustomization.Dto
+
+@model GetFormForPopupFormView
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Forms;
+    Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.cshtml";
+    var theme = await GetTheme();
+}
+
+<style>
+
+    .form-control {
+        border-width: 2px;
+    }
+
+    .table-bordered {
+        border: 2px solid #f4f5f8;
+    }
+
+    .wizard-page-label {
+        padding: 1em;
+        font-size: 1em;
+    }
+
+</style>
+
+@section Styles{
+    <script src="~/assets/formio/app/jquery/jquery.min.js"></script>
+    <link href="~/assets/formio/app/fontawesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/metronic/themes/default/css/style.bundle.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/default/css/style@(theme.BaseSettings.Layout.DarkMode ? ".dark": "").bundle@(CultureHelper.IsRtl ? ".rtl" : "").css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/default/plugins/global/plugins@(theme.BaseSettings.Layout.DarkMode ? ".dark": "").bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/Common/Styles/Themes/default/metronic-customize.css" asp-append-version="true" />
+}
+
+@section Scripts{
+
+    <script id="syntaq-script" src="/assets/Syntaq/Syntaq.js"></script>
+
+    <script>
+
+        window.onload = function () {
+
+            Syntaq.AuthToken = '';
+            Syntaq.TenantName = '@Model.TenantName';
+            Syntaq.Form.FormId = '@Model.FormId';
+ 
+            Syntaq.Project.ReleaseId = "@Model.ReleaseId";
+
+            // Event listener to recieve paramters from window.opener
+            // which may be on different domain. Event needs to be called
+           // after the Dom is loaded.
+            window.addEventListener("message", function (e) {
+                if (e.data.FormData !== undefined) {
+                    Syntaq.Form.FormData = e.data.FormData;
+                    Syntaq.Form.FormType = e.data.FormType;
+                    Syntaq.Form.PopName = e.data.PopName;
+                    Syntaq.Form.PopKey = e.data.PopKey;
+                    Syntaq.Form.PopRequired = e.data.PopRequired;
+                    Syntaq.Form.createForm();
+                }
+            }, false);
+
+            // Tell the window opener this form is to receive
+            // parameters  and data from the opener
+            window.opener.postMessage('Ready', '*');
+
+		};
+
+		// This function runs after the login workflow completes
+		function onLoginComplete() {
+			Syntaq.Form.createForm();
+		}
+
+		// This function runs after the registration workflow completes
+		function onRegoComplete() {
+			Syntaq.Account.Login(onLoginComplete);
+		}
+
+        function dataReceiver(result, PopName) {
+            var currentFormKeys = {};
+            FormioUtils.eachComponent(Form.components, function (comp) {
+                currentFormKeys[comp.key] = true;
+            }, true);
+            for (var key in currentFormKeys) {
+                if (result.hasOwnProperty(key)) {
+                    delete result[key];
+                }
+            }
+            document.getElementsByName(PopName)[0].value = JSON.stringify(result);
+            Form.updateValue({
+                modified: true
+            });
+            Form.redraw();
+        }
+
+    </script>
+}
+
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+    <div class="card mt-4">
+        <div id="syntaq-contributor-content" class="p-4" style="z-index: 94"></div>
+        <div id="syntaq-content" class="p-4"></div>
+    </div>
+</div>

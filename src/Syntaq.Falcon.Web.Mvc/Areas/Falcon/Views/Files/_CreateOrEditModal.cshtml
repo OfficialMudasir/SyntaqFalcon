@@ -1,0 +1,65 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@*@model CreateOrEditFileModalViewModel*@
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditFile")) : L("CreateNewFile")))
+
+<div class="modal-body">
+		<div id="FileInformationsTab">
+			<form name="FileInformationsForm" role="form" novalidate class="form-validation">
+				@if (Model.IsEditMode)
+				{
+					<input type="hidden" name="id" value="@Model.File.Id" />
+				}
+				<div class="form-group m-form__group">
+						<label for="RecordRecordName">@L("Record")</label>
+					<div class="input-group">
+							<input class="form-control" id="RecordRecordName" name="recordRecordName" value="@Model.RecordRecordName" type="text" disabled>
+						<div class="input-group-append">
+							<button class="btn btn-primary blue" id="OpenRecordLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+						</div> 
+						<div class="input-group-prepend">
+							<button class="btn btn-danger" type="button" id="ClearRecordRecordNameButton"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+				</div>
+				@if (Model.IsEditMode)
+				{
+					<input class="form-control" value="@Model.File.RecordId" type="text" name="recordId" required hidden/>
+				}
+					else
+				{ 
+					<input class="form-control" value="" type="text" name="recordId" required hidden/>
+				}
+				<div class="form-group m-form__group">
+						<label for="RecordMatterRecordMatterName">@L("RecordMatter")</label>
+					<div class="input-group">
+							<input class="form-control" id="RecordMatterRecordMatterName" name="recordMatterRecordMatterName" value="@Model.RecordMatterRecordMatterName" type="text" disabled>
+						<div class="input-group-append">
+							<button class="btn btn-primary blue" id="OpenRecordMatterLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+						</div> 
+						<div class="input-group-prepend">
+							<button class="btn btn-danger" type="button" id="ClearRecordMatterRecordMatterNameButton"><i class="fa fa-times"></i></button>
+						</div>
+					</div>
+				</div>
+				@if (Model.IsEditMode)
+				{
+					<input class="form-control" value="@Model.File.RecordMatterId" type="text" name="recordMatterId" required hidden/>
+				}
+					else
+				{ 
+					<input class="form-control" value="" type="text" name="recordMatterId" required hidden/>
+				}
+				<div class="form-group">
+					<label for="File_FileUploadId">@L("FileUploadId")</label>
+					<input class="form-control" id="File_FileUploadId" value="@Model.File.FileUploadId" type="text" name="fileUploadId"     />
+				</div>					
+				<div class="form-group">
+					<label for="File_FileUploads">@L("FileUploads")</label>
+					<input class="form-control" id="File_FileUploads" value="@Model.File.FileUploads" type="text" name="fileUploads"     />
+				</div>
+			</form>
+		</div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

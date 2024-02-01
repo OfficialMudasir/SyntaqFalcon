@@ -1,0 +1,78 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordPolicies
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model RecordPoliciesViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Host.RecordPolicies;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/RecordPolicies/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("RecordPolicies")" description="@L("RecordPoliciesHeaderInfo")">
+        @if (IsGranted(AppPermissions.Pages_RecordPolicies_Create))
+        {
+            <button id="CreateNewRecordPolicyButton" class="btn btn-primary">
+               
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewRecordPolicy")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="mb-5 align-items-center">
+                                <div class="input-group">
+                                    <input type="text" id="RecordPoliciesTableFilter" aria-label="@L("InputFilterText")" class="form-control" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                    <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button id="GetRecordPoliciesButton" class="btn btn-primary" type="submit" aria-label="@L("Search")">
+                                        <i class="fa fa-search" aria-label="@L("Search")"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                        <div class="col-xl-3">
+                            <div class="mb-5">
+                                <label for="NameFilterId" class="form-label">@L("Name")</label>
+                                <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-12">
+                            <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item">
+                                <i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")
+                            </span>
+                            <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none">
+                                <i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <table id="RecordPoliciesTable" class="table table-hover align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th>@L("Name")</th>
+                                <th>@L("AppliedTenantId")</th>
+                                <th style="width:5%">@L("Actions")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

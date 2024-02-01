@@ -1,0 +1,26 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Files
+@model FilesViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Uploaded Files for " + Model.RecordMatterName))
+<script type="text/javascript">
+	var JSRecordId = "@Html.Raw(Model.RecordId)";
+    var JSRecordMatterId = "@Html.Raw(Model.RecordMatterId)";
+    var JSRecordMatterItemGroupId = "@Html.Raw(Model.RecordMatterItemGroupId)";
+</script>
+<div id="filesviewRmId" class="modal-body">
+	<div class="container">
+		<table id="FilesTable" class="display table  table-bordered table-hover dt-responsive" style="margin-top:0!important">
+			<thead>
+				<tr>
+					<th>@L("FileName")</th>
+					<th>@L("FileSize")</th>
+					<th>@L("Download")</th>
+				</tr>
+			</thead>
+		</table>
+		<div class="offset-5" style="margin-top: 2%;"><a class="OnClickLink" href="/Falcon/Files/DownloadAllFiles?RecordId=@Html.Raw(Model.RecordId)&RecordMatterId=@Html.Raw(Model.RecordMatterId)&RecordMatterItemGroupId=@Html.Raw(Model.RecordMatterItemGroupId)"><i class="fas fa-file-archive"></i> @L("DownloadAll")</a></div>
+	</div>
+</div> 
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

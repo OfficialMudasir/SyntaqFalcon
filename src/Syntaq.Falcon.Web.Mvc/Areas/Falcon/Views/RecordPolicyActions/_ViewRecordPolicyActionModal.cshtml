@@ -1,0 +1,48 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordPolicyActions
+@model RecordPolicyActionViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="RecordPolicyActionInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Name") :</h6>
+                @Model.RecordPolicyAction.Name
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("AppliedTenantId") :</h6>
+                @Model.RecordPolicyAction.AppliedTenantId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ExpireDays") :</h6>
+                @Model.RecordPolicyAction.ExpireDays
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Active") :</h6>
+                @Model.RecordPolicyAction.Active
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Type") :</h6>
+                @Model.RecordPolicyAction.Type
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("RecordStatus") :</h6>
+                @Model.RecordPolicyAction.RecordStatus
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("Tenant")) @L("Name") :</h6>
+                @Model.AppliedTenantName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

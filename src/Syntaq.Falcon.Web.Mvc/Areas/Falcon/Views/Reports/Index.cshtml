@@ -1,0 +1,168 @@
+@*@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Reports
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model ReportsViewModel
+@{
+	ViewBag.CurrentPageName = FalconPageNames.Common.Reports;
+}
+@section Scripts
+{
+	<script abp-src="/view-resources/Areas/Falcon/Views/Reports/Index.js" asp-append-version="true"></script>
+}
+<div class="m-subheader">
+	<div class="row align-items-center">
+		<div class="mr-auto col-sm-12 col-md-6">
+			<h3 class="m-subheader__title m-subheader__title--separator">
+				  <span>@L("Reports")</span>
+			</h3>
+			<span class="m-section__sub">
+				@L("ReportsHeaderInfo")
+			</span>
+		</div>
+		<div class="col-sm-12 col-md-6 text-right">
+			<button id="ExportToExcelButton" class="btn btn-outline-success"><i class="fa fa-file-excel"></i> @L("ExportToExcel")</button>
+		@if (IsGranted(AppPermissions.Pages_Reports_Create))
+			{
+				<button id="CreateNewReportButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewReport")</button>
+			}
+		</div>
+	</div>
+</div>
+<div class="m-content">
+	<div class="m-portlet m-portlet--mobile">
+		<div class="m-portlet__body">
+			<div class="m-form m-form--label-align-right">
+			   <div class="row align-items-center m--margin-bottom-10">
+					<div class="col-xl-12">
+						<div class="form-group m-form__group align-items-center">
+							<div class="input-group">
+								<input type="text" id="ReportsTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+								<span class="input-group-btn">
+									<button id="GetReportsButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="AdvacedAuditFiltersArea" @*style="display: none" class="row m--margin-bottom-10">
+				<div class="col-md-12">
+					<div class="m-separator m-separator--dashed"></div>
+				</div>
+
+				<div class="col-md-3 col-sm-4">
+					<div class="form-group row">
+						<label for="StartPeriodFilterId" class="col-4 col-form-label">@L("MinMax") @L("StartPeriod")</label>
+						<div class="input-group col-8">
+							<input class="form-control m-input date-picker" type="text" placeholder="@L("StartPeriod")" id="StartPeriodFilterId">
+							<input class="form-control m-input date-picker" type="text" placeholder="@L("MaxValue")" id="MaxStartPeriodFilterId">
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="example-text-input" class="col-2 col-form-label">Text</label>
+					<div class="col-10">
+						<input class="form-control" type="text" value="Artisanal kale" id="example-text-input" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-4">
+					<div class="form-group row">
+						<label for="EndPeriodFilterId" class="col-4 col-form-label">@L("MinMax") @L("EndPeriod")</label>
+						<div class="input-group col-8">
+							<input class="form-control m-input date-picker" type="text" placeholder="@L("MinValue")" id="MinEndPeriodFilterId">
+							<input class="form-control m-input date-picker" type="text" placeholder="@L("EndPeriod")" id="EndPeriodFilterId">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-group row">
+						<label for="CompleteFilterId" class="col-4 col-form-label">@L("Complete")</label>
+						<div class="input-group col-8">
+							<select class="form-control" name="CompleteFilter" id="CompleteFilterId">
+								<option value="-1">@L("All")</option>
+								<option value="0">@L("Partial")</option>
+								<option value="1">@L("None")</option>
+							</select>
+						</div>
+					</div>
+				</div>
+					<div class="col-md-3">
+			<label for="ExcludeOwnAccountFilterId">@L("ExcludeOwnAccount")</label>
+			<select class="form-control" name="ExcludeOwnAccountFilter" id="ExcludeOwnAccountFilterId">
+				<option value="-1">@L("All")</option>
+				<option value="0">@L("False")</option>
+				<option value="1">@L("True")</option>
+			</select>
+		</div>
+					<div class="col-md-3">
+						<div class="form-group row">
+							<label class="col-6 col-form-label">@L("ExcludeOwnAccount")</label>
+							<div class="col-6">
+								<div class="kt-radio-inline">
+									<label class="kt-radio">
+										<input type="radio" checked="checked" name="ExcludeOwnAccountFilter"> Yes
+										<span></span>
+									</label>
+									<label class="kt-radio">
+										<input type="radio" name="ExcludeOwnAccountFilter"> No
+										<span></span>
+									</label>
+								</div>
+								<span class="form-text text-muted">Help Text?</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group row">
+							<label for="FormNameFilterId" class="col-4 col-form-label">@L("FormName")</label>
+							<div class="input-group col-8">
+								<input type="text" class="form-control" name="formNameFilter" id="FormNameFilterId">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group row">
+							<label for="UserNameFilterId" class="col-4 col-form-label">@L("UserName")</label>
+							<div class="input-group col-8">
+								<input type="text" class="form-control" name="userNameFilter" id="UserNameFilterId">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-group row">
+							<label for="RecordRecordNameFilterId" class="col-4 col-form-label">@L("RecordName")</label>
+							<div class="input-group col-8">
+								<input type="text" class="form-control" name="recordRecordNameFilter" id="RecordRecordNameFilterId">
+							</div>
+						</div>
+					</div>
+					<span class="input-group-btn">
+						<button id="GetReportsButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i> Search</button>
+					</span>
+				</div>
+				<div class="row m--margin-bottom-10">
+			<div class="col-xl-12">
+				<span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+				<span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+			</div>
+		</div>
+				<div class="row align-items-center">
+					<table id="ReportsTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+						<thead>
+							<tr>
+								<th></th>
+								<th>@L("Form")</th>
+								<th>@L("User")</th>
+								<th>@L("Email")</th>
+								<th>@L("RecordName")</th>
+								<th>@L("DateCreated")</th>
+								<th>@L("Paid")</th>
+								<th>@L("Complete")</th>
+								<th>@L("ExcludeOwnAccount")</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+	</div>
+</div>*@

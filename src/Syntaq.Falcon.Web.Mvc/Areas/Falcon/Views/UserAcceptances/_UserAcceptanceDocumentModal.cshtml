@@ -1,0 +1,11 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptances
+@model UserAcceptancesDocumentViewModel
+
+
+<div class="modal-body" style="height: 500px;">
+    <embed class="w-100 h-100" src="@Model.Content">
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

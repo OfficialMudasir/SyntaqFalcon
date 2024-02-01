@@ -1,0 +1,99 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTemplates
+@using Syntaq.Falcon.ProjectTemplates.Dtos
+
+@model ViewProjectTemplateViewModel
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ViewPojectTemplate")))
+<script>
+    var creatationTime = "@(Model.CreationTime.ToString("O"))";
+    var lastModificationTime = "@(Model.LastModificationTime.ToString("O"))";
+
+</script>
+<style>
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #22c0e8;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+
+            ul.timeline > li:last-child:before {
+                border: 3px solid #ffb822;
+            }
+
+            ul.timeline > li:first-child:before {
+                border: 3px solid #1dc9b7;
+            }
+</style>
+
+<div class="modal-body">
+    <div class="form-group">
+        <h5>Name</h5> <span>@Model.Name</span>
+
+    </div>
+    <div class="form-group">
+        <h5>Description</h5> <div style="overflow-y: scroll; max-height: 6em;"><div style=" white-space: pre-wrap;">@Model.Description</div></div>
+
+    </div>
+    <div class="form-group">
+        <p><b>Creation time: </b><span id="creationTime"></span></p>
+
+        <p><b>Last Modification Time: </b><span id="lastModificationTime"></span></p>
+
+    </div>
+    <hr />
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <h4>Steps</h4>
+            <div class="col-12">
+
+                <ul class="timeline">
+                    @{ int stepIndex = 1;
+                        @foreach ( ProjectTemplateStepDto step in Model.StepsSchema)
+                        {
+
+                            <li>
+                                <h5>Step @stepIndex: @step.StepName</h5>
+                                <p>@step.Description</p>
+                            </li>
+                            stepIndex++;
+
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

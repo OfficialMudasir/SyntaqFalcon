@@ -1,0 +1,35 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectTenants
+@model ProjectTenantViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="ProjectTenantInformationsTab">
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("SubscriberTenantId") :</h6>
+                @Model.ProjectTenant.SubscriberTenantId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("ProjectId") :</h6>
+                @Model.ProjectTenant.ProjectId
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Enabled") :</h6>
+                @Model.ProjectTenant.Enabled
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("ProjectEnvironment")) @L("Name") :</h6>
+                @Model.ProjectEnvironmentName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

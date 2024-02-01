@@ -1,0 +1,39 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterItems
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model RecordMatterLookupTableViewModel
+
+@section Scripts
+    {
+    <script src="/view-resources/Areas/Falcon/Views/RecordMatterItems/_RecordMatterLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickRecordMatter")))
+ 
+<div class="modal-body">
+ 
+ 
+                    <div class="form-group kt-form__group align-items-center">
+                        <div class="input-group">
+                            <input type="text" id="RecordMatterTableFilter" aria-label="@L("InputFilterText")" class="form-control kt-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                            <span class="input-group-btn">
+                                <button id="GetRecordMatterButton" aria-label="@L("Search")" class="btn btn-primary kt-btn kt-btn--custom   OpenRecordMatterLookupTableButton" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </div>
+    
+ 
+            <table id="RecordMatterTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                <thead>
+                    <tr>
+                        <th>@L("RecordMatterName")</th>
+                    </tr>
+                </thead>
+            </table>
+         
+   
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

@@ -1,0 +1,26 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@*model RoleViewModel*@
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(""))
+<div class="modal-body">
+    <div id="RoleInformationsTab">
+        <div class="m-stack m-stack--hor m-stack--general m-stack--demo">
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("Name") :</h6>
+                @*Model.Template.Name*@
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("Version") :</h6>
+                @*Model.Template.Version*@
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+            <div class="m-stack__item m-stack__item--center m-stack__item--middle">
+                <h6>@L("Comments") :</h6>
+                @*Model.Template.Comments*@
+            </div>
+            <div class="m-separator m-separator--dashed"></div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

@@ -1,0 +1,145 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@using Syntaq.Falcon.Forms.Dtos
+@model CreateOrEditFormModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditForm")) : L("CreateNewForm")))
+<style>
+    #OnClickLink:hover {
+        color: #287ebf;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+<div class="modal-body">
+    <div id="FormInformationsTab">
+        <form name="FormInformationsForm" role="form" novalidate class="form-validation">
+
+            <input type="hidden" name="id" value="@Model.Form.Id" />
+            @if (Model.IsEditMode)
+            {
+                <input type="hidden" name="id" value="@Model.Form.Id" />
+                <input class="form-control" id="Form_OriginalId" value="@Model.Form.OriginalId" type="hidden" name="originalId" />
+                <input type="hidden" name="currentVersion" value="@Model.Form.CurrentVersion" />
+                <input type="hidden" name="version" value="@Model.Form.Version" />
+                <input type="hidden" name="versionName" value="@Model.Form.VersionName" />
+
+            }
+            <input type="hidden" name="isIndex" value="1" />
+ 
+            <input class="form-control" id="FolderId" value="@Model.Form.FolderId" type="hidden" name="FolderId" />
+ 
+            <div class="row mb-4">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <label class="form-label"  for="Form_Name">Name</label>
+                    <input class="form-control" id="Form_Name" value="@Model.Form.Name" type="text" name="name" maxlength="50" minlength="0">
+                </div>
+                @if (Model.Form.Schema == null)
+                {
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <label class="form-label"  for="Form-select">Type</label>
+                        <select class="form-select " id="Form-select" name="schema"><option value='{"type": "form", "display": "form" }'>Form</option><option value='{"type": "form", "display": "wizard", "components": [{"title": "Page 1","label": "Page 1","type": "sfapanel","key": "page1","input": false,"tableView": false,"components": []}]}'>Wizard</option> </select>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <label class="form-label"  for="Form-select">Type</label>
+                        <select class="form-select " id="Form-select" disabled="disabled"><option value=' '>@Model.Type</option></select>
+                    </div>
+                }
+
+            </div>
+
+            <div class="form-group">
+                <label class="form-label"  for="Form_Description">@L("Description")</label>
+                <input class="form-control" id="Form_Description" value="@Model.Form.Description" type="text" name="description" maxlength="@Syntaq.Falcon.Forms.FormConsts.MaxDescriptionLength" minlength="@Syntaq.Falcon.Forms.FormConsts.MinDescriptionLength" />
+            </div>
+
+        </form>
+    </div>
+
+    <hr />
+
+    <button id="SetLiveFormButton" class="btn btn-primary blue" hidden aria-label="Set Live"></button>
+    <button id="ToggleFormButton"  class="btn btn-primary blue" hidden aria-label="Toggle"></button>
+    <button id="DeleteFormButton"  class="btn btn-primary blue" hidden aria-label="Delete"></button>    
+    <h5 class="text  font-weight-bold"><img class="stq-primary-icon me-2" title="App" src="/common/images/primaryicons/form.png" alt=" "> Live Version <span class="badge badge-lg badge-circle badge-outline badge-success"> @Model.Form.CurrentVersion</span></h5>
+    <div class="m-scrollable m-scroller" data-scrollable="true" data-height="380" data-mobile-height="300" style="height: 300px; overflow: auto;">
+        
+            <table class="table align-middle table-row-dashed">
+                @{int i = 0; int latestVersion = 0;}
+
+                @foreach (GetFormForView version in Model.VersionHistory)
+                {
+                    int tver = Int32.Parse(version.Form.Version.ToString());
+                    if (tver >= latestVersion) { latestVersion = tver; }
+                    <tr>
+
+                        <td>
+ 
+                            <span class="badge badge-@(version.Form.Version == version.Form.CurrentVersion? "success" : "warning")">ver. @version.Form.Version</span>
+                        </td>
+
+                        <td>
+                          
+                            @if (@version.Form.IsEnabled == true)
+                            {
+                                <div class="badge badge-success" name="DisableRuleLink"> Enabled</div>
+                            }
+                            else
+                            {
+                                <div class="badge badge-danger" name="EnableRuleLink">  Disabled</div>
+                            }
+                           
+                        </td>
+ 
+                        <td>
+                            <div>@version.Form.CreationTime.ToString("hh:mm tt, ddd, dd MMM yyyy")</div>
+                        </td>
+
+                        <td>
+ 
+                            <div class="btn-group pull-right">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
+                                <ul class="dropdown-menu" style="">
+                                    <li>
+                                        <a onClick="(function () { $('#SetLiveFormButton').trigger('click', ['@version.Form.OriginalId.ToString().ToString()', @version.Form.Version,'@version.Form.VersionName.ToString()']) })();" class="dropdown-item" id="OnClickLink"> Set As Live</a>
+                                    </li>
+                                    <li>
+                                        @if (@version.Form.IsEnabled == true)
+                                        {
+                                            <a  class="dropdown-item" name="DisableRuleLink" href="javascript:;" onClick="(function () { $('#ToggleFormButton').trigger('click', ['@version.Form.Id', 'false']) })();">Disable</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" name="EnableRuleLink" href="javascript:;" onClick="(function () { $('#ToggleFormButton').trigger('click', ['@version.Form.Id', 'true']) })();">Enable</a>
+                                        }
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@(Context.Request.Scheme + "://" + Context.Request.Host)/Falcon/forms/load?OriginalId=@version.Form.OriginalId&version=@version.Form.Version" name="OpenForm">Open Form</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="@(Context.Request.Scheme + "://" + Context.Request.Host)/Falcon/forms/build?OriginalId=@version.Form.OriginalId&version=@version.Form.Version" name="BuildForm">Build Form</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" onClick="(function () { $('#DeleteFormButton').trigger('click', '@version.Form.Id') })();" id="OnClickLink">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div name="template-version" class="">
+                                <input hidden type="text" aria-label="Form Link" value="@(Context.Request.Scheme + "://" + Context.Request.Host)/Falcon/Templates/gettemplate?OriginalId=@version.Form.OriginalId.ToString()&version=@version.Form.Version" id="link-content@(i)">
+                            </div>
+
+                        </td>
+ 
+                    </tr>
+                    i++;
+                }
+            </table>        
+ 
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,48 @@
+﻿@using Syntaq.Falcon.Projects;
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectEnvironments
+@model CreateOrEditProjectEnvironmentModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditProjectEnvironment")) : L("CreateNewProjectEnvironment")))
+
+<div class="modal-body">
+    <div id="ProjectEnvironmentInformationsTab">
+        <form name="ProjectEnvironmentInformationsForm" role="form" novalidate class="form-validation">
+ 
+            <input type="hidden" name="id" value="@Model.ProjectEnvironment.Id" />
+ 
+            <div class="my-3">
+                <label class="form-label" for="ProjectEnvironment_Name">@L("Name")</label>
+                <input class="form-control" id="ProjectEnvironment_Name" value="@Model.ProjectEnvironment.Name" type="text" name="name" required maxlength="@Syntaq.Falcon.Projects.ProjectEnvironmentConsts.MaxNameLength" minlength="@Syntaq.Falcon.Projects.ProjectEnvironmentConsts.MinNameLength" />
+            </div>
+
+            <div class="my-3">
+                <label class="form-label" for="ProjectEnvironment_Description">@L("Description")</label>
+                <textarea rows="6" class="form-control" id="ProjectEnvironment_Description" type="text" name="description" maxlength="@Syntaq.Falcon.Projects.ProjectEnvironmentConsts.MaxDescriptionLength" minlength="@Syntaq.Falcon.Projects.ProjectEnvironmentConsts.MinDescriptionLength" >@Model.ProjectEnvironment.Description</textarea>
+            </div>
+
+            @{
+                var selectListEnvironmentType = Html.GetEnumSelectList(typeof(ProjectEnvironmentConsts.ProjectEnvironmentType));
+                foreach (var selectOption in selectListEnvironmentType) { selectOption.Text = L("Enum_ProjectEnvironmentType_" + selectOption.Value); }
+            }
+
+            @if (Model.IsEditMode)
+            {
+                <label class="form-label" for="ProjectEnvironment_EnvironmentType">@L("EnvironmentType"): @Model.ProjectEnvironment.EnvironmentType </label>
+                <input type="hidden" name="environmentType" value="@Model.ProjectEnvironment.EnvironmentType" />
+            }
+            else{
+                <div class="my-3">
+                    <label class="form-label" for="ProjectEnvironment_EnvironmentType">@L("EnvironmentType")</label>
+                    <select class="form-select m-input m-input--square" name="environmentType" id="ProjectEnvironment_EnvironmentType" asp-for="@Model.ProjectEnvironment.EnvironmentType" asp-items="@selectListEnvironmentType">
+                    </select>
+                </div>
+            }
+
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

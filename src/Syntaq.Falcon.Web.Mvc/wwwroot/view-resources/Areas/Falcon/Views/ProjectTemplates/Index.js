@@ -1,0 +1,678 @@
+﻿
+(function () {
+    $(function () {
+
+        var _$projectDeploymentsTable = $('#ProjectDeploymentsTable');
+        var _projectDeploymentsService = abp.services.app.projectDeployments;
+
+        var _$projectsTable = $('#ProjectTemplatesTable');
+        var _$sharedProjectsTable = $('#SharedProjectTemplatesTable');
+        var _projectsService = abp.services.app.projects;
+        var _aclService = abp.services.app.aCLs;
+
+        var _manageACLModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/AccessControlList/ManageACLModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/AccessControlList/_ManageACLModal.js',
+            modalClass: 'ManageACLModal'
+        });
+
+        var _createOrEditProjectTemplateModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/ProjectTemplates/CreateOrEditModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/ProjectTemplates/_CreateOrEditModal.js',
+            modalClass: 'CreateOrEditProjectTemplatesModal'
+        });
+
+        var _createOrEditProjectTemplateTagsModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/ProjectTemplates/CreateOrEditTagsModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/ProjectTemplates/_CreateOrEditTagsModal.js',
+            modalClass: 'CreateOrEditProjectTemplatesTagModal'
+        });
+
+        var _viewProjectTemplateModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/ProjectTemplates/ViewProjectTemplateModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/ProjectTemplates/_ViewProjectTemplateModal.js',
+            modalClass: 'ViewProjectTemplateModal'
+        });
+
+        var _projectDeploymentTableModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/ProjectDeployments/ProjectDeploymentTableModal',
+            scriptUrl:
+                abp.appPath +
+                'view-resources/Areas/Falcon/Views/ProjectDeployments/_ProjectDeploymentTableModal.js',
+            modalClass: 'ProjectReleaseLookupTableModal',
+        });
+
+        var _ProjectDeploymentprojectReleaseLookupTableModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/ProjectDeployments/ProjectReleaseLookupTableModal',
+            scriptUrl:
+                abp.appPath +
+                'view-resources/Areas/Falcon/Views/ProjectDeployments/_ProjectDeploymentTableModal.js',
+            modalClass: 'ProjectReleaseLookupTableModal',
+        });
+
+        var _permissions = {
+            create: abp.auth.hasPermission('Pages.ProjectTemplates.Create'),
+            edit: abp.auth.hasPermission('Pages.ProjectTemplates.Edit'),
+            delete: abp.auth.hasPermission('Pages.ProjectTemplates.Delete')
+        };
+
+
+
+        var _manageTenantACLModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/AccessControlList/ManageTenantACLModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/AccessControlList/_ManageTenantACLModal.js',
+            modalClass: 'ManageACLModal'
+        });
+
+        var _createOrEditTagEntitiesModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/TagEntities/CreateOrEditTagEntitiesModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/TagEntities/_CreateOrEditTagEntitiesModal.min.js',
+            modalClass: 'CreateOrEditTagEntitiesModal'
+        });
+
+        //$('.date-picker').datetimepicker({
+        //    locale: abp.localization.currentLanguage.name,
+        //    format: 'L'
+        //});
+
+        var dataTable = _$projectsTable.DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            createdRow: function (row, data, dataIndex) {
+                $(row).find("td:nth-child(1),td:nth-child(2) ").on("click", function () {
+                    //_createOrEditProjectTemplateModal.open({ projectTemplateId: data.id })
+                    window.location.href = '/Falcon/ProjectTemplates/createoredit?Id=' + data.id;
+                });
+            },
+            listAction: {
+                ajaxFunction: _projectsService.getAllProjectTemplates,
+                inputFilter: function () {
+                    return {
+                        filter: $('#ProjectTemplatesTableFilter').val(),
+                        nameFilter: null,
+                        descriptionFilter: null
+                    };
+                }
+            },
+            columnDefs: [
+                {
+                    targets: 2,
+                    data: null,
+                    orderable: false,
+                    defaultContent: '',
+                    rowAction: {
+                        text: app.localize('Actions'),
+                        items: [
+                            {
+                                text: app.localize('Edit'),
+                                visible: function () {
+                                    return _permissions.edit;
+                                },
+                                action: function (data) {
+                                    //_createOrEditProjectTemplateModal.open({ projectTemplateId: data.record.id })
+                                    window.location.href = '/Falcon/ProjectTemplates/createoredit?Id=' + data.record.id;
+                                }
+                            },
+                            {
+                                text: app.localize('Share to User or Team'),
+                                action: function (data) {
+                                    _manageACLModal.open({ entityid: data.record.id, entityname: data.record.name, entitytype: 'Project' });
+                                }
+                            },
+                            //{
+                            //    text: app.localize('Export'),
+                            //    visible: function () {
+                            //        return _permissions.edit;
+                            //    },
+                            //    action: function (data) {
+                            //        exportProject(data.record.id);
+                            //    }
+                            //},
+                            {
+                                text: app.localize('Delete'),
+                                visible: function () {
+                                    return _permissions.delete;
+                                },
+                                action: function (data) {
+                                    deleteProjectTemplate(data.record);
+                                }
+                            }]
+                    }
+                },
+                {
+                    targets: 0,
+                    data: null,
+                    name: "name",
+                    overflow: 'hidden',
+                    render: function (data, type, row) {
+
+                        if (data.shared === true) {
+                            var sharedSpan = '<span class="label badge badge-' + 'info' + ' badge-inline">' + app.localize('Share') + '</span>';
+                            data = `<div  ><img class="stq-primary-icon me-2" title="Project" src="/common/images/primaryicons/project.png"></i> ${data.name} ${sharedSpan}</div><div> ${data.description}</div>`;
+                        }
+                        else {
+                            data = `<img class="stq-primary-icon me-2" title="Project" src="/common/images/primaryicons/project${data.type}.png"></i> ${data.name} 
+                                        <div class="text-width" style = "text-overflow:ellipsis; overflow: hidden;">${data.description}</div>`;
+                        }
+
+                        return data;
+                    }
+                },
+                //{
+                //    targets: 1,
+                //    data: null,
+                //    name: "enabled",
+                //    render: function (data, type, row) {
+                //        return data.enabled;
+                //    }
+
+                //},
+                {
+                    targets: 1,
+                    data: null,
+                    name: "creationTime",
+                    width: '22em',
+                    render: function (data, type, row) {
+                        var dt = new Date(row.creationTime);
+                        var dtoptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                        var tmoptions = { hour: 'numeric', minute: 'numeric' };
+                        var creationTime = dt.toLocaleTimeString('en-US', tmoptions) + ', ' + dt.toLocaleDateString('en-GB', dtoptions);
+                        return creationTime;
+                    }
+
+                }
+            ]
+        });
+
+        var sharedDataTable = _$sharedProjectsTable.DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            listAction: {
+                ajaxFunction: _projectsService.getAllSharedProjectTemplates,
+                inputFilter: function () {
+                    return {
+                        filter: null,
+                        nameFilter: null,
+                        descriptionFilter: null
+                    };
+                }
+            },
+            columnDefs: [
+                {
+                    targets: 3,
+                    data: null,
+                    orderable: false,
+                    width: 100,
+                    defaultContent: '',
+                    rowAction: {
+                        text: app.localize('Actions'),
+                        items: [
+                            {
+                                text: app.localize('Accept'),
+                                visible: function (data) {
+                                    return _permissions.delete
+                                },
+                                action: function (data) {
+                                    acceptSharedProjectTemplate(data.record);
+                                }
+                            },
+
+                            {
+                                text: app.localize('Tags'),
+                                visible: function () {
+                                    return _permissions.edit;
+                                },
+                                action: function (data) {
+                                    _createOrEditProjectTemplateTagsModal.open({ projectTemplateId: data.record.id })
+                                }
+                            },
+
+                            {
+                                text: 'Share',
+                                action: function (data) {
+                                    _manageACLModal.open({ entityid: data.record.id, entityname: data.record.name, entitytype: 'Project' });
+                                }
+                            },
+                            {
+                                text: app.localize('Remove'),
+                                visible: function () {
+                                    return _permissions.delete;
+                                },
+                                action: function (data) {
+                                    removeSharedProjectTemplate(data.record);
+                                }
+                            }]
+                    }
+                },
+                {
+                    targets: 0,
+                    data: null,
+                    name: "name",
+                    render: function (data, type, row) {
+                        return `<div><img class="stq-primary-icon me-2" title="Project" src="/common/images/primaryicons/project.png"></i> ${data.name}</div><div style="overflow-y: hidden; max-height: 10em"><div style="pre-wrap; width: 40vw ">${data.description}</div></div>`;
+                    }
+
+                },
+                {
+                    targets: 1,
+                    data: null,
+                    name: "sharedby",
+                    render: function (data, type, row) {
+                        return data.tenancyName;
+                    }
+
+                },
+                {
+                    targets: 2,
+                    data: null,
+                    width: 150,
+                    name: "accepted",
+                    render: function (data, type, row) {
+                        return data.accepted;
+                    }
+
+                }
+            ]
+        });
+
+        function exportProject(projectId) {
+            window.open('/Falcon/ProjectTemplates/export?projectid=' + projectId);
+        }
+
+        function getProjectTemplates() {
+            dataTable.ajax.reload();
+            sharedDataTable.ajax.reload();
+        }
+
+        function deleteProjectTemplate(projectTemplate) {
+            abp.message.confirm(
+                `Delete Project Template: ${projectTemplate.name}`,
+                app.localize('AreYouSure'),
+                function (isConfirmed) {
+                    if (isConfirmed) {
+                        _projectsService.deleteProjectTemplate({
+                            id: projectTemplate.id
+                        }).done(function () {
+                            getProjectTemplates();
+                            abp.notify.success(app.localize('SuccessfullyDeleted'));
+                        });
+                    }
+                }
+            );
+        }
+
+        function acceptSharedProjectTemplate(projectTemplate) {
+            abp.message.confirm(
+                `Accept this shared Project Template : ${projectTemplate.name}`,
+                app.localize('AreYouSure'),
+                function (isConfirmed) {
+                    if (isConfirmed) {
+
+                        var acl = {};
+                        acl.Type = "Project";
+                        acl.Role = "V";
+                        acl.EntityId = projectTemplate.id;
+
+                        _aclService.acceptSharedByTenant(acl).done(function () {
+                            abp.notify.success(app.localize('SuccessfullyAccepted'));
+                        });
+                    }
+                }
+            );
+        }
+
+        function removeSharedProjectTemplate(projectTemplate) {
+
+            abp.message.confirm(
+                `Remove this Shared Project Template : ${projectTemplate.name}`,
+                app.localize('AreYouSure'),
+                function (isConfirmed) {
+                    if (isConfirmed) {
+
+
+                        var acl = {};
+                        acl.Type = "Project";
+                        acl.Role = "V";
+                        acl.EntityId = projectTemplate.id;
+
+                        _aclService.removeSharedByTenant(acl).done(function () {
+                            sharedDataTable.ajax.reload();
+                            abp.notify.success(app.localize('SuccessfullyRemoved'));
+                        });
+                    }
+                }
+            );
+        }
+
+        $("#CreateNewProjectTemplateButton").click(function () {
+            //_createOrEditProjectTemplateModal.open({ Id: null });
+            window.location.href = '/Falcon/ProjectTemplates/createoredit?Id=';
+        });
+
+        $("#ImportProjectTemplateButton").click(function () {
+
+            var _importProjectTemplateModal = new app.ModalManager({
+                viewUrl: abp.appPath + 'Falcon/ProjectTemplates/ImportModal',
+                scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/ProjectTemplates/_ImportModal.js',
+                modalClass: 'ImportProjectTemplatesModal'
+            });
+
+            _importProjectTemplateModal.open();
+        });
+
+        abp.event.on('app.createOrEditProjectTemplatesModalSaved', function () {
+            getProjectTemplates();
+        });
+
+        abp.event.on('app.grantAccessSuccess', function () {
+            getProjectTemplates();
+        });
+
+        abp.event.on('app.revokeAccessSuccess', function () {
+            getProjectTemplates();
+        });
+
+        // on the ProjectTemplatesTableFilter text box when the user presses enter I want to execute the search
+        $('#ProjectTemplatesTableFilter').keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                getProjectTemplates();
+                getProjectTenants();
+            }
+        });
+
+        $('#ProjectTemplatesTableFilter')
+
+        $("#ProjectTemplatesTableFilter").keyup(function (event) {
+            // On enter 
+            if (event.keyCode === 13) {
+                getProjectTemplates();
+                getProjectTenants();
+            }
+        });
+
+        $('#GetProjectsButton').click(function (e) {           
+            e.preventDefault();
+            getProjectTemplates();
+            getProjectTenants();
+        });
+        $('#clearbtn').click(function () {
+            $('#ProjectTemplatesTableFilter').val('');
+            getProjectTemplates();
+            getProjectTenants();
+        });
+        var _manageNotificationModal = new app.ModalManager({
+            viewUrl: abp.appPath + 'Falcon/Notifications/ManageRecipientsModal',
+            scriptUrl: abp.appPath + 'view-resources/Areas/Falcon/Views/Notifications/_ManageRecipientsModal.js',
+            modalClass: 'ManageNotificationRecipients'
+        });
+        // Notification 
+        $('#closeNotificationButton').click(function (e) {
+            e.preventDefault();
+            $("#setLiveToast").removeClass("show");
+        });
+
+        $('#notifyButton').click(function (e) {
+            e.preventDefault();
+            $("#setLiveToast").removeClass("show");
+            _manageNotificationModal.open({ defaultMessage: $("#SetAliveHeaderMessage").text(), entityNames: $('#savedTemplateName').text() });
+        });
+        //$(".bootstrap-tagsinput").find("input").change( function () {
+        $(document).on('click', function (e) {
+            var container = $(".toast.show");
+            if (!$(e.target).closest(container).length) {
+                container.removeClass("show");
+            }
+        });
+
+        //Start Project Deployment Table
+        //var pdTable = _$projectDeploymentsTable.DataTable({
+        //    paging: true,
+        //    serverSide: true,
+        //    processing: true,
+        //    createdRow: function (row, data, dataIndex) {
+        //        $(row).find("td:nth-child(1),td:nth-child(2),td:nth-child(3)").on("click", function () {
+
+        //            _projectDeploymentTableModal.open(
+        //                { id: null, displayName: '' }
+        //            );
+        //        });
+        //    },
+        //    listAction: {
+        //        ajaxFunction: _projectDeploymentsService.getAllByProject,
+        //        inputFilter: function () {
+        //            return {
+        //                filter: $('#ProjectDeploymentsTableFilter').val(),
+        //                commentsFilter: $('#CommentsFilterId').val(),
+        //                actionTypeFilter: $('#ActionTypeFilterId').val(),
+        //                projectReleaseNameFilter: $('#ProjectReleaseNameFilterId').val(),
+        //            };
+        //        },
+        //    },
+        //    columnDefs: [
+        //        {
+        //            width: 100,
+        //            targets: 2,
+        //            data: null,
+        //            orderable: false,
+
+        //            defaultContent: '',
+        //            rowAction: {
+        //                cssClass: 'btn btn-brand dropdown-toggle',
+        //                text: app.localize('Actions') + ' <span class="caret"></span>',
+        //                items: [
+        //                    {
+        //                        text: app.localize('Deployments'),
+        //                        //iconStyle: 'fas fa-boxes me-2',
+        //                        action: function (data) {
+
+        //                            _projectDeploymentTableModal.open(
+        //                                { id: null, displayName: '' }
+        //                            );
+
+        //                        },
+        //                    },
+        //                    {
+        //                        text: app.localize('Delete'),
+        //                        //iconStyle: 'far fa-trash-alt me-2',
+        //                        visible: function () {
+        //                            return false;
+        //                        },
+        //                        action: function (data) {
+        //                            deleteProjectDeployment(data.record.projectDeployment);
+        //                        },
+        //                    },
+        //                ],
+        //            },
+        //        },
+        //        {
+        //            targets: 1,
+
+        //            data: null,
+        //            name: "lastUpdated",
+        //            width: '22em',
+        //            render: function (data, type, row) {
+        //                debugger;
+        //                var dt = new Date(row.createdDateTime);
+        //                var dtoptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        //                var tmoptions = { hour: 'numeric', minute: 'numeric' };
+        //                var creationTime = dt.toLocaleTimeString('en-US', tmoptions) + ', ' + dt.toLocaleDateString('en-GB', dtoptions);
+        //                return creationTime;
+        //            }
+        //        },
+        //        //{
+        //        //    targets: 1,
+        //        //    width: 100,
+        //        //    data: 'projectDeployment.actionType',
+        //        //    name: 'actionType',
+        //        //    render: function (actionType) {
+        //        //        return app.localize('Enum_ProjectDeploymentActionType_' + actionType);
+        //        //    },
+        //        //},
+        //        {
+        //            targets: 0,
+        //            width: 250,
+        //           // data: 'projectReleaseName',
+        //            //name: 'projectReleaseFk.name',
+        //            //width: '42em',
+        //            render: function (data, type, row) {
+        //                debugger;
+        //                data = `<img class="stq-primary-icon me-2" title="Project" src="/common/images/primaryicons/project1.png"></i> ${row.projectName}<div>${row.projectDeployment.comments}</div>`;
+        //                return data;
+        //            }
+
+        //        },
+        //    ],
+        //});
+
+        //function getProjectDeployments() {
+        //    pdTable.ajax.reload();
+        //}
+
+        //function deleteProjectDeployment(projectDeployment) {
+
+
+        //    abp.message.confirm(
+        //        '',
+        //        app.localize('AreYouSure'),
+        //        function (isConfirmed) {
+        //            if (isConfirmed) {
+        //                _projectDeploymentsService.delete({
+        //                    id: projectDeployment.id
+        //                }).done(function () {
+        //                    debugger;
+        //                    getProjectDeployments(true);
+        //                    abp.notify.success(app.localize('SuccessfullyDeleted'));
+        //                });
+        //            }
+        //        }
+        //    );
+        //}
+
+        function deleteProjectTenant(projectTenant) {
+
+            abp.message.confirm(
+                '',
+                app.localize('AreYouSure'),
+                function (isConfirmed) {
+                    if (isConfirmed) {
+                        _projectTenantsService.delete({
+                            id: projectTenant.id
+                        }).done(function () {
+                            getProjectTenants(true);
+                            abp.notify.success(app.localize('SuccessfullyDeleted'));
+                        });
+                    }
+                }
+            );
+        }
+
+        var _$projectTenantsTable = $('#ProjectTenantsTable');
+        var _projectTenantsService = abp.services.app.projectTenants;
+
+        var ptTable = _$projectTenantsTable.DataTable({
+            paging: true,
+            serverSide: true,
+            processing: true,
+            listAction: {
+                ajaxFunction: _projectTenantsService.getAllForTenant,
+                inputFilter: function () {
+                    return {
+                        filter: $('#ProjectTemplatesTableFilter').val(),
+                        minSubscriberTenantIdFilter: $('#MinSubscriberTenantIdFilterId').val(),
+                        maxSubscriberTenantIdFilter: $('#MaxSubscriberTenantIdFilterId').val(),
+                        projectIdFilter: $('#ProjectIdFilterId').val(),
+                        enabledFilter: $('#EnabledFilterId').val(),
+                        projectEnvironmentNameFilter: $('#ProjectEnvironmentNameFilterId').val(),
+                    };
+                },
+            },
+            columnDefs: [
+                {
+                    width: 120,
+                    targets: 3,
+                    data: null,
+                    orderable: false,
+                    autoWidth: false,
+                    defaultContent: '',
+                    rowAction: {
+                        cssClass: 'btn btn-brand dropdown-toggle',
+                        text: '<i class="fa fa-cog"></i> ' + app.localize('Actions') + ' <span class="caret"></span>',
+                        items: [
+                            {
+                                text: app.localize('Deployments'),
+                                //iconStyle: 'fas fa-boxes me-2',
+                                action: function (data) {
+                                    _projectDeploymentTableModal.open(
+                                        { id: data.record.projectTenant.projectId, displayName: '', environmentId: data.record.projectTenant.projectEnvironmentId }
+                                    );
+
+                                },
+                            },
+                            {
+                                text: app.localize('Tags'),
+                                //iconStyle: 'far fa-eye mr-2',
+                                action: function (data) {
+                                    _createOrEditTagEntitiesModal.open({ id: data.record.projectTenant.id });
+                                },
+                            },
+                            {
+                                text: app.localize('Share'),
+                                //iconStyle: 'far fa-edit mr-2',
+                                visible: function () {
+                                    return _permissions.edit;
+                                },
+                                action: function (data) {
+                                    _manageACLModal.open({ entityid: data.record.projectTenant.id, entityname: data.record.name, entitytype: 'Project', simpleMode: true });
+                                },
+                            },
+                            {
+                                text: app.localize('Delete'),
+                                //iconStyle: 'far fa-trash-alt mr-2',
+                                visible: function () {
+                                    return _permissions.delete;
+                                },
+                                action: function (data) {
+                                    deleteProjectTenant(data.record.projectTenant);
+                                },
+                            },
+                        ],
+                    },
+                },
+
+                {
+                    targets: 2,
+                    data: 'projectTenant.enabled',
+                    name: 'enabled',
+                    render: function (enabled) {
+                        if (enabled) {
+                            return '<div class="text-center"><i class="fa fa-check text-success" title="True"></i></div>';
+                        }
+                        return '<div class="text-center"><i class="fa fa-times-circle" title="False"></i></div>';
+                    },
+                },
+                {
+                    targets: 0,
+                    data: 'projectName',
+                    name: 'ProjectName',
+                    render: function (data, type, row) {
+
+                        return `<div><img class="stq-primary-icon me-2" title="Project" src="/common/images/primaryicons/project1.png"></i> ${row.projectName}</div><div style="overflow-y: hidden; max-height: 10em"><div style="pre-wrap; width: 40vw ">${row.projectDescription}</div></div>`;
+                    }
+                },
+                {
+                    targets: 1,
+                    data: 'projectEnvironmentName',
+                    name: 'projectEnvironmentFk.name',
+                },
+            ],
+        });
+
+        function getProjectTenants() {
+            ptTable.ajax.reload();
+        }
+
+    });
+})();

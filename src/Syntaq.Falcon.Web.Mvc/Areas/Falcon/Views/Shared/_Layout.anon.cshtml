@@ -1,0 +1,106 @@
+﻿@using System.Globalization
+@using Abp.AspNetZeroCore.Timing
+@using Abp.MultiTenancy
+@using Abp.Web.Mvc.Alerts
+@using Syntaq.Falcon.Features
+@using Syntaq.Falcon.Web.Resources
+@using Abp.Web.Security.AntiForgery
+@using Syntaq.Falcon.UiCustomization
+@using Syntaq.Falcon.UiCustomization.Dto
+@using Syntaq.Falcon.Url
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Layout
+@using Syntaq.Falcon.Web.Session
+@using CultureHelper = Syntaq.Falcon.Localization.CultureHelper
+@inject ScriptPaths ScriptPaths
+@inject AppTimes AppTimes
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@inject IWebUrlService WebUrlService
+@inject IPerRequestSessionCache SessionCache
+@inject IAlertManager AlertManager
+@{
+    AbpAntiForgeryManager.SetCookie(Context);
+
+    var isChatEnabled = AbpSession.MultiTenancySide == MultiTenancySides.Host || IsFeatureEnabled(AppFeatures.ChatFeature);
+    var headerViewModel = new HeaderViewModel();
+    UiCustomizationSettingsDto theme = await GetTheme();
+}
+<!DOCTYPE html>
+<html lang="en" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<head prefix="og: http://ogp.me/ns#">
+    <title>@L("ApplicationName")</title>
+    <meta charset="utf-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <meta property="og:title" content="Falcon" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/vendors.bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/app-layout-libs.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/_Bundles/common-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/Common/Styles/metronic-customize.css" asp-append-version="true" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/Falcon/Views/Layout/_Layout.css" asp-append-version="true" />
+
+    @if (CultureHelper.IsRtl)
+    {
+        <link rel="stylesheet" href="@(ApplicationPath)Common/Styles/abp-zero-template-rtl.css" asp-append-version="true" />
+    }
+    @RenderSection("Styles", false)
+
+    @{ var loginInfo = await SessionCache.GetCurrentLoginInformationsAsync(); }
+
+
+    <script type="text/javascript">
+        @* This is used to get the application's root path from javascript.
+        It's useful if you're running application in a virtual directory under IIS. *@
+       // var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+</head>
+<!-- END HEAD -->
+<!-- begin::Body -->
+<body >
+    <!-- begin:: Page -->
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        @RenderBody()
+    </div>
+    <!-- end:: Page -->
+    <!-- end::Scroll Top -->
+    <!--begin::Base Scripts -->
+    <script src="/view-resources/Areas/Falcon/Views/_Bundles/app-layout-libs.js" asp-append-version="true"></script>
+    <script src="/view-resources/Areas/Falcon/Views/_Bundles/default-scripts.bundle.js" asp-append-version="true"></script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="@(ApplicationPath)AbpServiceProxies/GetAll?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+    <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        abp.localization.currentCulture = $.extend({}, abp.localization.currentCulture, { displayNameEnglish: '@CultureInfo.CurrentUICulture.EnglishName' });
+        moment.locale('@(CultureHelper.UsingLunarCalendar ? "en": CultureInfo.CurrentUICulture.Name )'); //Localizing moment.js
+    </script>
+ 
+
+    <script src="/view-resources/Areas/Falcon/Views/_Bundles/common-scripts.js" asp-append-version="true"></script>
+    <script src="/view-resources/Areas/Falcon/Views/_Bundles/app-common-scripts.js" asp-append-version="true"></script>
+ 
+
+    <script src="~@ScriptPaths.JQuery_Validation_Localization" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.Bootstrap_Select_Localization" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.JQuery_Timeago_Localization" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.Select2_Localization" asp-append-version="true"></script>
+
+    <!--end::Base Scripts -->
+    <!--begin::Page Snippets -->
+    @RenderSection("Scripts", false)
+    <script>
+        app.supportsTenancyNameInUrl = @(WebUrlService.SupportsTenancyNameInUrl.ToString().ToLower());
+    </script>
+    <!--end::Page Snippets -->
+
+</body>
+<!-- end::Body -->
+</html>

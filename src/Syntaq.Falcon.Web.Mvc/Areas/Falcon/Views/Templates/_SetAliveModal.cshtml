@@ -1,0 +1,50 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Templates
+@using Syntaq.Falcon.Documents.Dtos;
+@model CreateOrEditTemplateDto
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("SetAsLive") + ": " + Model.Name))
+
+@section Scripts
+    {
+    <script src="/view-resources/Areas/Falcon/Views/Forms/Index.js" asp-append-version="true"></script>
+    <script src="~/assets/jquery-ui/jquery-ui.min.js"></script>
+
+    <script src="~/assets/typeahead/typeahead.bundle.min.js"></script>
+    <script src="~/assets/Bootstrap/bootstrap-tagsinput.min.js"></script>
+
+    <script src="~/lib/ClipboardJS/clipboard.min.js"></script>
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script src="~/assets/Prism/prism.js"></script>
+}
+@section Styles
+    {
+    <link href="~/Common/tagsinput.css" rel="stylesheet" />
+}
+
+<div class="modal-body">
+    <p>
+        @*<input type="hidden" name="FormId" value="@Model.Form.Id" />*@
+        <input type="hidden" name="OriginalId" value="@Model.OriginalId" />
+        <input type="hidden" name="Version" value="@Model.Version" />
+        <input type="hidden" name="CurrentVersion" value="@Model.CurrentVersion" />
+        <input type="hidden" name="Name" value="@Model.Name" />
+
+        <div class="form-group mb-3">
+
+            <label class="form-label" for="FormVersionName">@L("Version Name")</label>
+            <input class="form-control" id="FormVersionName" type="text" name="VersionName" @*maxlength="@FormConsts.MaxNameLength" minlength="@FormConsts.MinNameLength"*@ value=@(String.Format("{0}{1}","Version", Model.Version)) readonly="readonly" />
+        </div>
+        <div>
+            <label  class="form-label" for="VersionDescription">@("Version") @L("Description")</label>
+            <textarea class="form-control" id="VersionDescription" type="text" name="VersionDescription" @*maxlength="@FormConsts.MaxNameLength" minlength="@FormConsts.MinNameLength"*@></textarea>
+        </div>
+
+    </p>
+ 
+</div>
+ 
+<div class="modal-footer">
+    <button id="setAlive" class="btn btn-primary">@L("SetAsLive")</button>
+    <button type="button" class="btn btn-secondary close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+</div>

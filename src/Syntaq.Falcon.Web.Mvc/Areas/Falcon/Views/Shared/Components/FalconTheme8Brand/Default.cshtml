@@ -1,0 +1,24 @@
+﻿@using Abp.Runtime.Session
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Layout
+@using Syntaq.Falcon.Web.Areas.Falcon.Views.Shared.Components.FalconLogo
+@model HeaderViewModel
+@{
+    Layout = null;
+}
+
+<div class="kt-header__brand   kt-grid__item" id="kt_header_brand">
+    <div class="kt-header__brand-logo">
+        <a href="@Url.Action("Index", "Home", new {area = string.Empty})" target="_blank">
+            @if (AbpSession.TenantId == null || Model.LoginInformations?.Tenant?.LogoId == null)
+            {
+                <img src="/Common/Images/app-logo-on-dark.svg" alt="logo" height="38" class="kt-header__brand-logo-default" />
+                <img src="/Common/Images/app-logo-on-light.svg" alt="logo" height="38" class="kt-header__brand-logo-sticky" />
+            }
+            else
+            {
+                @await Component.InvokeAsync(typeof(FalconLogoViewComponent))
+                @await Component.InvokeAsync(typeof(FalconLogoViewComponent), new { logoClass = "kt-header__brand-logo-sticky" })
+            }
+        </a>
+    </div>
+</div>

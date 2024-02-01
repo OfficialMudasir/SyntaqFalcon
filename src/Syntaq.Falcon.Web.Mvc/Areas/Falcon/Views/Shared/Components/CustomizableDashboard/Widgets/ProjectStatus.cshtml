@@ -1,0 +1,76 @@
+﻿@using Syntaq.Falcon.Web.Resources
+<link href="~/metronic/themes/default/css/pages/wizard/wizard-5.css" rel="stylesheet" />
+@inject IWebResourceManager WebResourceManager
+@{
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/morris.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/raphael.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.flot.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.waypoints.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.counterup.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/topojson.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/jquery.easypiechart.min.js");
+    WebResourceManager.AddScript(ApplicationPath + "view-resources/Areas/Falcon/Views/_Bundles/chartist.min.js");
+}
+
+<div class="card card-custom bgi-no-repeat card-stretch gutter-b new-subscription-statistics h-100 ProjectStatusContainer">
+    <div class="card-header align-items-center border-0">
+        <div class="d-flex align-items-center">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="font-weight-bolder text-dark"> @L("ProjectStage")</span>
+                        </h3>
+        <div class="tooltip-new d-inline-block">
+            <i class="fas fa-question-circle"></i>
+            <div class="tooltip-inner-new kt-o">
+                    <caption>@L("ProjectStatusTableCaption")</caption>
+            </div>
+        </div>
+        </div>
+        <div class="card-toolbar">
+@*            <!--begin::Menu-->
+            <button class="btn btn-icon btn-color-gray-400 btn-active-color-primary justify-content-end show menu-dropdown" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">
+                <!--begin::Svg Icon | path: icons/duotune/general/gen023.svg-->
+                <span class="svg-icon svg-icon-1 svg-icon-gray-300 me-n1">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="4" fill="currentColor"></rect>
+                        <rect x="11" y="11" width="2.6" height="2.6" rx="1.3" fill="currentColor"></rect>
+                        <rect x="15" y="11" width="2.6" height="2.6" rx="1.3" fill="currentColor"></rect>
+                        <rect x="7" y="11" width="2.6" height="2.6" rx="1.3" fill="currentColor"></rect>
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+            </button>*@
+
+
+            <!--begin::Menu 2-->
+            <!--end::Menu 2-->
+            <!--end::Menu-->
+
+            <div class="dropdown me-2">
+                <button class="btn btn-sm btn-secondary dropdown-toggle " style="width:125px" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="envLbl">@L("All")</span><span class="envId d-none"></span>
+                </button>
+                <div id="PsEnvContent" class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                </div>
+            </div>
+ 
+
+        </div>
+
+                    </div>
+    <div class="card-body">
+        @*<div class="row col-12">*@
+                     
+                    @*<div class="card-title text-left font-weight-bolder text-dark font-size-h6 mb-0 text-hover-state-dark d-block" style="max-height: 20px;">
+                        <h3 class="card-title align-items-start flex-column">
+                        @L("ProjectStage")
+                        </h3>
+                    </div>*@ 
+                    <div class="kt-portlet__body kt-portlet__body--fit">
+                        <div id="projectStatusAppendedId" class="row row-no-padding">
+                        </div>
+                    </div>
+                  
+       @* </div>*@
+           
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@using Syntaq.Falcon.Tags;
+@using Syntaq.Falcon.Tags.Dtos
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagValues
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagEntities
+@using Abp.Extensions
+
+@model CreateOrEditTagEntitiesModalViewModel
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("Tags")) : L("Tags")))
+
+<div class="modal-body">
+        <div id="TagEntityInformationsTab">
+            <form name="TagValuesForEntityForm" role="form" novalidate class="form-validation">
+
+@*            <div class="fs-5 mt-6">
+                @L("Tags")
+            </div>*@
+
+            <input type="hidden" value="@Model.EntityId" id="EntityId" />
+
+            @foreach (GetTagEntityTypeForViewDto tag in Model.Tags.Items)
+            {
+
+                <div class="mt-2">
+                    <div class="font-weight-bold mb-2"><span class="fa fa-tag text-primary fs-4"></span> <b>@tag.TagName</b> </div>
+                    @foreach (TagValueDto tagvalue in tag.TagEntityType.Values)
+                    {
+                        <span class="ml-3">
+                            <label class="kt-checkbox mb-2" for="tag@(tagvalue.Value)">
+                                <input id="tag@(tagvalue.Value)" data-entitytagid="@( Model.EntityTags.Items.Any(t => t.TagEntity.TagValueId == tagvalue.Id) ? Model.EntityTags.Items.First(t => t.TagEntity.TagValueId == tagvalue.Id).TagEntity.Id : "")"
+                               @( Model.EntityTags.Items.Any(t => t.TagEntity.TagValueId == tagvalue.Id) ? "checked" : "")
+                               style="font-size:1.4em" type="checkbox" name="@(tagvalue.Id)"
+                               value="true" />
+                                @tagvalue.Value
+                                <span></span>
+                            </label>
+                        </span>
+                    }
+                </div>
+
+            }
+  
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

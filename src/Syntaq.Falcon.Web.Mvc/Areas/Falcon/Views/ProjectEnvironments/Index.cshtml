@@ -1,0 +1,101 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectEnvironments
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model ProjectEnvironmentsViewModel
+@{
+ViewBag.CurrentPageName = FalconPageNames.Common.ProjectEnvironments;
+}
+@section Scripts
+{
+<script abp-src="/view-resources/Areas/Falcon/Views/ProjectEnvironments/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid">
+
+    <abp-page-subheader title='@L("ProjectEnvironments")' description='@L("ProjectEnvironmentsHeaderInfo")'>
+        <button id="ExportToExcelButton" class="btn btn-outline btn-outline-success btn-active-light-success me-1"><i class="fa fa-file-excel"></i> @L("ExportToExcel")</button>
+
+        @if (IsGranted(AppPermissions.Pages_ProjectEnvironments_Create))
+        {
+        <button id="CreateNewProjectEnvironmentButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewProjectEnvironment")</button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <input type="text" id="ProjectEnvironmentsTableFilter" class="form-control" placeholder='@L("SearchWithThreeDot")' value="@Model.FilterText">
+                                    <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button id="GetProjectEnvironmentsButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="my-3">
+                            <label class="form-label" for="NameFilterId">@L("Name")</label>
+                            <input type="text" class="form-control" name="nameFilter" id="NameFilterId">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="my-3">
+                            <label class="form-label" for="DescriptionFilterId">@L("Description")</label>
+                            <input type="text" class="form-control" name="descriptionFilter" id="DescriptionFilterId">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="my-3">
+                            <label class="form-label" for="EnvironmentTypeFilterId">@L("EnvironmentType")</label>
+                            <select class="form-select" name="EnvironmentTypeFilter" id="EnvironmentTypeFilterId">
+                                <option value="-1">@L("All")</option>
+                                <option value="0">@L("Enum_ProjectEnvironmentType_0")</option>
+
+                                <option value="1">@L("Enum_ProjectEnvironmentType_1")</option>
+
+                                <option value="2">@L("Enum_ProjectEnvironmentType_2")</option>
+
+                                <option value="3">@L("Enum_ProjectEnvironmentType_3")</option>
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row my-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <table id="ProjectEnvironmentsTable" class="table align-middle table-hover table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+
+                                <th>@L("Name")</th>
+                                <th>@L("Description")</th>
+                                <th>@L("EnvironmentType")</th>
+                                <th>@L("Actions")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Apps
+@model CreateOrEditAppModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditApp")) : L("CreateNewApp")))
+
+<div class="modal-body">
+        <div id="AppInformationsTab">
+            <form name="AppInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.App.Id" />
+                }
+
+ 
+				
+					<div class="form-group mb-3">
+						<label class="form-label" for="App_Name">@L("Name")</label>
+						<input class="form-control" id="App_Name" value="@Model.App.Name" type="text" name="name"  required  maxlength="@Syntaq.Falcon.Apps.AppConsts.MaxNameLength"  minlength="@Syntaq.Falcon.Apps.AppConsts.MinNameLength"  />
+					</div>
+					
+					<div class="form-group mb-3">
+						<label class="form-label" for="App_Description">@L("Description")</label>
+						<input class="form-control" id="App_Description" value="@Model.App.Description" type="text" name="description"   maxlength="@Syntaq.Falcon.Apps.AppConsts.MaxDescriptionLength"  minlength="@Syntaq.Falcon.Apps.AppConsts.MinDescriptionLength"  />
+					</div>
+					
+					<div class="form-group mb-3">
+						<label class="form-label" for="App_Data">@L("Data")</label>
+                        <textarea class="form-control" id="App_Data" name="data" required>@Model.App.Data</textarea>
+					</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

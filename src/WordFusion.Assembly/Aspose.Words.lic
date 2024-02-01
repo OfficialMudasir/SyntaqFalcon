@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License>
+  <Data>
+    <LicensedTo>Zumesoft</LicensedTo>
+    <LicenseType>Developer Small Business</LicenseType>
+    <LicenseNote>Limited to 1 developer.</LicenseNote>
+    <OrderID>111114040251</OrderID>
+    <OEM>This is not a non-redistributable license</OEM>
+    <Products>
+      <Product>Aspose.Words for .NET</Product>
+    </Products>
+    <EditionType>Enterprise</EditionType>
+    <SerialNumber>864fc0bc-d46d-4aef-a2e0-84cf022e010b</SerialNumber>
+    <SubscriptionExpiry>20121114</SubscriptionExpiry>
+    <LicenseVersion>2.2</LicenseVersion>
+  </Data>
+  <Signature>okPF4Lhkz7E3yjVWUiAeutyojQ8C4atQv/Ya+7Vc+wEEZRiHvHrEbWVy67MctWA4bWHAsQalt7z0NULLfXJLBSQnUSst5EEbG7Ym7u4OEu/yXvvXE7XtVJKQBsAYFcZHfvZ9ZF/OMluZ+6cu3G1BJY8A9J0qyLFFrmCFQgNZua4=</Signature>
+</License>

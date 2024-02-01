@@ -1,0 +1,79 @@
+.cc-window {
+  background-color: #282a3a;
+}
+.cc-btn {
+  background-color: #5867dd;
+  border-color: #5867dd;
+  color: #ffffff;
+}
+.cc-message {
+  color: #fefefe;
+}
+.searchMenuContainerSelect2 {
+  margin: 1em;
+}
+.searchMenuContainerSelect2 .select2-selection__rendered {
+  min-height: 35px;
+}
+.searchMenuContainerSelect2 .select2-container {
+  width: 100% !important;
+}
+body.dark-mode .searchMenuContainerSelect2 .select2-selection {
+  background: #1e1e2d !important;
+  border-color: #8a8a91 !important;
+}
+/*** top menu search ***/
+@media (max-width: 991px) {
+  .searchMenuTop {
+    display: block !important;
+  }
+  .searchMenuBottom {
+    display: none !important;
+  }
+  .searchMenuContainerSelect2 {
+    width: calc(100% - 40px) !important;
+  }
+}
+@media (min-width: 992px) {
+  .searchMenuTop {
+    display: none !important;
+  }
+  .searchMenuBottom {
+    display: block !important;
+  }
+}
+.searchMenuTop {
+  margin-bottom: 1em !important;
+  margin-left: 25px !important;
+}
+.unread-chat-message-count {
+  position: relative;
+  top: -32px;
+  left: 12px;
+}
+.unread-notification-count {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+div.dataTables_wrapper div.dataTables_info {
+  padding-top: 0 !important;
+  margin-left: 10px !important;
+}
+#kt_content {
+  padding: 0;
+}
+@media (min-width: 992px) {
+  #kt_content {
+    margin-top: -60px;
+  }
+}
+#kt_toolbar {
+  padding-top: 0 !important;
+}
+#kt_aside_menu_wrapper {
+  width: 100% !important;
+}
+#ActiveUserDelegationsCombobox {
+  max-width: 120px;
+}

@@ -1,0 +1,46 @@
+@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
+
+@model FormViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.Forms;
+    Layout = "~/Areas/Falcon/Views/Layout/_Layout.min.cshtml";
+}
+
+<style>
+    .form-control {
+        border-width: 2px;
+    }
+
+    .control-label {
+        font-weight: bold;
+    }
+
+    .table-bordered {
+        border: 2px solid #f4f5f8;
+    }
+</style>
+
+@section Styles{
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/materia/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="https://unpkg.com/formiojs@latest/dist/formio.full.min.css" />*@
+    <link href="~/lib/formio/formio.full.min.css" rel="stylesheet" />
+}
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/Forms/Loader.js" asp-append-version="true"></script>
+    <script src="~/lib/formio/formio.full.min.js"></script>
+
+    <script type="text/javascript">
+        var JSONObj = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.Form)))
+    </script>
+}
+
+<div class="align-items-center p-3">
+    <div id="formio"></div>
+</div>

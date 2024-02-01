@@ -1,0 +1,48 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Records
+@using Newtonsoft.Json
+@using Syntaq.Falcon.Forms.Dtos
+@model NewFormForRecordModal
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("New Form for Record"))
+
+@*<script type="text/javascript">
+        $(function () {
+            $("#formselect").select2({
+                tags: true
+            });
+        });
+    </script>*@
+@*var formslist = @Html.Raw(JsonConvert.DeserializeObject(JsonConvert.SerializeObject(Model.FormsList)));
+    var select = document.getElementById('formselect');
+    for (const i in formslist) {
+        var opt = document.createElement('option');
+        opt.value = formslist[i].value;
+        opt.appendChild(document.createTextNode(formslist[i].label));
+        select.appendChild(opt);
+        }
+*@
+
+<div class="modal-body">
+    <div id="RecordInformationsTab">
+        <form name="NewFormForRecordForm" role="form" novalidate class="form-validation">
+            <input type="hidden" name="rid" value="@Model.RecordID" />
+
+            <select id="formselect" name="formid" class="form-control">
+                @{
+                    var formslist = Model.FormsList;
+                    foreach (FormListDto form in formslist)
+                    {
+                        @:<option value="@form.value">@form.label</option>
+                    }
+                }
+            </select>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary save-button"><span>@L("Open")</span></button>
+    <button type="button" class="btn btn-secondary close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+</div>

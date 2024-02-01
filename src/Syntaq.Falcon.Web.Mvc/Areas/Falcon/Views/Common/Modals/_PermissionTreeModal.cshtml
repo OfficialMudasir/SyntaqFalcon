@@ -1,0 +1,15 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model IPermissionsEditViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel( L("SelectPermissions")))
+
+<div class="modal-body">
+    <div id="PermissionFilterTree">
+        @await Html.PartialAsync("~/Areas/Falcon/Views/Common/_PermissionTree.cshtml", Model)
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">@L("Select")</button>
+</div>
+

@@ -1,0 +1,84 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterContributors
+@model RecordMatterContributorViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="RecordMatterContributorInformationsTab">
+        
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("OrganizationName") :</h6>
+                @Model.RecordMatterContributor.OrganizationName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Name") :</h6>
+                @Model.RecordMatterContributor.Name
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("AccessToken") :</h6>
+                @Model.RecordMatterContributor.AccessToken
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Time") :</h6>
+                @Model.RecordMatterContributor.Time
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("StepStatus") :</h6>
+                @L("Enum_ProjectStepStatus_" + (int)Model.RecordMatterContributor.StepStatus)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("StepRole") :</h6>
+                @L("Enum_ProjectStepRole_" + (int)Model.RecordMatterContributor.StepRole)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("StepAction") :</h6>
+                @L("Enum_ProjectStepAction_" + (int)Model.RecordMatterContributor.StepAction)
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Complete") :</h6>
+                @Model.RecordMatterContributor.Complete
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Email") :</h6>
+                @Model.RecordMatterContributor.Email
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FormSchema") :</h6>
+                @Model.RecordMatterContributor.FormSchema
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FormScript") :</h6>
+                @Model.RecordMatterContributor.FormScript
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FormRules") :</h6>
+                @Model.RecordMatterContributor.FormRules
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("FormPages") :</h6>
+                @Model.RecordMatterContributor.FormPages
+            </div>
+
+            <div class="col-6 mb-3">
+                <h6>(@L("RecordMatter")) @L("RecordMatterName") :</h6>
+                @Model.RecordMatterRecordMatterName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("User")) @L("Name") :</h6>
+                @Model.UserName
+            </div>
+            <div class="col-6 mb-3">
+                <h6>(@L("Form")) @L("Name") :</h6>
+                @Model.FormName
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

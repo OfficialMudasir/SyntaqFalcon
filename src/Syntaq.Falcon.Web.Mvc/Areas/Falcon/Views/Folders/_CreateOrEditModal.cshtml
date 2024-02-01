@@ -1,0 +1,35 @@
+
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Folders
+@model CreateOrEditFolderModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditFolder")) : L("CreateNewFolder")))
+
+<div class="modal-body">
+        <div id="FolderInformationsTab">
+            <form name="FolderInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.Folder.Id" />
+                }
+
+                <div class="form-group">
+                    <label class="form-label" for="Folder_Name">@L("Name")</label>
+                    <input class="form-control" id="Folder_Name" value="@Model.Folder.Name" type="text" name="name" required maxlength="@Syntaq.Falcon.Folders.FolderConsts.MaxNameLength" minlength="@Syntaq.Falcon.Folders.FolderConsts.MinNameLength" />
+                </div>
+
+                <div class="form-group d-none">
+                    <label  class="form-label" for="Folder_Description">@L("Description")</label>
+                    <input class="form-control" id="Folder_Description" value="@Model.Folder.Description" type="text" name="description" maxlength="@Syntaq.Falcon.Folders.FolderConsts.MaxDescriptionLength" minlength="@Syntaq.Falcon.Folders.FolderConsts.MinDescriptionLength" />
+                </div>
+
+                <input type="hidden" name="parentId" value="@Model.Folder.ParentId" />
+
+                <input type="hidden" name="type" value="@Model.Folder.Type" />
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

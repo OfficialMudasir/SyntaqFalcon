@@ -1,0 +1,23 @@
+.StartNewProjectContainer .card.card-custom > .card-body {
+  padding: 1rem 1.25rem !important;
+}
+.StartNewProjectContainer .gutter-b {
+  margin-bottom: 0px !important;
+}
+.StartPtitle {
+  text-align: left !important;
+}
+.StartPdesc {
+  text-align: left !important;
+}
+.StartNewProjectButton {
+  margin-left: 1.5rem !important;
+}
+.StartPtitle {
+  color: #595d6e !important;
+}
+.OnClickLink {
+  cursor: pointer;
+  color: #5871a0;
+  font-size: small;
+}

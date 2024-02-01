@@ -1,0 +1,54 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.TagValues
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@model TagValueTagLookupTableViewModel
+
+@section Scripts
+    {
+    <script abp-src="/view-resources/Areas/Falcon/Views/TagValues/_TagValueTagLookupTableModal.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("PickTag")))
+
+
+
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+            <div class="kt-form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+                        <div class="kt-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="TagTableFilter" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+@*                                <span class="input-group-btn">
+                                    <button id="GetTagButton" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                                </span>*@
+                                <span class="input-group-append">
+                                    <button class="btn btn-secondary" id="tag_clearbtn" type="button">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                    <button id="GetTagButton" class="btn btn-primary" type="button"><i class="fa fa-search" style="color:#ffffff; font-size:1rem"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <table id="TagTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th>@L("Actions")</th>
+                            <th>@L("Name")</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")

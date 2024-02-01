@@ -1,0 +1,24 @@
+@*@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Teams
+@model CreateOrEditTeamModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditTeam")) : L("CreateNewTeam")))
+
+<div class="modal-body">
+    <div id="TeamInformationsTab">
+        <form name="TeamInformationsForm" role="form" novalidate class="form-validation">
+
+            @if (Model.IsEditMode)
+            {
+                <input type="hidden" name="id" value="@Model.Team.Id" />
+            }
+            <div class="form-group">
+                <label for="Team_TeamName">@L("TeamName")</label>
+                <input class="form-control" id="Team_TeamName" value="@Model.Team.TeamName" type="text" name="teamName" required maxlength="@Syntaq.Falcon.Teams.TeamConsts.MaxTeamNameLength" minlength="@Syntaq.Falcon.Teams.TeamConsts.MinTeamNameLength" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")*@

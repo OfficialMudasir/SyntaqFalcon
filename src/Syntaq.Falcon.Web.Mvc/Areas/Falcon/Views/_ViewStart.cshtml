@@ -1,0 +1,5 @@
+﻿@using Syntaq.Falcon.UiCustomization.Dto
+@{
+    UiCustomizationSettingsDto theme = await GetTheme();
+    Layout = "~/Areas/Falcon/Views/Layout/" + theme.BaseSettings.Theme + "/_Layout.cshtml";
+}

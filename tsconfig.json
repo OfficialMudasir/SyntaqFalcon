@@ -1,0 +1,25 @@
+// JavaScript source code
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "maxNodeModuleJsDepth": 2,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "**/bin",
+    "**/bower_components",
+    "**/jspm_packages",
+    "**/node_modules",
+    "**/obj",
+    "**/platforms",
+    "**/npm",
+    "**/assets",
+    "**/Common",
+    "**/lib",
+    "**/metronic",
+    "**/view-resources",
+    "**/vendor"
+  ]
+}

@@ -1,0 +1,16 @@
+.WaitingOthersContainer .kt-portlet__body {
+  padding-top: 0px;
+}
+.table {
+  text-align: left;
+}
+.my-custom-scrollbar {
+  position: relative;
+  height: 200px;
+  overflow: auto;
+}
+.OnClickLink {
+  cursor: pointer;
+  color: #4166e0;
+  font-size: small;
+}

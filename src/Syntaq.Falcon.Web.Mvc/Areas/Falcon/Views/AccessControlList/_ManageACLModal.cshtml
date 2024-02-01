@@ -1,0 +1,211 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AccessControlList
+@using Syntaq.Falcon.Web.Areas.Falcon.Utility
+@model ManageACLModalViewModel
+<style>
+	ul.ui-autocomplete {
+		z-index: 10051;
+	}
+
+    .dropdown-menu {
+    min-width:370px;
+    }
+
+    li:hover{
+
+        background-color:#F5F8FA ;
+
+    }
+
+</style>
+<div class="modal-header pl-4 pr-4 pt-3 pb-3">
+@*	<div class="mr-2 p-0">
+		<img src="~/Common/Images/Entities/user-credentials.png" height=48 />
+	</div>*@
+	<div class="modal-title pl-0">
+		<h5 class=" pt-2 mb-0  pb-0 ">@Html.Raw(Model.EntityName)</h5>
+		<div class="pt-0 small">@Html.Raw(Model.EntityACL.Items.Count + " members")</div>
+	</div>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body pl-4 pr-4 pt-3 pb-2 mb-4">
+    <div class="row" id="GrantNewACL">
+        <form name="GrantNewACLForm" role="form" novalidate class="form-validation form-inline w-100">
+            <input id="EntityId" name="EntityId" value="@Model.EntityId" type="hidden" />
+            <input id="Type" name="Type" value="@Model.EntityType" type="hidden" />
+            <div class="  col-12 mb-4">
+
+                <label for="Assignees" class="col-md-1 col-form-label text-right kt--font-bolder">@L("To"):</label>
+                <div class="col-md-12 form-inline pl-0 pr-0">
+                    <input id="Assignees" class="form-control tagsinput-typeahead" type="text" name="Assignees" @*data-value='@record.UserIds' *@ data-role="tagsinput">
+                </div>
+            </div>
+
+            @if(Model.SimpleView){
+                <input type="hidden" id="Role" name="Role" value="E"/>
+            }
+            else{
+                <div class="col-12 mb-4"> 
+                    <select id="Role" class="form-select form-select-sm form-select-solid" name="Role" required>
+                        <option value="V">Can View</option>
+                        <option value="E">Can Edit</option>
+                        <option value="O">Set Owner</option>
+                    </select>    
+                </div>
+            }
+
+
+ 
+        </form>
+    </div>
+    <hr class="row">
+    <div class="pl-2" id="GrantedACls">
+        <button id="UpdateACL" type="button" hidden aria-label="Update ACL">Update</button>
+        <button id="RevokeACL" type="button" hidden aria-label="Revoke ACL">Revoke</button>
+        @foreach (var Item in Model.EntityACL.Items)
+        {
+            <div class="form-group row">
+                <div class="col-md-1 pt-1">
+                    @IconUtility.Generate(@Item.UserId != null ? @Item.UserName : @Item.OrganizationUnitDisplayName)
+                </div>
+                <span class="col-md-8">
+                    @Html.Raw(@Item.UserId != null ? @Item.UserName : @Item.OrganizationUnitDisplayName)
+                    @Html.Raw(Item.UserEmail)
+                    <div>
+                        @if (Item.Role == "O")
+                        {
+                            <span>Is Owner</span>  
+                        }
+                        else if (Item.Role == "E")
+                        {
+                            <span>Can Edit</span>  
+                        }
+                        else
+                        {
+                            <span>Can View</span>  
+                        }
+                    </div>
+
+
+                </span>
+                <input id="@Html.Raw(@Item.UserId != null ? "UserId" : "OrgId")" hidden aria-label="User Or Organisation" type="text" name="@Html.Raw(@Item.UserId != null ? "UserId" : "OrgId")" value="@Html.Raw(@Item.UserId != null ? @Item.UserId : @Item.OrganizationUnitId)">
+
+                @if(Model.SimpleView){
+
+                    <div class="col-3">
+
+                        <span class="pull-right">
+                            <a onClick="(function(){$('#RevokeACL').trigger('click', '@Item.ACLId')})();" class="btn btn-sm btn-danger text-white font-weight-bold btn-xs"><span class="fa fa-times"></span></a>
+                        </span>                        
+                    </div>
+                }
+                else{
+                    <div class="col-md-3">
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @if (Item.Role == "O")
+                                {
+                                    <span>Is Owner</span> <i class="fas fa-caret-down"></i>
+                                }
+                                else if (Item.Role == "E")
+                                {
+                                    <span>Can Edit</span> <i class="fas fa-caret-down"></i>
+                                }
+                                else
+                                {
+                                    <span>Can View</span> <i class="fas fa-caret-down"></i>
+                                }
+                            </button>
+                            <div class="dropdown-menu  " aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
+                                <ul class="nav">
+                                    <li class="nav-item w-100">
+                                        @if (Item.Role == "V")
+                                        {
+                                            <div class="nav-link">                                            
+                                                <div class="nav-link-text" style="color: #6f777d;">
+                                                    <h6 class="dropdown-header "><i class="nav-link-icon fa fa-check"></i> Can View</h6>                                                
+                                                    <span class="dropdown-item-text ">People can view and download</span>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <a onClick="(function(){$('#UpdateACL').trigger('click', ['@Item.ACLId', 'V'])})();" class="nav-link" style="cursor: pointer;">
+                                                <i class="nav-link-icon"></i>
+                                                <div class="nav-link-text">
+                                                    <h6 class="dropdown-header">Can View</h6>                                                
+                                                    <span class="dropdown-item-text">People can view and download</span>
+                                                </div>
+                                            </a>
+                                        }
+                                    </li>
+                                
+                                    <li class="nav-item w-100">
+                                        @if (Item.Role == "E")
+                                        {
+                                            <div class="nav-link">                                            
+                                                <div class="nav-link-text" style="color: #6f777d;">
+                                                    <h6 class="dropdown-header"><i class="nav-link-icon fa fa-check"></i>  Can Edit</h6>                                                
+                                                    <span class="dropdown-item-text">People can view, edit, move, copy, rename, publish, export, delete and download</span>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <a onClick="(function(){$('#UpdateACL').trigger('click', ['@Item.ACLId','E'])})();" class="nav-link" style="cursor: pointer;">
+                                                <div class="nav-link-text">
+                                                    <h6 class="dropdown-header">Can Edit</h6>                                                
+                                                    <span class="dropdown-item-text">People can view, edit, move, copy, rename, publish, export, delete and download</span>
+                                                </div>
+                                            </a>
+                                        }
+                                    </li>
+                               
+                                    <li class="nav-item w-100">
+                                        @if (Item.Role == "O")
+                                        {
+                                            <div class="nav-link">                                            
+                                                <span class="nav-link-text" style="color: #6f777d;">
+
+                                                    <h6 class="dropdown-header"><i class="nav-link-icon fa fa-check"></i> As Owner</h6>                                                
+                                                    <span class="dropdown-item-text">Owner can create, view, edit, move, copy, rename, publish, export, share, delete and download</span>
+                                                </span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <a onClick="(function(){$('#UpdateACL').trigger('click', ['@Item.ACLId', 'O'])})();" class="nav-link" style="cursor: pointer;">
+                                                <i class="nav-link-icon"></i>
+                                                <div class="nav-link-text">
+                                                    <h6 class="dropdown-header">Make Owner</h6>
+                                                
+                                                    <span class="dropdown-item-text">Owner can create, view, edit, move, copy, rename, publish, export, share, delete and download</span>
+                                                </div>
+                                            </a>
+                                        }
+                                    </li>
+                               
+                                    <li class="nav-item">
+                                        <div class="nav-link pb-0">
+                                            <i class="nav-link-icon"></i>
+                                            <a onClick="(function(){$('#RevokeACL').trigger('click', '@Item.ACLId')})();" class="btn btn-danger text-white font-weight-bold btn-sm mt-2 ">Revoke Access</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal-footer pl-4 pr-4 pt-3 pb-3">
+    <button id="GrantACL" type="button" class="btn btn-primary btn-sm pull-right"  >@L("Share")</button>
+	<button type="button" class="btn btn-sm btn-secondary close-button" data-bs-dismiss="modal">Close</button>
+</div>
+@*    @await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithCloseSm.cshtml")*@

@@ -1,0 +1,36 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.MergeTextItemValues
+@model CreateOrEditMergeTextItemValueModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditMergeTextItemValue")) : L("CreateNewMergeTextItemValue")))
+
+<div class="modal-body">
+        <div id="MergeTextItemValueInformationsTab">
+            <form name="MergeTextItemValueInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.MergeTextItemValue.Id" />
+                }
+
+				
+
+				
+								<div class="form-group">
+									<label for="MergeTextItemValue_Key">@L("Key")</label>
+									<input class="form-control" id="MergeTextItemValue_Key" value="@Model.MergeTextItemValue.Key" type="text" name="key"   maxlength="@Syntaq.Falcon.MergeTexts.MergeTextItemValueConsts.MaxKeyLength"  minlength="@Syntaq.Falcon.MergeTexts.MergeTextItemValueConsts.MinKeyLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label for="MergeTextItemValue_Value">@L("Value")</label>
+									<input class="form-control" id="MergeTextItemValue_Value" value="@Model.MergeTextItemValue.Value" type="text" name="value"   maxlength="@Syntaq.Falcon.MergeTexts.MergeTextItemValueConsts.MaxValueLength"  minlength="@Syntaq.Falcon.MergeTexts.MergeTextItemValueConsts.MinValueLength"  />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,19 @@
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Forms.Dtos
+@using Syntaq.Falcon.Forms
+@model GetFormForEditOutput
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("New") + ' ' + L("Version") + ' ' + L("for") + ' ' + Model.Form.Name))
+<div class="modal-body">
+    <p>
+        <input type="hidden" name="FormId" value="@Model.Form.Id" />
+        <input type="hidden" name="FormOriginalId" value="@Model.Form.OriginalId" />
+        <input type="hidden" name="FormVersion" value="@Model.Form.Version" />
+        <div class="form-group">
+            <label for="FormVersionName">@L("Version Name")</label>
+            <input class="form-control" id="FormVersionName" type="text" name="VersionName" maxlength="@FormConsts.MaxNameLength" minlength="@FormConsts.MinNameLength" value="@Model.Form.Name" />
+        </div>
+ 
+    </p>
+</div>
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+ 

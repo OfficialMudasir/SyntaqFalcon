@@ -1,0 +1,71 @@
+﻿
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.EntityVersionHistories
+@model CreateOrEditEntityVersionHistoryModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditEntityVersionHistory")) : L("CreateNewEntityVersionHistory")))
+
+<div class="modal-body">
+        <div id="EntityVersionHistoryInformationsTab">
+            <form name="EntityVersionHistoryInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.EntityVersionHistory.Id" />
+                }
+
+				            
+						<div class="form-group">
+							<label for="userId">@L("User")</label>
+							@Html.DropDownList("userId", new SelectList(Model.EntityVersionHistoryUserList,"Id","DisplayName", (Model.IsEditMode ? Model.EntityVersionHistory.UserId.ToString() : "")),@L("SelectAUser"), new { @class = "form-control"   })
+						</div>
+
+
+				
+								<div class="form-group">
+									<label class="form-label" for="EntityVersionHistory_Name">@L("Name")</label>
+									<input class="form-control" id="EntityVersionHistory_Name" value="@Model.EntityVersionHistory.Name" type="text" name="name"  required  maxlength="@Syntaq.Falcon.EntityVersionHistories.EntityVersionHistoryConsts.MaxNameLength"  minlength="@Syntaq.Falcon.EntityVersionHistories.EntityVersionHistoryConsts.MinNameLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_VersionName">@L("VersionName")</label>
+									<input class="form-control" id="EntityVersionHistory_VersionName" value="@Model.EntityVersionHistory.VersionName" type="text" name="versionName"     />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_Description">@L("Description")</label>
+									<input class="form-control" id="EntityVersionHistory_Description" value="@Model.EntityVersionHistory.Description" type="text" name="description"   maxlength="@Syntaq.Falcon.EntityVersionHistories.EntityVersionHistoryConsts.MaxDescriptionLength"  minlength="@Syntaq.Falcon.EntityVersionHistories.EntityVersionHistoryConsts.MinDescriptionLength"  />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_Version">@L("Version")</label>
+									<input class="form-control m-input" id="EntityVersionHistory_Version" value="@Model.EntityVersionHistory.Version.ToString(CultureInfo.InvariantCulture)" type="number" name="version"  />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_PreviousVersion">@L("PreviousVersion")</label>
+									<input class="form-control m-input" id="EntityVersionHistory_PreviousVersion" value="@Model.EntityVersionHistory.PreviousVersion.ToString(CultureInfo.InvariantCulture)" type="number" name="previousVersion"  />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_EntityId">@L("EntityId")</label>
+									<input class="form-control" id="EntityVersionHistory_EntityId" value="@Model.EntityVersionHistory.EntityId" type="text" name="entityId"     />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_Data">@L("Data")</label>
+									<input class="form-control" id="EntityVersionHistory_Data" value="@Model.EntityVersionHistory.Data" type="text" name="data"     />
+								</div>
+					
+								<div class="form-group">
+									<label class="form-label"  for="EntityVersionHistory_Type">@L("Type")</label>
+									<input class="form-control" id="EntityVersionHistory_Type" value="@Model.EntityVersionHistory.Type" type="text" name="type"  required    />
+								</div>
+					
+
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

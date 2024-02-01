@@ -1,0 +1,110 @@
+﻿
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterItemHistories
+@model RecordMatterItemHistoryViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("History")))
+
+<script>
+
+    var _$recordMatterItemHistoriesTable = $('#RecordMatterItemHistoriesTable');
+    var _recordMatterItemHistoriesService = abp.services.app.recordMatterItemHistories;
+
+    var dataTable = _$recordMatterItemHistoriesTable.DataTable({
+        paging: true,
+        serverSide: true,
+        processing: true,
+        listAction: {
+            ajaxFunction: _recordMatterItemHistoriesService.getAll,
+            inputFilter: function () {
+                return {
+                    recordMatterId: '@Model.RecordMatterItemHistory.RecordMatterItemId'
+                };
+            }
+        },
+        columnDefs: [
+            //{
+            //    targets: 0,
+            //    data: "recordMatterItemDocumentName",
+            //    name: "recordMatterItemFk.documentName"
+            //},
+            {
+                targets: 0,
+                /*                data: "recordMatterItemHistory.createdDate",*/
+                name: "Name",
+                render: function (data, type, row) {
+                    debugger;
+                    return row.recordMatterItemHistory.name;
+                }
+            },
+            {
+                targets: 1,
+/*                data: "recordMatterItemHistory.createdDate",*/
+                name: "DateCreated",
+                render: function (data, type, row) {
+                    var m = moment(row.recordMatterItemHistory.createdDate);
+                    data = m.format('LLL');
+                    return data;
+                }
+            },
+            {
+                targets: 2,
+                data: "recordMatterItemHistory.status",
+                name: "status"
+            },
+            {
+                targets: 3,
+
+                name: "allowedFormats",
+                render: function (data, type, row) {
+                    data = '';
+                    if (row.recordMatterItemHistory.allowedFormats.includes('W')) {
+                        data += " <a class='mr-2' href='/Falcon/RecordMatterItemHistories/GetDocumentForDownload?Id=" + row.recordMatterItemHistory.id + "&format=docx'><img alt='pdf' class='stq-primary-icon me-2' title='App' src='/common/images/primaryicons/pdf.svg'></a>";
+                    }
+
+                    if (row.recordMatterItemHistory.allowedFormats.includes('P')) {
+                        data += " <a href='/Falcon/RecordMatterItemHistories/GetDocumentForDownload?Id=" + row.recordMatterItemHistory.id + "&format=pdf'><img alt='docx' class='stq-primary-icon me-2' title='App' src='/common/images/primaryicons/doc.svg'></a>";
+                    }
+                    
+                    return data;
+                }
+            },
+            //{
+            //    targets: 5,
+            //    data: "formName",
+            //    name: "formFk.name"
+            //},
+            //{
+            //    targets: 6,
+            //    data: "submissionSubmissionStatus",
+            //    name: "submissionFk.submissionStatus"
+            //}
+        ]
+    });
+
+    function getRecordMatterItemHistories() {
+        dataTable.ajax.reload();
+    }
+
+</script>
+
+<div class="modal-body">
+    <div id="RecordMatterItemHistoryInformationsTab">
+        <table id="RecordMatterItemHistoriesTable" class="display table table-bordered table-hover dt-responsive nowrap">
+            <thead>
+                <tr>
+                    @*<th></th>
+        <th>@L("DocumentName")</th>*@
+                    <th>@L("Name")</th>
+                    <th>@L("Date")</th>
+                    @*<th>@L("AllowedFormats")</th>*@
+                    <th>@L("Status")</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

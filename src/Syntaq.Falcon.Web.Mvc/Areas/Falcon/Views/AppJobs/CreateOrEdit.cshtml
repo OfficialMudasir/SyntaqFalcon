@@ -1,0 +1,1291 @@
+
+@* UNUSED FILE
+    @using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.AppJobs
+@model CreateOrEditAppJobModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditAppJob")) : L("CreateNewAppJob")))
+
+<style>
+    .m-wizard__step {
+        margin-bottom: 1rem !important;
+    }
+
+    .m-wizard__progress {
+        margin-bottom: 2rem !important;
+    }
+
+    label {
+        display: inline-block;
+        margin-top: .5rem;
+        margin-bottom: 0rem;
+    }
+</style>
+
+@section Scripts{
+
+    <script abp-src="/view-resources/Areas/Falcon/Views/Apps/Index.js" asp-append-version="true"></script>
+
+    <script src="~/metronic/src/js/framework/components/general/wizard.js"></script>
+    <script src="~/Common/Scripts/jquery.serializejson.min.js"></script>
+    <script src="~/Common/tagsinput.js"></script>
+
+}
+
+<div class="modal-body mb-0 pb-0  ">
+    <div id="AppJobInformationsTab">
+            <form name="AppJobInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.AppJob.Id" />
+                }
+
+
+                                <div class="form-group m-form__group">
+                                        <label for="AppName">@L("App")</label>
+                                    <div class="input-group">
+                                            <input class="form-control" id="AppName" name="appName" value="@Model.AppName" type="text" disabled>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary blue" id="OpenAppLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                                        </div>
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-danger" type="button" id="ClearAppNameButton"><i class="fa fa-close"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (Model.IsEditMode)
+                                {
+                                    <input class="form-control" value="@Model.AppJob.AppId" type="text" name="appId" required hidden/>
+                                }
+                                 else
+                                {
+                                    <input class="form-control" value="" type="text" name="appId" required hidden/>
+                                }
+
+
+
+
+                                <div class="form-group">
+                                    <label for="AppJob_Name">@L("Name")</label>
+                                    <input class="form-control" id="AppJob_Name" value="@Model.AppJob.Name" type="text" name="name"  required  maxlength="@Syntaq.Falcon.Apps.AppJobConsts.MaxNameLength"  minlength="@Syntaq.Falcon.Apps.AppJobConsts.MinNameLength"  />
+                                </div>
+
+
+            </form>
+        </div>
+
+
+    <input type="hidden" name="JobId" value="@Model.Id">
+    <input type="hidden" name="AppId" value="@Model.AppId">
+
+    <div class="m-wizard m-wizard--3 m-wizard--success m-wizard--step-first" id="m_wizard">
+
+        <!--begin: Message container -->
+        <div class="m-portlet__padding-x">
+            <!-- Here you can put a message or alert -->
+        </div>
+        <!--end: Message container -->
+
+        <div class="row m-row--no-padding mb-0 pb-0">
+            <div class="col-xl-4 col-lg-12">
+                <!--begin: Form Wizard Head -->
+                <div class="m-wizard__head pt-0 pb-0 mb-0 pl-0">
+                    <h3 class="m-form m-form__section  ">@Model.AppJobName</h3>
+                    <!--begin: Form Wizard Progress -->
+                    <div class="m-wizard__progress">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Progress -->
+                    <!--begin: Form Wizard Nav -->
+                    <div class="m-wizard__nav">
+                        <div class="m-wizard__steps">
+                            <div class="m-wizard__step m-wizard__step--current" m-wizard-target="m_wizard_form_step_1">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>1</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        Details
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-wizard__step m-wizard__step--current" m-wizard-target="m_wizard_form_step_2">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>2</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        Document Templates
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-wizard__step" m-wizard-target="m_wizard_form_step_3">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>3</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        Saving Records
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-wizard__step" m-wizard-target="m_wizard_form_step_4">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>4</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        Before Assembly Workflow
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="m-wizard__step" m-wizard-target="m_wizard_form_step_5">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>5</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        After Assembly Workflow
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="m-wizard__step" m-wizard-target="m_wizard_form_step_6">
+                                <div class="m-wizard__step-info">
+                                    <a href="#" class="m-wizard__step-number">
+                                        <span><span>6</span></span>
+                                    </a>
+                                    <div class="m-wizard__step-line">
+                                        <span></span>
+                                    </div>
+                                    <div class="m-wizard__step-label">
+                                        Emails
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end: Form Wizard Nav -->
+                </div>
+                <!--end: Form Wizard Head -->
+            </div>
+            <div class="col-xl-8 col-lg-12">
+                <!--begin: Form Wizard Form-->
+                <div class="m-wizard__form pt-0">
+                    <!--
+                        1) Use m-form--label-align-left class to alight the form input lables to the right
+                        2) Use m-form--state class to highlight input control borders on form validation
+                    -->
+                    <div class="m-form m-form--label-align-left- m-form--state-" id="m_JobForm" novalidate="novalidate">
+                        <!--begin: Form Body -->
+                        <div class="m-portlet__body m-portlet__body--no-padding">
+                            <!--begin: Form Wizard Step 1-->
+                            <div class="m-wizard__form-step m-wizard__form-step--current" id="m_wizard_form_step_1">
+                                <div class="m-form__section m-form__section--first">
+                                    <div class="">
+                                        <h3>Details</h3>
+                                        <div class="form-group m-form__group row">
+                                            <h3 class="col-xl-3 col-lg-3 col-form-label">* Job Name:</h3>
+                                            <div class="col-xl-9 col-lg-9">
+                                                <input type="text" name="JobName" class="form-control form-control-sm m-input" placeholder="" value="@Model.AppJob.Name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <form id="m_wizard_form_step_user_form" class="d-none">
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label">* User Name:</label>
+                                            <div class="col-xl-9 col-lg-9">
+                                                <input type="hidden" name="User[ID]" class="form-control form-control-sm  m-input" placeholder="" value="@Model.AppJob.User.ID">
+                                                <input type="text" name="User[Name]" class="form-control form-control-sm  m-input" placeholder="" value="@Model.AppJob.User.Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group m-form__group row">
+                                            <label class="col-xl-3 col-lg-3 col-form-label">* Email:</label>
+                                            <div class="col-xl-9 col-lg-9">
+                                                <input type="email" name="User[Email]" class="form-control form-control-sm  m-input" placeholder="" value="@Model.AppJob.User.Email">
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+                            <!--end: Form Wizard Step 1-->
+                            <!--begin: Form Wizard Step 2-->
+                            <div class="m-wizard__form-step" id="m_wizard_form_step_2">
+
+                                <div class="m-form__section m-form__section--first mb-0">
+                                    <div class="">
+                                        <h3 class=" ">Document templates</h3>
+                                    </div>
+                                </div>
+
+
+
+                                <form id="m_wizard_form_step_1_form">
+
+                                    @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobDocumentDto document in Model.AppJob.Document)
+                                    {
+
+                                        <div class="m-form__section m-form__section--first formblock ">
+
+                                            <div class="form-group  ">
+                                                <div class="">
+                                                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                                                    <label class="form-control-label">* Document name:</label>
+                                                    <input type="text" name="Document[][DocumentName]" class="form-control form-control-sm  m-input" placeholder="" value="@document.DocumentName">
+                                                    <span class="m-form__help">The name to save this document as</span>
+                                                </div>
+                                                <div class="">
+                                                    <label class="form-control-label">* Document template URL:</label>
+                                                    <input type="url" name="Document[][DocumentTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="@document.DocumentTemplateURL">
+                                                    <span class="m-form__help">Document template to be used in this assembly job</span>
+                                                </div>
+                                                <div class="">
+                                                        <label class="form-control-label">* Summary Document template URL:</label>
+                                                        <input type="url" name="Document[][DocumentSummaryTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="@document.DocumentSummaryTemplateURL">
+                                                        <span class="m-form__help">Summary Document template to be used in this assembly job</span>
+                                                    </div>
+                                                    <div class="">
+                                                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                            <input type="checkbox" name="Document[][SummaryDoc]" value="true" @(document.SummaryDoc.GetValueOrDefault() ? "checked" : "")> Summary Document
+                                                            <span></span>
+                                                        </label>
+                                                    </div>
+
+                                                <div class="  ">
+                                                    <div class="">Download options</div>
+                                                    <div class="m-checkbox-inline">
+                                                        <label class="m-checkbox m-checkbox--solid m-checkbox--brand">
+                                                            <input type="checkbox" name="Document[][AllowWord]" @(document.AllowWord.GetValueOrDefault() ? "checked" : "") value="true"> Allow Word
+                                                            <span></span>
+                                                        </label>
+                                                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                            <input type="checkbox" name="Document[][AllowWordPaid]" @(document.AllowWordPaid.GetValueOrDefault() ? "checked" : "") value="true"> Allow Word paid
+                                                            <span></span>
+                                                        </label>
+                                                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                            <input type="checkbox" name="Document[][AllowPdf]" @(document.AllowPdf.GetValueOrDefault() ? "checked" : "") value="true"> Allow Pdf
+                                                            <span></span>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                            <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                        </div>
+
+                                    }
+
+
+                                </form>
+
+                                <a id="btn-add-DocumentTemplate" class="btn btn-outline-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder     mr-2"><i class="fa fa-plus"></i> Add Document Template </a>
+
+                            </div>
+                            <!--end: Form Wizard Step 2-->
+                            <!--begin: Form Wizard Step 2-->
+                            <div class="m-wizard__form-step" id="m_wizard_form_step_3">
+
+                                <form id="m_wizard_form_step_2_form">
+                                    <div class="m-form__section m-form__section--first mb-0 ">
+                                        <div class="">
+                                            <h class=" ">Records</h>
+                                        </div>
+                                    </div>
+
+                                    @{
+                                        int recordidx = 0;
+                                        foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRecordMatterDto record in Model.AppJob.RecordMatter)
+                                        {
+                                            <div class="formblock formblock-record">
+
+                                                <input name="index" type="text" value="@recordidx" />
+
+                                                <div class="m-form__section m-form__section--first">
+
+                                                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+
+                                                    <div>
+                                                        <!--<input type="hidden" name="RecordMatter[][UserID]" value="record.Users.ID">-->
+                                                        <input type="hidden" name="RecordMatter[][OrganizationID]" value="@record.OrganizationID">
+                                                        <input type="hidden" name="RecordMatter[][RecordId]" value="@record.RecordID">
+                                                        <input type="hidden" name="RecordMatter[][RecordMatterId]" value="@record.RecordMatterID">
+                                                        <input type="hidden" name="RecordMatter[][RecordMatterItemId]" value="@record.RecordMatterItemID">
+                                                        <input type="hidden" name="RecordMatter[][RecordMatterItemGroupId]" value="@record.RecordMatterItemGroupID">
+                                                        <input type="hidden" name="RecordMatter[][FolderId]" value="@record.FolderId">
+                                                    </div>
+
+                                                    <div class="form-group">
+
+
+                                                        <div class="input-group mb-2">
+                                                            <label class="form-control-label">Users who :</label>
+                                                            <input type="text" name="RecordMatter[][UserIds]" data-value='@record.UserIds' data-role="tagsinput">
+                                                        </div>
+
+                                                        <a class="large OpenUserLookupTableButton   pull-right" href="#"><i class="fa fa-search"></i> @L("Pick")</a>
+
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="">
+                                                            <label class="form-control-label">Record Name:</label>
+
+                                                            <div class="input-group mb-2">
+                                                                <input type="text" name="RecordMatter[][RecordName]" class="form-control form-control-sm  m-input" placeholder="if empty new record will be created" value="@record.RecordName">
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary m-btn m-btn--custom   OpenRecordLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                                                                </div>
+                                                            </div>
+                                                            <a class=" OpenRecordLookupTableButton pull-right  ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=RecordId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") | </a>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <div class="">
+                                                            <label class="form-control-label">Matter Name:</label>
+                                                            <div class="input-group mb-2">
+                                                                <input type="text" name="RecordMatter[][RecordMatterName]" class="form-control form-control-sm  m-input" placeholder="if empty new record matter will be created" value="@record.RecordMatterName">
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-outline-primary m-btn m-btn--custom   OpenRecordMatterLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                                                                </div>
+                                                            </div>
+                                                            <a class=" OpenRecordMatterLookupTableButton pull-right  ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=RecordMatterId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordMatterName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") | </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <div class="">
+                                                            <label class="form-control-label">Folder:</label>
+                                                            <div class="input-group mb-2">
+                                                                <input type="text" name="RecordMatter[][FolderName]" readonly class="form-control form-control-sm  m-input" placeholder="if empty root folder will be used" value="@record.FolderName">
+                                                                <div class="input-group-append">
+                                                                      <button class="btn btn-outline-primary m-btn m-btn--custom   OpenFormsFolderLookupTableButton" id="" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                                                                </div>
+                                                            </div>
+                                                            <a class=" OpenFormsFolderLookupTableButton pull-right  ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=FolderId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=FolderName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") | </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                            <div class="">
+                                                                <label class="form-control-label">File Description:</label>
+                                                                <input type="text" name="RecordMatter[][FileDescription]" class="form-control form-control-sm  m-input" placeholder="" value="@record.FileDescription">
+                                                            </div>
+                                                        </div>
+                                                        <div class="m-checkbox-inline">
+                                                            <label class="m-checkbox m-checkbox--solid m-checkbox--brand">
+                                                                <input type="checkbox" name="RecordMatter[][GenerateInvoice]" @(record.GenerateInvoice.GetValueOrDefault() ? "checked" : "") value="true"> Generate Invoice
+                                                                <span></span>
+                                                            </label>
+
+                                                        </div>
+                                                </div>
+                                                <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                            </div>
+
+                                            recordidx++;
+
+                                        }
+                                    }
+
+
+
+                                </form>
+
+                                <a id="btn-add-RecordMatter" class="btn btn-outline-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder     mr-2"><i class="fa fa-plus"></i> Add Record Matter</a>
+
+                            </div>
+                            <!--end: Form Wizard Step 2-->
+
+                            <form id="m_wizard_form_step_workflow_form">
+
+                                <!--begin: Form Wizard Step 3-->
+                                <div class="m-wizard__form-step" id="m_wizard_form_step_4">
+                                    <div class="tab-content active  ">
+
+
+                                        <div class="m-form__section m-form__section--first mb-0">
+                                            <div class="">
+                                                <h3 class=" ">Before Assembly REST API</h3>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div id="m_wizard_form_step_3_BeforeAssembly">
+
+                                            @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRestDto workflow in Model.AppJob.WorkFlow.BeforeAssembly)
+                                            {
+
+                                                <div class="formblock">
+
+                                                    <div class="m-form__section m-form__section--first">
+
+                                                        <div class="form-group  row">
+                                                            <div class="col-lg-12">
+                                                                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                                                                <label class="form-control-label">* URL:</label>
+                                                                <input type="text" name="WorkFlow[]BeforeAssembly[][URL]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.URL">
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group row inline">
+
+                                                            <div class="col-lg-1">
+                                                                <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                                    <input type="checkbox" name="WorkFlow[]BeforeAssembly[][Async]" @( workflow.Async.GetValueOrDefault() ? "checked" : "") value="true"> Async
+                                                                    <span></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <label for="exampleSelect1">Rest Type</label>
+                                                                <select class="form-control m-input" name="WorkFlow[]BeforeAssembly[][Rest]">
+                                                                    <option>POST</option>
+                                                                    <option>GET</option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="m-form__heading">
+                                                            <h3 class="m-form__heading-title">Headers <span onclick="$('#workflow-beforeassembly').toggle();" style="cursor:pointer" class="small text-primary">Show Headers</span></h3>
+                                                        </div>
+
+
+                                                        <div id="workflow-beforeassembly" style="display:none">
+
+                                                            <div class="form-group row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header1Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header1Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Description">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Description">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group  row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Description">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="m-form__heading">
+                                                            <h3 class="m-form__heading-title">Body</h3>
+                                                        </div>
+                                                        <div class="form-group  row">
+                                                            <div class="col-lg-12">
+                                                                <label class="form-control-label">* BodyType:</label>
+                                                                <input type="text" name="WorkFlow[]BeforeAssembly[][BodyType]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.BodyType">
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <label class="form-control-label">* Body Content:</label>
+                                                                <textarea type="text" name="WorkFlow[]BeforeAssembly[][BodyContent]" class="form-control form-control-sm  m-input" placeholder="">@workflow.BodyContent</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                </div>
+                                            }
+
+
+                                        </div>
+
+                                        <a id="btn-add-BeforeAssembly" class="btn btn-outline-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder     mr-2"><i class="fa fa-plus"></i> Add Before Assembly REST API</a>
+
+                                        <div class="m-form__section">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Step 3-->
+                                <!--begin: Form Wizard Step 4-->
+                                <div class="m-wizard__form-step" id="m_wizard_form_step_5">
+                                    <!--begin::Section-->
+
+                                    <div class="tab-content active  ">
+                                        <div class="m-form__section m-form__section--first mb-0">
+                                            <div class="">
+                                                <h3 class=" ">After Assembly REST API</h3>
+                                            </div>
+                                        </div>
+
+                                        <div id="m_wizard_form_step_3_AfterAssembly">
+
+                                            @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobRestDto workflow in Model.AppJob.WorkFlow.AfterAssembly)
+                                            {
+                                                <div class="formblock">
+
+                                                    <div class="m-form__section m-form__section--first">
+                                                        <div class="form-group  row">
+
+                                                            <div class="col-lg-12">
+                                                                <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                                                                <label class="form-control-label">* URL:</label>
+                                                                <input type="text" name="WorkFlow[]AfterAssembly[][URL]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.URL">
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row inline">
+
+                                                            <div class="col-lg-1">
+                                                                <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                                    <input type="checkbox" name="WorkFlow[]AfterAssembly[][Async]" @(workflow.Async.GetValueOrDefault() ? "checked" : "") value="true"> Async
+                                                                    <span></span>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <label for="exampleSelect1">Rest Type</label>
+                                                                <select class="form-control form-control-sm  m-input" name="WorkFlow[]AfterAssembly[][Rest]">
+                                                                    <option>Post</option>
+                                                                    <option>GET</option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="m-form__heading">
+                                                            <h3 class="m-form__heading-title">Headers <span onclick="$('#workflow-afterassembly').toggle()" style="cursor:pointer" class="text-primary small">Show Headers</span></h3>
+                                                        </div>
+
+
+                                                        <div id="workflow-afterassembly" style="display:none">
+
+                                                            <div class="form-group  row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header1Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header1Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header1Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header1Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header1Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header1Description">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header2Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header2Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header2Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header2Description">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-group  row">
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Key:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header3Key]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Key">
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <label class="form-control-label">* Value:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header3Value]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Value">
+                                                                </div>
+                                                                <div class="col-lg-12">
+                                                                    <label class="form-control-label">* Description:</label>
+                                                                    <input type="text" name="WorkFlow[]AfterAssembly[][Header3Description]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.Header3Description">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="m-form__heading">
+                                                            <h3 class="m-form__heading-title">Body</h3>
+                                                        </div>
+                                                        <div class="form-group  row">
+                                                            <div class="col-lg-12">
+                                                                <label class="form-control-label">* BodyType:</label>
+                                                                <input type="text" name="WorkFlow[]AfterAssembly[][BodyType]" class="form-control form-control-sm  m-input" placeholder="" value="@workflow.BodyType">
+                                                            </div>
+                                                            <div class="col-lg-12">
+                                                                <label class="form-control-label">* Body Content:</label>
+                                                                <textarea type="text" name="WorkFlow[]AfterAssembly[][BodyContent]" class="form-control form-control-sm  m-input" placeholder="">@workflow.BodyContent</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                </div>
+                                            }
+
+
+                                        </div>
+
+                                        <a id="btn-add-AfterAssembly" class="btn btn-outline-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder     mr-2"><i class="fa fa-plus"></i> Add After Assembly REST API</a>
+
+                                        <div class="m-form__section">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Step 4-->
+                                <!--begin: Form Wizard Step 5-->
+                                <div class="m-wizard__form-step" id="m_wizard_form_step_6">
+                                    <!--begin::Section-->
+
+                                    <div class="tab-content active   ">
+
+                                        <div class="m-form__section m-form__section--first mb-0">
+                                            <div class="">
+                                                <h3 class=" ">Email</h3>
+                                            </div>
+                                        </div>
+
+                                        <div id="m_wizard_form_step_3_Email">
+
+                                            @foreach (Syntaq.Falcon.Apps.Dtos.CreateOrEditAppJobEmailDto email in Model.AppJob.WorkFlow.Email)
+                                            {
+                                                <div class="formblock">
+                                                    <div class="tab-content active ">
+                                                        <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                                                        <div class="">
+                                                            <label class="form-control-label">* Recipients:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][DocumentEmailRecipients]" class="form-control form-control-sm  m-input" placeholder="" value="@email.DocumentEmailRecipients">
+                                                        </div>
+                                                        <div class="">
+                                                            <label class="form-control-label">* CC Recipients:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][DocumentEmailCCRecipients]" class="form-control form-control-sm  m-input" placeholder="" value="@email.DocumentEmailCCRecipients">
+                                                        </div>
+                                                        <div class="">
+                                                            <label class="form-control-label">* BCC Recipients:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][DocumentEmailBCCRecipients]" class="form-control form-control-sm  m-input" placeholder="" value="@email.DocumentEmailBCCRecipients">
+                                                        </div>
+
+                                                        <div class="">
+                                                            <label class="form-control-label">* Email From:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][DocumentEmailFrom]" class="form-control form-control-sm  m-input" placeholder="" value="@email.DocumentEmailFrom">
+                                                        </div>
+                                                        <div class="">
+                                                            <label class="form-control-label">* Subject:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][DocumentEmailSubject]" class="form-control form-control-sm  m-input" placeholder="" value="@email.DocumentEmailSubject">
+                                                        </div>
+
+
+
+                                                        <div class=" mt-4">
+                                                            <h5>Email Body</h5>
+                                                            <select class="form-control form-control-sm  m-input" name="WorkFlow[]Email[][EmailType]">
+                                                                <option>HTML</option>
+                                                                <option>Plain</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="">
+                                                            <label class="form-control-label">* Message:</label>
+                                                            <textarea type="text" name="WorkFlow[]Email[][DocumentEmailMessage]" class="form-control form-control-sm  m-input" placeholder="">@email.DocumentEmailMessage</textarea>
+                                                        </div>
+
+                                                        <div class="">
+                                                                <label class="form-control-label">* User Email:</label>
+                                                                <input type="text" name="WorkFlow[]Email[][UserEmail]" class="form-control m-input" placeholder="" value="@email.UserEmail">
+                                                            </div>
+
+
+
+                                                        <div class="">
+
+                                                            <label class="form-control-label">* Email template URL:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][EmailTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="@email.EmailTemplateURL">
+                                                        </div>
+                                                        <div class="">
+                                                            <label class="form-control-label">* Template Part ID:</label>
+                                                            <input type="text" name="WorkFlow[]Email[][TemplatePartID]" class="form-control form-control-sm  m-input" placeholder="" value="@email.TemplatePartID">
+                                                        </div>
+
+                                                        <div class=" mt-4">
+                                                                <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                                                                    <input type="checkbox" name="WorkFlow[]Email[][EmailPublisher]" @(email.EmailPublisher.GetValueOrDefault() ? "checked" : "") value="true"> Email Publisher
+                                                                    <span></span>
+                                                                </label>
+                                                            </div>
+                                                        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                        <div class="m-form__section">
+
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            }
+
+
+                                        </div>
+
+                                        <a id="btn-add-Email" class="btn btn-outline-secondary m-btn m-btn--custom m-btn--label-accent m-btn--bolder     mr-2"><i class="fa fa-plus"></i> Add Email</a>
+
+
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Step 5-->
+
+                            </form>
+
+
+
+                        </div>
+                        <!--end: Form Body -->
+                        <!--begin: Form Actions -->
+                        <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
+                            <div class="m-form__actions">
+                                <div class="row">
+                                    <div class="col-lg-6 m--align-left">
+                                        <a href="#" class="btn btn-secondary m-btn m-btn--custom m-btn--icon" data-wizard-action="prev">
+                                            <span>
+                                                <i class="la la-arrow-left"></i>&nbsp;&nbsp;
+                                                <span>Back</span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-6 m--align-right">
+                                        <a id="saveJob" href="#" class="btn btn-primary m-btn m-btn--custom m-btn--icon" data-wizard-action="submit">
+                                            <span>
+                                                <i class="la la-check"></i>&nbsp;&nbsp;
+                                                <span>Save Job</span>
+                                            </span>
+                                        </a>
+                                        <a href="#" class="btn btn-success m-btn m-btn--custom m-btn--icon" data-wizard-action="next">
+                                            <span>
+                                                <span>Next</span>&nbsp;&nbsp;
+                                                <i class="la la-arrow-right"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end: Form Actions -->
+                    </div>
+
+
+                </div>
+                <!--end: Form Wizard Form-->
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+
+
+<div id="tempaltes" class="d-none">
+
+    <div id="m_wizard_form_step_1_formblock" class="formblock">
+
+        <div class="m-form__section m-form__section--first ">
+
+            <div class="form-group  ">
+                <div class="">
+                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                    <label class="form-control-label">* Document name:</label>
+                    <input type="text" name="Document[][DocumentName]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    <span class="m-form__help">The name to save this document as</span>
+                </div>
+                <div class="">
+                    <label class="form-control-label">* Document template URL:</label>
+                    <input type="url" name="Document[][DocumentTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    <span class="m-form__help">Document template to be used in this assembly job</span>
+                </div>
+                <div class="">
+                        <label class="form-control-label">* Summary Document template URL:</label>
+                        <input type="url" name="Document[][DocumentSummaryTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                        <span class="m-form__help">Summary Document template to be used in this assembly job</span>
+                    </div>
+                    <div class="">
+                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                            <input type="checkbox" name="Document[][SummaryDoc]" value="true"> Summary Document
+                            <span></span>
+                        </label>
+                    </div>
+
+                <div class="  ">
+                    <div class="">Download options</div>
+                    <div class="m-checkbox-inline">
+                        <label class="m-checkbox m-checkbox--solid m-checkbox--brand">
+                            <input type="checkbox" name="Document[][AllowWord]" value="true"> Allow Word
+                            <span></span>
+                        </label>
+                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                            <input type="checkbox" name="Document[][AllowWordPaid]" value="true"> Allow Word paid
+                            <span></span>
+                        </label>
+                        <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                            <input type="checkbox" name="Document[][AllowPdf]" value="true"> Allow Pdf
+                            <span></span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 m-form__group-sub">
+                        <div class="m-checkbox-inline">
+                            <label class="form-control-label">* Document Fee:</label>
+                            <input type="number" class="form-control m-input" name="DocumentFee" placeholder="" value="">
+                            <span></span>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+
+        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+
+    </div>
+
+
+    <div id="m_wizard_form_step_2_formblock" class="formblock formblock-record">
+        <div class="m-form__section m-form__section--first">
+
+            <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+
+            <input name="index" type="text" value="{0}" />
+
+            <div>
+                <input type="hidden" name="RecordMatter[][UserID]" value="0">
+                <input type="number" name="RecordMatter[][OrganizationID]" value="null" hidden>
+                <input type="hidden" name="RecordMatter[][RecordId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterItemId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][RecordMatterItemGroupId]" value="00000000-0000-0000-0000-000000000000">
+                <input type="hidden" name="RecordMatter[][FolderId]" value="00000000-0000-0000-0000-000000000000">
+            </div>
+
+            <div class="form-group">
+                <div class="">
+                    <div class="input-group mb-2">
+                        <label class="form-control-label">Users:</label>
+                        <input class="tagsinput" type="text" name="RecordMatter[][UserIds]" data-value=''>
+                    </div>
+
+                    <a class="large OpenUserLookupTableButton pull-right" href="#"><i class="fa fa-search"></i> @L("Pick")</a>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="">
+                    <label class="form-control-label">Record:</label>
+
+                    <div class="input-group mb-2">
+                        <input type="text" name="RecordMatter[][RecordName]" class="form-control form-control-sm  m-input" placeholder="if empty new record will be created" value="">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary m-btn m-btn--custom   OpenRecordLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                        </div>
+                    </div>
+                    <a class=" OpenRecordLookupTableButton pull-right ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=RecordId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") | </a>
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="">
+                    <label class="form-control-label">Record Matter:</label>
+                    <div class="input-group mb-2">
+                        <input type="text" name="RecordMatter[][RecordMatterName]" class="form-control form-control-sm  m-input" placeholder="if empty new record matter will be created" value="">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary m-btn m-btn--custom   OpenRecordMatterLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                        </div>
+                    </div>
+                    <a class=" OpenRecordMatterLookupTableButton pull-right  ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=RecordMatterId]').val('00000000-0000-0000-0000-000000000000'); $(this).closest('.formblock-record').find('[name*=RecordMatterName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") |</a>
+                </div>
+            </div>
+            <div class="form-group ">
+                <div class="">
+                    <label class="form-control-label">Save Folder:</label>
+                    <div class="input-group mb-2">
+                        <input type="text" name="RecordMatter[][FolderName]" class="form-control form-control-sm  m-input" placeholder="if empty root folder will be used" value="">
+                        <div class="input-group-append">
+                              <button class="btn btn-outline-primary m-btn m-btn--custom   OpenFormsFolderLookupTableButton" id="" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                        </div>
+                    </div>
+                    <a class=" OpenFormsFolderLookupTableButton pull-right  ml-2" href="#"><i class="fa fa-search"></i> @L("Pick")</a> <a onclick="$(this).closest('.formblock-record').find('[name*=FolderId]').val('00000000-0000-0000-0000-000000000000'); $('this').closest('.formblock-record').find('[name*=FolderName]').val(''); " class="pull-right" href="#"><i class="fa fa-times"></i> @L("Clear") | </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <div class="">
+                        <label class="form-control-label">File Description:</label>
+                        <input type="text" name="RecordMatter[][FileDescription]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="m-checkbox-inline">
+                    <label class="m-checkbox m-checkbox--solid m-checkbox--brand">
+                        <input type="checkbox" name="RecordMatter[][GenerateInvoice]" value="true"> Generate Invoice
+                        <span></span>
+                    </label>
+                </div>
+        </div>
+        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+    </div>
+
+
+    <div id="m_wizard_form_step_3_BeforeAssembly_formblock" class="formblock">
+
+        <div class="m-form__section m-form__section--first">
+
+            <div class="form-group  row">
+                <div class="col-lg-12">
+                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                    <label class="form-control-label">* URL:</label>
+                    <input type="text" name="WorkFlow[]BeforeAssembly[][URL]" class="form-control form-control-sm  m-input" placeholder="" value="">
+
+                </div>
+            </div>
+
+            <div class="form-group row inline">
+
+                <div class="col-lg-1">
+                    <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                        <input type="checkbox" name="WorkFlow[]BeforeAssembly[][Async]" value="true"> Async
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="col-lg-12">
+                    <label for="exampleSelect1">Rest Type</label>
+                    <select class="form-control form-control-sm  m-input" name="WorkFlow[]BeforeAssembly[][Rest]">
+                        <option>POST</option>
+                        <option>GET</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="m-form__heading">
+                <h3 class="m-form__heading-title">Headers <span onclick="$('#workflow-beforeassembly').toggle();" style="cursor:pointer" class="small text-primary">Show Headers</span></h3>
+            </div>
+
+            <div class="form-group m-form__group row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[]Headers[][Key]" class="form-control m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[]Headers[][Value]" class="form-control m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[]Headers[][Description]" class="form-control m-input" placeholder="" value="">
+                    </div>
+                </div>
+
+
+            <div id="workflow-beforeassembly" style="display:none">
+
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header1Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header2Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group  row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]BeforeAssembly[][Header3Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="m-form__heading">
+                <h3 class="m-form__heading-title">Body</h3>
+            </div>
+            <div class="form-group  row">
+                <div class="col-lg-12">
+                    <label class="form-control-label">* BodyType:</label>
+                    <input type="text" name="WorkFlow[]BeforeAssembly[][BodyType]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                </div>
+                <div class="col-lg-12">
+                    <label class="form-control-label">* Body Content:</label>
+                    <textarea type="text" name="WorkFlow[]BeforeAssembly[][BodyContent]" class="form-control form-control-sm  m-input" placeholder=""></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+    </div>
+
+    <div id="m_wizard_form_step_3_AfterAssembly_formblock" class="formblock">
+
+        <div class="m-form__section m-form__section--first">
+            <div class="form-group  row">
+
+                <div class="col-lg-12">
+                    <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+                    <label class="form-control-label">* URL:</label>
+                    <input type="text" name="WorkFlow[]AfterAssembly[][URL]" class="form-control form-control-sm  m-input" placeholder="" value="">
+
+                </div>
+            </div>
+            <div class="form-group row inline">
+
+                <div class="col-lg-1">
+                    <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                        <input type="checkbox" name="WorkFlow[]AfterAssembly[][Async]" value="true"> Async
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="col-lg-12">
+                    <label for="exampleSelect1">Rest Type</label>
+                    <select class="form-control form-control-sm  m-input" name="WorkFlow[]AfterAssembly[][Rest]">
+                        <option>Post</option>
+                        <option>GET</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="m-form__heading">
+                <h3 class="m-form__heading-title">Headers <span onclick="$('#workflow-afterassembly').toggle()" style="cursor:pointer" class="text-primary small">Show Headers</span></h3>
+            </div>
+
+
+            <div id="workflow-afterassembly" style="display:none">
+
+                <div class="form-group  row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header1Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header1Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header1Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header2Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header2Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header2Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+
+
+                <div class="form-group  row">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Key:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header3Key]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-control-label">* Value:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header3Value]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                    <div class="col-lg-12">
+                        <label class="form-control-label">* Description:</label>
+                        <input type="text" name="WorkFlow[]AfterAssembly[][Header3Description]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="m-form__heading">
+                <h3 class="m-form__heading-title">Body</h3>
+            </div>
+            <div class="form-group  row">
+                <div class="col-lg-12">
+                    <label class="form-control-label">* BodyType:</label>
+                    <input type="text" name="WorkFlow[]AfterAssembly[][BodyType]" class="form-control form-control-sm  m-input" placeholder="" value="">
+                </div>
+                <div class="col-lg-12">
+                    <label class="form-control-label">* Body Content:</label>
+                    <textarea type="text" name="WorkFlow[]AfterAssembly[][BodyContent]" class="form-control form-control-sm  m-input" placeholder=""></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="m-separator m-separator--dashed m-separator--lg"></div>
+    </div>
+
+    <div id="m_wizard_form_step_3_Email_formblock" class="formblock">
+        <div class="tab-content active ">
+            <a class="pull-right" onclick="$(this).closest('.formblock').remove()" href="#">Remove</a>
+            <div class="">
+                <label class="form-control-label">* Recipients:</label>
+                <input type="text" name="WorkFlow[]Email[][DocumentEmailRecipients]" class="form-control form-control-sm  form-control-sm  m-input" placeholder="" value="">
+            </div>
+            <div class="">
+                <label class="form-control-label">* CC Recipients:</label>
+                <input type="text" name="WorkFlow[]Email[][DocumentEmailCCRecipients]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+            <div class="">
+                <label class="form-control-label">* BCC Recipients:</label>
+                <input type="text" name="WorkFlow[]Email[][DocumentEmailBCCRecipients]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+            <div class="">
+                <label class="form-control-label">* Email From:</label>
+                <input type="text" name="WorkFlow[]Email[][DocumentEmailFrom]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+            <div class="">
+                <label class="form-control-label">* Subject:</label>
+                <input type="text" name="WorkFlow[]Email[][DocumentEmailSubject]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+
+
+            <div class=" mt-4">
+                <h4>Email Body</h4>
+                <select class="form-control form-control-sm  m-input" name="WorkFlow[]Email[][EmailType]">
+                    <option>HTML</option>
+                    <option>Plain</option>
+                </select>
+            </div>
+            <div class="">
+                <label class="form-control-label">* Message:</label>
+                <textarea type="text" name="WorkFlow[]Email[][DocumentEmailMessage]" class="form-control form-control-sm  m-input" placeholder=""></textarea>
+            </div>
+
+            <div class="">
+                    <label class="form-control-label">* User Email:</label>
+                    <input type="text" name="WorkFlow[]Email[][UserEmail]" class="form-control m-input" placeholder="" value="">
+                </div>
+
+
+            <div class="">
+
+                <label class="form-control-label">* Email template URL:</label>
+                <input type="text" name="WorkFlow[]Email[][EmailTemplateURL]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+            <div class="">
+                <label class="form-control-label">* Template Part ID:</label>
+                <input type="text" name="WorkFlow[]Email[][TemplatePartID]" class="form-control form-control-sm  m-input" placeholder="" value="">
+            </div>
+
+            <div class=" mt-4">
+                    <label class="m-checkbox m-checkbox--solid  m-checkbox--brand">
+                        <input type="checkbox" name="WorkFlow[]Email[][EmailPublisher]" value="true"> Email Publisher
+                        <span></span>
+                    </label>
+                </div>
+            <div class="m-separator m-separator--dashed m-separator--lg"></div>
+            <div class="m-form__section">
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>*@
+

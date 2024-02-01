@@ -1,0 +1,302 @@
+﻿@using Syntaq.Falcon.Projects;
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.ProjectReleases
+@model CreateOrEditProjectReleaseModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("ProjectRelease")) : L("CreateNewProjectRelease")))
+
+<script>
+ 
+      var toolbarOptions = [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }, { 'font': [] }],
+            ['bold', 'italic', 'underline', 'strike'],                          // toggled buttons
+            [{ 'header': 1 }, { 'header': 2 }],                                 // custom button values
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }, { 'align': [] }],          // outdent/indent
+            [{ 'color': [] }, { 'background': [] }],                            // dropdown with defaults from theme
+            ['link'] // add the 'link' button to the toolbar
+
+            //[{ 'font': [] }, { 'size': [] }],
+            //['bold', 'italic', 'underline', 'strike'],
+            //[{ 'color': [] }, { 'background': [] }],
+            //[{ 'script': 'super' }, { 'script': 'sub' }],
+            //[{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+            //[{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+            //['direction', { 'align': [] }],
+            //['link', 'image', 'video', 'formula'],
+            //['clean']
+
+        ];
+
+        var quill = new Quill('#kt_docs_quill_basic', {
+            modules: {
+                toolbar: toolbarOptions
+            },
+            placeholder: 'Type your text here...',
+            theme: 'snow' // or 'bubble'
+        });
+
+        quill.getModule('toolbar').addHandler('link', function (value) {
+            if (value) {
+                // get the selected text
+                var selection = quill.getSelection();
+                var selectedText = quill.getText(selection);
+
+                if (!selectedText) {
+                    // if no text is selected, prompt the user for the text to be turned into a hyperlink
+                    selectedText = prompt('Enter the text to be turned into a hyperlink');
+                    if (!selectedText) {
+                        // if the user cancels the prompt, return without inserting the hyperlink
+                        return;
+                    }
+                }
+
+                // prompt the user to enter the URL
+                var url = prompt('Enter the URL');
+
+                // get the index and length of the selected text
+                var index, length;
+                if (selection) {
+                    // if the selection is not null, get the index and length of the selected text using the selection object
+                    index = selection.index;
+                    length = selection.length;
+                } else {
+                    // if the selection is null, get the index and length of the selected text using the getLine and getContents methods
+                    var range = quill.getSelection(true);
+                    var line = quill.getLine(range.index);
+                    var contents = quill.getContents(range.index, range.length);
+                    selectedText = contents.ops[0].insert.trim();
+                    index = line.offset(quill.scroll);
+                    length = contents.ops[0].insert.length;
+                }
+
+                // insert the hyperlink
+                quill.insertText(index, selectedText, { 'link': url });
+                quill.setSelection(index, selectedText.length);
+            } else {
+                quill.format('link', false);
+            }
+        });
+  var delta = quill.clipboard.convert('@Html.Raw(Model.ProjectRelease.Notes)');
+
+  quill.setContents(delta);
+</script>
+
+<div class="modal-body ps-0 pe-0">
+    <div id="ProjectReleaseInformationsTab">
+
+        <ul class="nav nav-tabs nav-tabs-bold nav-tabs nav-tabs-line-right nav-tabs-line-brand mb-2" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="#release_tab" role="tab" aria-selected="true">
+                    @L("Release")
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link " data-bs-toggle="tab" href="#subscribtions_tab" role="tab" aria-selected="true">
+                    @L("Subscriptions")
+                </a>
+            </li>
+
+            @if ( Model.ProjectRelease.Id != null && Model.ProjectRelease.ReleaseIdToClone == Guid.Empty)
+            {
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link " data-bs-toggle="tab" href="#deployments_tab" role="tab" aria-selected="true">
+                        @L("Deployments")
+                    </a>
+                </li>
+            }
+
+
+        </ul>
+
+        <div class="tab-content  mt-4  border-0">
+            <div class="tab-pane active" id="release_tab" role="tabpanel">
+                <div id="ReleaseTab" class="align-items-center">
+                    <form name="ProjectReleaseInformationsForm" id="ProjectReleaseInformationsForm" role="form" novalidate class="form-validation row">
+                                                
+                        <input class="form-control" type="hidden" name="id" id="id" value="@Model.ProjectRelease.Id" />
+                        <input class="form-control" type="hidden" name="releaseIdToClone" id="releaseIdToClone" value="@Model.ProjectRelease.ReleaseIdToClone" />
+
+                        <input class="form-control" id="ProjectRelease_ProjectTemplateId" value="@Model.ProjectRelease.ProjectTemplateId" type="hidden" name="projectTemplateId" />
+                        <input class="form-control" id="ProjectRelease_ProjectId" value="@Model.ProjectRelease.ProjectId" type="hidden" name="projectId" />
+
+
+                        @if (Model.IsEditMode)
+                        {
+                            <input class="form-control" id="ProjectRelease_ProjectEnvironmentId" value="@Model.ProjectRelease.ProjectEnvironmentId" type="text" name="projectEnvironmentId" hidden />
+                        }
+                        else
+                        {
+                            <input class="form-control" id="ProjectRelease_ProjectEnvironmentId" value="" type="text" name="projectEnvironmentId" hidden />
+                        }
+
+                        <div class="my-3">
+                            <label class="form-label" for="ProjectRelease_Name">@L("Name")</label>
+                            <input @(Model.IsViewMode? "disabled" : "") class="form-control" id="ProjectRelease_Name" value="@Model.ProjectRelease.Name" type="text" name="name" required maxlength="@Syntaq.Falcon.Projects.ProjectReleaseConsts.MaxNameLength" minlength="@Syntaq.Falcon.Projects.ProjectReleaseConsts.MinNameLength" />
+                        </div>
+
+                        <div class="my-3 mb-10" style="height:">
+                            <label class="form-label" for="ProjectRelease_Notes">@L("Notes")</label>
+                            @*<textarea @(Model.IsViewMode? "disabled" : "") class="form-control" id="ProjectRelease_Notes" rows="4" name="notes" maxlength="@Syntaq.Falcon.Projects.ProjectReleaseConsts.MaxNotesLength" minlength="@Syntaq.Falcon.Projects.ProjectReleaseConsts.MinNotesLength">@Model.ProjectRelease.Notes</textarea>*@
+
+ 
+
+                            @if(Model.IsViewMode){
+                                <div style=" max-height:200px;  overflow-y:auto">
+                                    @Html.Raw(Model.ProjectRelease.Notes)
+                                </div>
+                            }else{
+                                <div class="editor-container">
+                                    <div id="kt_docs_quill_basic" name="kt_docs_quill_basic">
+                                    </div>
+                                </div>
+ 
+                            }
+
+                              <style>
+                                .editor-container {
+                                    height: 220px;  margin-bottom: 30px
+                                }
+                              </style>
+
+                        </div>
+                    
+                        <div class="my-3">
+                             
+                            <label class="form-label" for="ProjectEnvironmentName">@L("ProjectEnvironment")</label>
+                            <div class="input-group">
+                                <input class="form-control" id="ProjectEnvironmentName" name="projectEnvironmentName" required value="@Model.ProjectEnvironmentName" type="text" disabled>
+                                <button @(Model.IsViewMode? "disabled" : "") class="btn btn-primary blue" id="OpenProjectEnvironmentLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+                                <button @(Model.IsViewMode? "disabled" : "") class="btn btn-danger btn-icon" type="button" id="ClearProjectEnvironmentNameButton"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="my-3">
+                            <label class="form-check form-check-custom">
+                                <input @(Model.IsViewMode? "disabled" : "") id="ProjectRelease_Required" name="required" type="checkbox" class="form-check-input" value="true" @Html.Raw(Model.ProjectRelease.Required ?"checked=\"checked\"":"") />
+                                <span class="form-check-label">
+                                    @L("Required")
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="my-3 col-3">
+                            <label class="form-label" for="ProjectRelease_VersionMajor">@L("VersionMajor")</label>
+                            <input @(Model.IsViewMode? "disabled" : "") class="form-control m-input" id="ProjectRelease_VersionMajor" value="@Model.ProjectRelease.VersionMajor.ToString(CultureInfo.InvariantCulture)" type="number" name="versionMajor" />
+                        </div>
+
+                        <div class="my-3 col-3">
+                            <label class="form-label" for="ProjectRelease_VersionMinor">@L("VersionMinor")</label>
+                            <input @(Model.IsViewMode? "disabled" : "") class="form-control m-input" id="ProjectRelease_VersionMinor" value="@Model.ProjectRelease.VersionMinor.ToString(CultureInfo.InvariantCulture)" type="number" name="versionMinor" />
+                        </div>
+
+                        <div class="my-3 col-3">
+                            <label class="form-label" for="ProjectRelease_VersionRevision">@L("VersionRevision")</label>
+                            <input @(Model.IsViewMode? "disabled" : "") class="form-control m-input" id="ProjectRelease_VersionRevision" value="@Model.ProjectRelease.VersionRevision.ToString(CultureInfo.InvariantCulture)" type="number" name="versionRevision" />
+                        </div>
+
+                        @{
+                            var selectListReleaseType = Html.GetEnumSelectList(typeof(ProjectReleaseEnums.ProjectReleaseType));
+                            foreach (var selectOption in selectListReleaseType) { selectOption.Text = L("Enum_ProjectReleaseType_" + selectOption.Value); }
+                        }
+                        <div class="my-3 col-3">
+                            <label class="form-label" for="ProjectRelease_ReleaseType">@L("ReleaseType")</label>
+                            <select @(Model.IsViewMode? "disabled" : "") class="form-select m-input m-input--square" name="releaseType" id="ProjectRelease_ReleaseType" asp-for="@Model.ProjectRelease.ReleaseType"  >
+
+                                @foreach (var item in selectListReleaseType)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="tab-pane" id="subscribtions_tab" role="tabpanel">
+                <div id="SubscriptionsTab" class="align-items-center">
+@*                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <input type="text" id="ProjectTenantName" class="form-control" placeholder='@L("Add Tenant")' >
+                                    <button id="addProjectTenantButton" class="btn btn-sm btn-primary nowrap pull-right">
+                                        @L("Add") @L("Tenant")  
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                    <form name="ProjectTenantsForm">
+                        <table id="ProjectTenantsModalTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th>@L("Tenant")</th>
+                                    <th>@L("Enabled")</th>
+                                    <th>@L("Environment")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="deployments_tab" role="tabpanel">
+                <div id="DeploymentsTab" class="align-items-center">
+
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="my-3">
+                                <div class="input-group">
+                                    <input type="text" id="ProjectTenantName" class="form-control" placeholder='@L("Tenant")' >
+                                    <button id="addSubscriptionAndDeployButton" class="btn btn-sm btn-primary nowrap pull-right">
+                                        @L("Add") @L("Deployment")  
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="ProjectReleaseDeploymentsTable" class="table table-hover align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th>@L("Tenant")</th>
+                                <th>@L("Date")</th>
+@*                                <th>@L("Name")</th>
+                                <th>@L("Version")</th>*@
+                                <th>@L("Type")</th>
+                                <th>@L("Enabled")</th>
+                                <th>@L("Comments")</th>
+                                @*<th>@L("Actions")</th>*@
+                            </tr>
+                        </thead>
+                    </table> 
+                </div>
+            </div>
+
+        </div> 
+    </div>
+</div>
+
+@{ 
+    if(Model.ProjectRelease.ReleaseIdToClone != new Guid("00000000-0000-0000-0000-000000000000")){
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary font-weight-bold close-button promote-button" id="btnPromote">@L("Promote")</button>
+            <button type="button" class="btn btn-secondary font-weight-bold close-button" data-bs-dismiss="modal">@L("Close")</button>
+        </div>
+    }
+    else if (Model.IsViewMode ){
+        @await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+    }
+    else{
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary save-button"> @L("Save") </button>
+            <button type="button" class="btn btn-primary deploy-button"> @L("Deploy") </button>
+            <button type="button" class="btn btn-secondary font-weight-bold close-button me-2" data-bs-dismiss="modal">@L("Close")</button>
+        </div>
+    }
+}

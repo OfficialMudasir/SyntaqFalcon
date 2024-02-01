@@ -1,0 +1,126 @@
+﻿@using Syntaq.Falcon.Authorization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.RecordMatterItemHistories
+@using Syntaq.Falcon.Web.Areas.Falcon.Startup
+@model RecordMatterItemHistoriesViewModel
+@{
+    ViewBag.CurrentPageName = FalconPageNames.Common.RecordMatterItemHistories;
+}
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/Falcon/Views/RecordMatterItemHistories/Index.js" asp-append-version="true"></script>
+}
+<div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+
+
+                <div class="kt-subheader kt-grid__item">
+                  <div class="@(await GetContainerClass())">
+                    <div class="kt-subheader__main">
+                        <h3 class="kt-subheader__title">
+                            <span>@L("RecordMatterItemHistories")</span>
+                        </h3>
+                        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                        <span class="kt-subheader__desc">
+                            @L("RecordMatterItemHistoriesHeaderInfo")
+                        </span>
+                    </div>
+                    <div class="kt-subheader__toolbar">
+                        <div class="kt-subheader__wrapper">
+                            @if (IsGranted(AppPermissions.Pages_RecordMatterItemHistories_Create))
+                            {
+                                <button id="CreateNewRecordMatterItemHistoryButton" class="btn btn-primary blue">@L("CreateNewRecordMatterItemHistory")</button>                
+                            }
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            
+<div class="@(await GetContainerClass()) kt-grid__item kt-grid__item--fluid">   
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__body">
+            <div class="kt-form">
+                <div class="row align-items-center mb-4">
+                    <div class="col-xl-12">
+                        <div class="form-group align-items-center">
+                            <div class="input-group">
+                                <input type="text" id="RecordMatterItemHistoriesTableFilter" aria-label="@L("InputFilterText")" class="form-control m-input" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                <button class="btn btn-secondary" id="clearbtn" aria-label="@L("Clear")" type="button">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <span class="input-group-btn">
+                                    <button id="GetRecordMatterItemHistoriesButton" aria-label="@L("Search")" class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</div>
+                <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                    <div class="col-md-12">
+						<div class="kt-separator kt-separator--border-dashed"></div>
+					</div>
+
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="DocumentNameFilterId">@L("DocumentName")</label>
+									<input type="text" class="form-control" name="documentNameFilter" id="DocumentNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="AllowedFormatsFilterId">@L("AllowedFormats")</label>
+									<input type="text" class="form-control" name="allowedFormatsFilter" id="AllowedFormatsFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="StatusFilterId">@L("Status")</label>
+									<input type="text" class="form-control" name="statusFilter" id="StatusFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="RecordMatterItemDocumentNameFilterId">(@L("RecordMatterItem")) @L("DocumentName")</label>
+									<input type="text" class="form-control" name="recordMatterItemDocumentNameFilter" id="RecordMatterItemDocumentNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="FormNameFilterId">(@L("Form")) @L("Name")</label>
+									<input type="text" class="form-control" name="formNameFilter" id="FormNameFilterId">
+								</div>
+                            </div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="SubmissionSubmissionStatusFilterId">(@L("Submission")) @L("SubmissionStatus")</label>
+									<input type="text" class="form-control" name="submissionSubmissionStatusFilter" id="SubmissionSubmissionStatusFilterId">
+								</div>
+                            </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-xl-12">
+                        <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
+                        <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
+                    </div>
+                </div>
+            <div class="row align-items-center">
+                <table id="RecordMatterItemHistoriesTable" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            
+                            <th>@L("Actions")</th>
+								<th>@L("DocumentName")</th>
+								<th>@L("AllowedFormats")</th>
+								<th>@L("Status")</th>
+								<th>@L("RecordMatterItemDocumentName")</th>
+								<th>@L("FormName")</th>
+								<th>@L("SubmissionSubmissionStatus")</th>
+                            
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

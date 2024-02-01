@@ -1,0 +1,25 @@
+<<<<<<< HEAD
+version: '3.7'
+=======
+version: '2'
+>>>>>>> Master-7.1
+
+services:
+
+    zero_mvc:
+        image: zero/mvc
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Staging
+        ports:
+            - "9903:80"
+        volumes:
+            - "./Mvc-Logs:/app/App_Data/Logs"
+            
+    zero_public:
+        image: zero/public
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Staging
+        ports:
+            - "9905:80"
+        volumes:
+            - "./Public-Logs:/app/App_Data/Logs"

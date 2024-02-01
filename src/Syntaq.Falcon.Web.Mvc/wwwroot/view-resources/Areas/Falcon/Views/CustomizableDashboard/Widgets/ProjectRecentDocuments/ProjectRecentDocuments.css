@@ -1,0 +1,20 @@
+﻿.ProjectRecentDocumentsContainer .kt-portlet__body {
+    padding-top: 0px;
+}
+
+.table {
+    text-align: left !important;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+}
+
+.OnClickLink {
+    cursor: pointer;
+    color: #5871a0;
+    font-size: small;
+}
+    

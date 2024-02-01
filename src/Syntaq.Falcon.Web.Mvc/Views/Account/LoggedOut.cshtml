@@ -1,0 +1,40 @@
+﻿@using System.Globalization
+@using Abp.Extensions
+@using Abp.MultiTenancy
+@using Syntaq.Falcon.Identity
+@using Syntaq.Falcon.Localization
+@using Syntaq.Falcon.Web.Security.Recaptcha
+@using Owl.reCAPTCHA
+@addTagHelper *, Owl.reCAPTCHA
+@model Syntaq.Falcon.Web.Models.Account.LoginFormViewModel
+@inject SignInManager SignInManager
+
+@using Abp.AspNetZeroCore.Timing
+@using Abp.Configuration.Startup
+@using Abp.Web.Security.AntiForgery
+@using Syntaq.Falcon.UiCustomization.Dto
+@using Syntaq.Falcon.Url
+@using Syntaq.Falcon.Web.Resources
+@using CultureHelper = Syntaq.Falcon.Localization.CultureHelper
+@inject ScriptPaths ScriptPaths
+@inject AppTimes AppTimes
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@inject IMultiTenancyConfig MultiTenancyConfig
+@inject IWebResourceManager WebResourceManager
+@inject IWebUrlService WebUrlService
+
+@section Scripts
+{
+
+    <script abp-src="/view-resources/Views/Account/Login.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl":"").css" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/formio/app/fontawesome/css/fontawesome.min.css" />
+}
+
+<div class="  text-center row" role="alert">
+    <div class=" fs-4  mb-8">You have successfully logged out </div> 
+    <a href="/account/login" class="col-12 h5 btn btn-lg btn-primary ">Click here to login again</a>
+</div>

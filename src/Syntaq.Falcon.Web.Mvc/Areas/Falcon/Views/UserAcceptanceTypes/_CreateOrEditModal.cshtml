@@ -1,0 +1,52 @@
+
+@using System.Globalization
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.UserAcceptanceTypes
+@model CreateOrEditUserAcceptanceTypeModalViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditUserAcceptanceType")) : L("CreateNewUserAcceptanceType")))
+
+<div class="modal-body">
+        <div id="UserAcceptanceTypeInformationsTab">
+            <form name="UserAcceptanceTypeInformationsForm" role="form" novalidate class="form-validation">
+
+                @if (Model.IsEditMode)
+                {
+                    <input type="hidden" name="id" value="@Model.UserAcceptanceType.Id" />
+                }				            
+					<div class="form-group m-form__group  mb-3">
+						<label class="form-label" for="TemplateName">@L("Template")</label>
+						<div class="input-group">												
+							<input class="form-control" id="TemplateName" name="templateName" value="@Model.TemplateName" type="text" disabled>									 
+							<button class="btn btn-primary blue" id="OpenTemplateLookupTableButton" type="button"><i class="fa fa-search"></i> @L("Pick")</button>
+							<button class="btn btn-danger" type="button" id="ClearTemplateNameButton"><i class="fa fa-times"></i></button>									 
+						</div>
+					</div>
+
+					@if (Model.IsEditMode)
+					{
+						<input class="form-control" value="@Model.UserAcceptanceType.TemplateId" type="text" name="templateId"  hidden/>
+					}
+						else
+					{ 
+						<input class="form-control" value="" type="text" name="templateId"  hidden/>
+					}
+
+					<div class="form-group mb-3">
+						<label class="form-label"  for="UserAcceptanceType_Name">@L("Name")</label>
+						<input class="form-control" id="UserAcceptanceType_Name" value="@Model.UserAcceptanceType.Name" type="text" name="name"   maxlength="@Syntaq.Falcon.Users.UserAcceptanceTypeConsts.MaxNameLength"  minlength="@Syntaq.Falcon.Users.UserAcceptanceTypeConsts.MinNameLength"  />
+					</div>
+					
+					<div class="m-checkbox-list">
+						<label class="form-label"  for="UserAcceptanceType_Active" >
+							<input id="UserAcceptanceType_Active" type="checkbox" name="active" value="true" @Html.Raw(Model.UserAcceptanceType.Active ?"checked=\"checked\"":"") />
+							@L("Active")
+							<span></span>
+						</label>
+					</div>
+					
+            </form>
+        </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

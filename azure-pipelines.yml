@@ -1,0 +1,166 @@
+variables:
+- name: BuildParameters.RestoreBuildProjects
+  value: >
+    **/Syntaq.Falcon.Application.csproj
+
+    **/Syntaq.Falcon.Shared.csproj
+
+    **/Syntaq.Falcon.Assembly.csproj
+
+    **/Syntaq.Falcon.Core.csproj
+
+    **/Syntaq.Falcon.Core.Shared.csproj
+
+    **/Syntaq.Falcon.EntityFrameworkCore.csproj
+
+    **/Syntaq.Falcon.Syntaq.Falcon.GraphQL.csproj
+
+    **/Syntaq.Falcon.Syntaq.Falcon.Migrator.csproj
+
+    **/Syntaq.Falcon.Web.Core.csproj
+
+    **/Syntaq.Falcon.Web.Host.csproj
+
+    **/Syntaq.Falcon.Web.Mvc.csproj
+
+    **/WordFusion.Assembly.csproj
+
+
+name: $(date:yyyyMMdd)$(rev:.r)
+jobs:
+  - job: Job_1
+    displayName: Agent job 1
+    pool:
+      vmImage: windows-2022
+      demands:
+      - msbuild
+      - visualstudio
+
+    steps:
+      - checkout: self
+     # - task: UseDotNet@2
+     #   inputs:
+     #     packageType: 'sdk'
+     #     version: '6.0.8'
+      - task: NuGetToolInstaller@1
+        displayName: Use NuGet
+        inputs:
+          checkLatest: true     
+      - task: NuGetCommand@2
+        displayName: NuGet restore
+        inputs:
+          solution: Syntaq.Falcon.Web.sln
+          vstsFeed: '426d350f-7a78-407a-946e-6958bfaa15bb'
+          includeNuGetOrg: false           
+      - task: NodeTool@0
+        displayName: Use Node v10.22.1
+        inputs:
+          versionSpec: v10.22.1
+      - task: Npm@1
+        displayName: Form.io Npm install
+        inputs:
+          workingDir: src/Syntaq.Falcon.Web.Mvc/wwwroot/assets/formio
+          verbose: false
+      - task: gulp@0
+        displayName: "Form.io Gulp Build "
+        inputs:
+          gulpFile: src/Syntaq.Falcon.Web.Mvc/wwwroot/assets/formio/gulpfile.js
+          targets: build
+
+      - task: DotNetCoreCLI@2
+        displayName: DotNet Restore
+        inputs:
+          command: restore
+          arguments: '--framework net6.0.8'
+          projects: $(BuildParameters.RestoreBuildProjects)
+      - task: VSBuild@1
+        displayName: Build solution **/Syntaq.Falcon.Web.Mvc.csproj
+        inputs:
+          configuration: 'release'
+          solution: '**/Syntaq.Falcon.Web.Mvc.csproj'
+          msbuildArgs: /p:DeployOnBuild=true /p:SelfContained=true /p:WebPublishMethod=Package /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\Syntaq.Falcon.zip"     
+   #   - task: DotNetCoreCLI@2
+   #     displayName: Test
+   #     enabled: true
+   #     inputs:
+   #       command: test
+   #       projects: ' **/Syntaq.Falcon.Tests.csproj' 
+   #     continueOnError: true
+      
+   #   - task: DotNetCoreCLI@2
+   #     displayName: GraphQLTest
+   #     enabled: true
+   #     inputs:
+   #       command: test
+   #       projects: ' **/Syntaq.Falcon.GraphQL.Tests.csproj' 
+   #     continueOnError: true
+
+      - task: XplatGenerateReleaseNotes@3
+        condition: contains(variables['Build.SourceBranch'], 'refs/heads/Master')
+        inputs:
+              outputfile: '$(System.DefaultWorkingDirectory)\releasenotes.md'
+              templateLocation: 'InLine'
+              inlinetemplate: |
+                # Notes for build
+                **Build Number**:{{buildDetails.id}}   
+                **Total Work Items Resolved** :{{workItems.length}}
+                
+                #  New Features
+                        {{#filter_workitems_by_type  this.workItems "User Story"}}
+                        *  **{{this.id}}**  {{lookup this.fields 'System.Title'}}
+                        {{/filter_workitems_by_type}}
+            
+                #  Bug fixes
+                        {{#filter_workitems_by_type  this.workItems "Bug"}} 
+                        *  **{{this.id}}**  {{lookup this.fields 'System.Title'}}
+                        {{/filter_workitems_by_type}}
+                
+              
+                #  Associated commit comments
+                        {{#forEach commits}}
+                        * Message: {{this.message}}   Commited by: {{this.author.displayName}}
+                        {{/forEach}}
+              checkStage: false
+              dumpPayloadToConsole: false
+              dumpPayloadToFile: false
+              replaceFile: True
+              customHandlebarsExtensionCode: |
+                const handlebars = require("handlebars");
+                module.exports = {
+                  filter_workitems_by_type: function (array,typeName, opts) {
+                    var i, result = '';
+                    for(i = 0; i < array.length; ++i)
+                        if(array[i].fields['System.WorkItemType'] === typeName)
+                            result = result + opts.fn(array[i]);
+                    return result;
+                  }
+                    
+                }
+                
+              getParentsAndChildren: true
+              getAllParents: False
+              getIndirectPullRequests: False
+              stopOnError: False
+        
+      - task: WikiUpdaterTask@1
+        displayName: 'Git based WIKI Updater'
+        condition: contains(variables['Build.SourceBranch'], 'refs/heads/Master')
+        inputs:
+          repo: 'https://dev.azure.com/syntaqsolutions/Falcon/_git/Syntaq.Falcon.wiki'
+          filename: 'Releases/BuildNote-$(build.buildnumber).md'        
+          replaceFile: False
+          dataIsFile: true
+          sourceFile: '$(System.DefaultWorkingDirectory)\releasenotes.md'
+          message: 'Update from Build'
+          gitname: 'Tong Yu'
+          gitemail: 'tong@syntaq.com'
+          useAgentToken: true
+          user: 'tong@syntaq.com'
+          password: 'mal2iutgdcgows5tlguuqd5reriasb7mhgokk4kar5u6zkphcgza'
+
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifact
+        condition: succeededOrFailed()
+        inputs:
+          PathtoPublish: $(build.artifactstagingdirectory)
+          TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'

@@ -1,0 +1,25 @@
+﻿@using Syntaq.Falcon.Web.Areas.Falcon.Models.Common.Modals
+@using Syntaq.Falcon.Web.Areas.Falcon.Models.Forms
+
+@model ImportFormSchemaViewModel
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ImportFormSchema")))
+
+<div class="modal-body">
+    <div id="ImportSchemaTab" style="margin: 2vh;">
+        <div class="form-group">
+            <strong>Note: Uploading a form schema will override the existing schema of the currently selected form version.</strong>
+        </div>
+
+        <form id="ImportSchemaForm" method="POST" action="@(ApplicationPath + "Falcon/Forms/UploadFormSchema")">
+            <div class="form-group">
+                <input  class="btn btn-secondary  " type="file" name="file" />
+ 
+            </div>
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="Id" value="@Model.Version" />
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/Falcon/Views/Common/Modals/_ModalFooterWithClose.cshtml")
